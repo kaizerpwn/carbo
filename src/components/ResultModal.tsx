@@ -57,7 +57,7 @@ export const ResultModal: React.FC<{
             {result.reasons.map((reason, index) => (
               <div
                 key={index}
-                className="bg-backgroundDark rounded-xl p-3 text-[#6B7280] text-sm"
+                className="bg-backgroundDark rounded-xl p-3 text-[#ffffff] text-sm"
               >
                 {reason}
               </div>
@@ -73,7 +73,7 @@ export const ResultModal: React.FC<{
                     You will get:{" "}
                   </span>
                 </div>
-                <span className="text-[#4ADE80] font-bold">
+                <span className="text-[#4ADE80] font-bold flex items-center">
                   +{calculateCoins(result.score)}
                   <Flame className="ml-2 w-4 h-4 text-[#4ADE80] group-hover:animate-bounce" />
                 </span>
