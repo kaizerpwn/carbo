@@ -136,7 +136,7 @@ const Login: React.FC = () => {
 
           <p className="text-center text-[#6B7280] text-sm">
             Don&apos;t have an account?{" "}
-            <a href="/sign-up" className="text-primaryColor hover:underline">
+            <a href="/onboarding" className="text-primaryColor hover:underline">
               Sign up
             </a>
           </p>

@@ -11,6 +11,7 @@ interface Product {
   price: number;
   points: number;
   ecoImpact: string;
+  imageUrl: string;
 }
 
 export interface User {
@@ -38,6 +39,8 @@ const SponsorProducts: React.FC = () => {
       price: 25,
       points: 150,
       ecoImpact: 'Saves 300 plastic bottles per year',
+      imageUrl:
+        'https://sarajevski-kiseljak.com/wp-content/uploads/elementor/thumbs/FORT_Sara-Hero-qll5q38xl8ck9vqebtdsfuiw6gs9wnmfkura168q2o.jpg',
     },
     {
       id: 2,
@@ -46,6 +49,8 @@ const SponsorProducts: React.FC = () => {
       price: 45,
       points: 250,
       ecoImpact: '100% renewable energy source',
+      imageUrl:
+        'https://cdn.teufelaudio.com/image/upload/c_fill,f_auto,q_auto/v1/products/VARTA/Energy_Power_Bank/varta_energy_power_bank-silver-bottom.jpg',
     },
     {
       id: 3,
@@ -54,6 +59,8 @@ const SponsorProducts: React.FC = () => {
       price: 15,
       points: 100,
       ecoImpact: 'Biodegradable materials',
+      imageUrl:
+        'https://www.bambuhome.com/cdn/shop/files/054600KnifeForkSpoonNP2048_1024x1024.png?v=1712005685',
     },
   ];
 
@@ -96,8 +103,12 @@ const SponsorProducts: React.FC = () => {
           >
             <div className='flex items-center justify-between mb-4'>
               <div className='flex items-center'>
-                <div className='w-12 h-12 bg-primaryColor/20 rounded-full flex items-center justify-center mr-4'>
-                  <Leaf className='w-6 h-6 text-primaryColor' />
+                <div className='w-16 h-16 rounded-lg overflow-hidden mr-4 bg-gray-700'>
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className='w-full h-full object-cover'
+                  />
                 </div>
                 <div>
                   <h3 className='font-medium'>{product.name}</h3>
@@ -124,8 +135,12 @@ const SponsorProducts: React.FC = () => {
         <div className='fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn'>
           <div className='bg-gray-800 p-8 rounded-2xl text-white max-w-md w-full mx-4 shadow-2xl transform animate-slideUp'>
             <div className='flex flex-col items-center text-center mb-6'>
-              <div className='w-16 h-16 bg-primaryColor/20 rounded-full flex items-center justify-center mb-4'>
-                <Leaf className='w-8 h-8 text-primaryColor' />
+              <div className='w-24 h-24 rounded-lg overflow-hidden mb-4'>
+                <img
+                  src={selectedProduct.imageUrl}
+                  alt={selectedProduct.name}
+                  className='w-full h-full object-cover'
+                />
               </div>
               <h2 className='text-2xl font-semibold mb-2'>Confirm Purchase</h2>
               <p className='text-gray-400'>You&apos;re about to purchase:</p>
