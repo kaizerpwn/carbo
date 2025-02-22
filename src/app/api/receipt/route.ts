@@ -18,11 +18,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No product text provided" }, { status: 400 });
     }
 
-    // Pretvaranje slike u Base64
     const bytes = await file.arrayBuffer();
     const base64Image = Buffer.from(bytes).toString("base64");
 
-    // 1. poziv: Ekstrakcija teksta sa računa
     const responseExtract = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -43,6 +41,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       max_tokens: 300,
+      temperature: 0.1
     });
 
     const extractContent = responseExtract.choices[0].message.content;
@@ -52,7 +51,6 @@ export async function POST(req: NextRequest) {
     const extractResult = JSON.parse(extractContent);
     const extractedText = extractResult.text;
 
-    // 2. poziv: Usporedba ekstraktovanog teksta sa tekstom proizvoda
     const responseCompare = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -72,6 +70,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       max_tokens: 100,
+      temperature: 0.1
     });
 
     const compareContent = responseCompare.choices[0].message.content;
@@ -81,7 +80,6 @@ export async function POST(req: NextRequest) {
     const compareResult = JSON.parse(compareContent);
     const confirmed = compareResult.confirmed;
 
-    // Vraćamo samo potvrdu kupovine
     return NextResponse.json({ confirmed });
   } catch (error) {
     console.error("Error processing receipt image:", error);

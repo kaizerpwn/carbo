@@ -3,12 +3,10 @@
 import { useState } from "react";
 
 function UploadImages() {
-  // Stanje za rezultat skeniranog proizvoda (text i ecofriendly_meter)
   const [productResult, setProductResult] = useState<{
     text: string;
     ecofriendly_meter: number;
   } | null>(null);
-  // Stanje za rezultat skeniranog računa (text i confirmed)
   const [receiptResult, setReceiptResult] = useState<{
     text: string;
     confirmed: boolean;
@@ -33,7 +31,6 @@ function UploadImages() {
         body: formData,
       });
       const data = await res.json();
-      // Očekujemo da API vrati JSON: { text: string, ecofriendly_meter: number }
       if (!data.text || data.ecofriendly_meter === undefined) {
         alert("Došlo je do greške: nedostaju podaci za proizvod.");
         return;
@@ -84,7 +81,6 @@ function UploadImages() {
 
   return (
     <div className="w-full flex flex-col items-center space-y-8">
-      {/* Sekcija za skeniranje proizvoda */}
       <div>
         <h3 className="mb-2 font-bold">Proizvod</h3>
         <form onSubmit={handleUploadProduct} className="flex flex-col space-y-2">
@@ -108,7 +104,6 @@ function UploadImages() {
         )}
       </div>
 
-      {/* Sekcija za skeniranje računa */}
       <div>
         <h3 className="mb-2 font-bold">Račun</h3>
         <form onSubmit={handleUploadReceipt} className="flex flex-col space-y-2">

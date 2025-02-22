@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const base64Image = Buffer.from(bytes).toString("base64");
 
-    // Prvi poziv: ekstrakcija teksta i ecofriendly_meter
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -37,14 +36,13 @@ export async function POST(req: NextRequest) {
         },
       ],
       max_tokens: 500,
-      temperature: 0.4,
+      temperature: 0.1,
     });
 
     const content = response.choices[0].message.content;
     if (!content) throw new Error("No content in the response");
     const resultJSON = JSON.parse(content);
 
-    // Drugi poziv: izvuci 2-4 ekološke činjenice iz ekstraktovanog teksta
     const ecoFactsResponse = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -62,6 +60,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       max_tokens: 150,
+      temperature: 0.1
     });
 
     const ecoContent = ecoFactsResponse.choices[0].message.content;
