@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
 import React, { useState } from "react";
-import { Camera, Upload, Award } from "lucide-react";
+import { Camera as CameraIcon, Upload, Award } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import { ScanResult } from "@/types/scan";
 import { ResultModal } from "@/components/ResultModal";
+import Camera from "./Camera";
 
 interface RecentScan {
   id: number;
@@ -18,6 +19,7 @@ interface RecentScan {
 const ProductScanView: React.FC = () => {
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(false);
 
   const recentScans: RecentScan[] = [
     {
@@ -48,24 +50,63 @@ const ProductScanView: React.FC = () => {
 
   const handleScan = async (file: File) => {
     setIsScanning(true);
-    setTimeout(() => {
-      setScanResult({
-        isEcoFriendly: true,
-        score: 85,
-        reasons: [
-          "Recyclable packaging",
-          "Low carbon footprint",
-          "Sustainable materials",
-        ],
-        potentialPoints: 50,
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/vision", {
+        method: "POST",
+        body: formData,
       });
+      const data = await res.json();
+      console.log("API response:", data);
+      if (!data.text || data.ecofriendly_meter === undefined || !data.eco_facts) {
+        alert("Error: Missing product data.");
+        return;
+      }
+      setScanResult({
+        isEcoFriendly: data.ecofriendly_meter > 50,
+        score: data.ecofriendly_meter,
+        reasons: data.eco_facts,
+        potentialPoints: data.ecofriendly_meter,
+      });
+    } catch (error) {
+      console.error("Error scanning product:", error);
+      alert("Error processing product image.");
+    } finally {
       setIsScanning(false);
-    }, 1500);
+    }
+  };
+
+  const handleCapture = (imageSrc: string) => {
+    const file = base64ToFile(imageSrc, "capture.jpg");
+    handleScan(file);
+    setIsCameraActive(false);
+  };
+
+  // Convert base64 image to File object
+  const base64ToFile = (dataurl: string, filename: string) => {
+    const arr = dataurl.split(",");
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    if (!mimeMatch) throw new Error("Invalid image format");
+    const mime = mimeMatch[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
   };
 
   const handleScanReceipt = () => {
     console.log("Scanning receipt...");
   };
+
+  // When camera is active, render only the Camera component.
+  if (isCameraActive) {
+    return <Camera onCapture={handleCapture} isLoading={isScanning} />;
+  }
 
   return (
     <div className="min-h-screen bg-backgroundDark pb-20">
@@ -80,20 +121,23 @@ const ProductScanView: React.FC = () => {
         </div>
 
         <div className="space-y-4 mb-8">
-          <button className="w-full bg-backgroundLight rounded-2xl p-6 text-left hover:bg-backgroundLight/80 transition-colors">
+          {/* Use Camera Button */}
+          <button
+            onClick={() => setIsCameraActive(true)}
+            className="w-full bg-backgroundLight rounded-2xl p-6 text-left hover:bg-backgroundLight/80 transition-colors"
+          >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-[#374151] flex items-center justify-center">
-                <Camera className="w-6 h-6 text-[#4ADE80]" />
+                <CameraIcon className="w-6 h-6 text-[#4ADE80]" />
               </div>
               <div>
                 <h3 className="text-white font-medium">Use Camera</h3>
-                <p className="text-[#6B7280] text-sm">
-                  Scan product using camera
-                </p>
+                <p className="text-[#6B7280] text-sm">Scan product using camera</p>
               </div>
             </div>
           </button>
 
+          {/* Upload Image */}
           <div className="relative">
             <input
               type="file"
@@ -119,12 +163,11 @@ const ProductScanView: React.FC = () => {
           </div>
         </div>
 
+        {/* Recent Scans */}
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-white font-medium">Recent Scans</h2>
-            <button className="text-[#4ADE80] text-sm hover:underline">
-              View All
-            </button>
+            <button className="text-[#4ADE80] text-sm hover:underline">View All</button>
           </div>
 
           <div className="space-y-3">
