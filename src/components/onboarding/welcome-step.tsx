@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 interface WelcomeStepProps {
-  onContinue: () => void;
+  onContinue: (data: any) => void;
 }
 
 export default function WelcomeStep({ onContinue }: WelcomeStepProps) {

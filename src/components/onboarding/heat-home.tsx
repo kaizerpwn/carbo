@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 interface TransportStepProps {
-  onContinue: () => void;
+  onContinue: (data: any) => void;
 }
 
 const transport = ["Car", "Walk", "Bcycle", "Public transport"];
