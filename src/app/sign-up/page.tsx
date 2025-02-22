@@ -36,7 +36,7 @@ const SignupWizard: React.FC = () => {
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<SignupData>>({});
-  const { onboardingData, setSignupData } = useAuth();
+  const { onboardingData, setSignupData, setUser } = useAuth();
   const [countryData, setCountryData] = useState<{ value: string; label: string }[]>([]);
   const [townData, setTownData] = useState<{ value: string; label: string }[]>([]);
   const [formData, setFormData] = useState<SignupData>({
@@ -272,6 +272,7 @@ const SignupWizard: React.FC = () => {
           recycle: onboardingData.recycle,
         });
         setSignupData(response.user);
+        setUser(response.user);
 
         router.push("/");
       } catch (error) {
