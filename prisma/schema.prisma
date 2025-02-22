@@ -18,6 +18,10 @@ model User {
   updatedAt    DateTime @updatedAt @map("updated_at")
   locationId   String   @map("location_id") @db.VarChar(36)
 
+  transport String? @db.VarChar(100)
+  energy    String? @db.VarChar(100)
+  recycle   String? @db.VarChar(100)
+
   userStats        UserStats?
   devices          Device[]
   monthlySummaries MonthlySummary[]
@@ -165,9 +169,9 @@ enum Status {
 }
 
 model Location {
-  id              String  @id @default(uuid()) @db.VarChar(36)
-  country            String   @db.VarChar(100)
-  town               String   @db.VarChar(100)
+  id      String @id @default(uuid()) @db.VarChar(36)
+  country String @db.VarChar(100)
+  town    String @db.VarChar(100)
 
   @@map("locations")
 }
