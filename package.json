@@ -13,6 +13,7 @@
     "@types/jsonwebtoken": "^9.0.8",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.2",
+    "framer-motion": "^12.4.7",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.475.0",
