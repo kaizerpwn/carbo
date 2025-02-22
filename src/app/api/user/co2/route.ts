@@ -31,7 +31,6 @@ export async function GET(req: NextRequest) {
       });
     });
 
-    // Assuming a conversion factor for CO2 emissions (e.g., 0.000233 kg CO2 per kWh)
     const co2ConversionFactor = 0.000233;
     const carbonSaved = totalPowerConsumption * co2ConversionFactor;
 
