@@ -18,6 +18,8 @@ import {
 import InputField from "../../components/InputField";
 import Dropdown from "../../components/Dropdown";
 import { useAuth } from "@/context/AuthContext";
+import { AuthAPI } from "@/lib/Auth/Auth";
+import { useRouter } from "next/navigation";
 
 interface SignupData {
   fullName: string;
@@ -30,6 +32,7 @@ interface SignupData {
 }
 
 const SignupWizard: React.FC = () => {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<SignupData>>({});
@@ -43,7 +46,7 @@ const SignupWizard: React.FC = () => {
     password: "",
     confirmPassword: "",
     country: "",
-    town: ""
+    town: "",
   });
 
   useEffect(() => {
@@ -248,15 +251,33 @@ const SignupWizard: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateStep()) return;
 
     if (step < 3) {
       setStep(step + 1);
     } else {
-      setSignupData(formData);
-      console.log("Form submitted:", formData); // Log only the form data
+      try {
+        const { fullName, username, email, password, country, town } = formData;
+        const response = await AuthAPI.registerUser({
+          fullName,
+          username,
+          email,
+          password,
+          country,
+          town,
+          transport: onboardingData.transport,
+          energy: onboardingData.energy,
+          recycle: onboardingData.recycle,
+        });
+        setSignupData(response.user);
+
+        router.push("/");
+      } catch (error) {
+        console.error("Registration error:", error);
+        setErrors({ email: "Registration failed. Please try again." });
+      }
     }
   };
 
