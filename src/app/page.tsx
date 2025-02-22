@@ -27,7 +27,7 @@ export default function Dashboard() {
           Hello, {user?.fullName.split(" ")[0]}
         </div>
       ),
-      message: "Welcome back! This is your dashboard.",
+      message: "Glad to see you here! This is your dashboard.",
       target: "#step1",
       position: "stepOne",
     },
@@ -61,7 +61,7 @@ export default function Dashboard() {
     } else {
       setShowTutorial(false);
       try {
-        await UserAPI.finishTutorial({ finishedTutorial: true });
+        await UserAPI.finishTutorial(user?.id, true);
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
           const previousState = JSON.parse(storedUser);
