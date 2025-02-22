@@ -19,11 +19,10 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reset error state
+    setError(null);
     try {
       const response = await AuthAPI.loginUser(formData);
       console.log("Login successful:", response);
-      // Handle successful login (e.g., redirect, show message, etc.)
     } catch (error) {
       console.error("Login error:", error);
       setError("Invalid email or password. Please try again.");
@@ -124,7 +123,7 @@ const Login: React.FC = () => {
 
           <p className="text-center text-[#6B7280] text-sm">
             Don&apos;t have an account?{" "}
-            <a href="/signup" className="text-primaryColor hover:underline">
+            <a href="/sign-up" className="text-primaryColor hover:underline">
               Sign up
             </a>
           </p>
