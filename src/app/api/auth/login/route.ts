@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
       {
         userId: user.id,
         email: user.email,
+        finishedTutorial: user.finishedTutorial,
       },
       process.env.JWT_SECRET as string,
       { expiresIn: "7d" }

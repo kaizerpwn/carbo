@@ -5,6 +5,7 @@ import CoTreeSmall from "@/components/CoTreeSmall";
 import NavBar from "@/components/NavBar";
 import XPComponent from "@/components/XpComponent";
 import { useAuth } from "@/context/AuthContext";
+import { UserAPI } from "@/lib/User/User";
 import { Airplay, Navigation, PlaneLanding } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -13,14 +14,14 @@ export default function Dashboard() {
 
   const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
-  const [showTutorial, setShowTutorial] = useState(true);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const steps = [
     {
       title: (
         <div className="flex justify-center items-center gap-2">
           <PlaneLanding />
-          Hello, {user?.fullName}
+          Hello, {user?.fullName.split(" ")[0]}
         </div>
       ),
       message: "Welcome back! This is your dashboard.",
@@ -51,11 +52,23 @@ export default function Dashboard() {
     },
   ];
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
       setShowTutorial(false);
+      try {
+        await UserAPI.finishTutorial({ finishedTutorial: true });
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const previousState = JSON.parse(storedUser);
+          previousState.finishedTutorial = true;
+
+          localStorage.setItem("user", JSON.stringify(previousState));
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -98,6 +111,16 @@ export default function Dashboard() {
     return "z-20";
   };
 
+  useEffect(() => {
+    if (user?.finishedTutorial === false) {
+      setShowTutorial(true);
+    } else {
+      setShowTutorial(false);
+    }
+  }, [user]);
+
+  if (!user) return <></>;
+
   return (
     <div className="min-h-screen bg-backgroundDark pb-20 max-w-md mx-auto">
       <div className="h-2 bg-primaryColor rounded-b-lg" />
@@ -117,17 +140,15 @@ export default function Dashboard() {
               </svg>
             </div>
             <div>
-              <h1 className="text-white text-lg">Hello, {user?.fullName}</h1>
+              <h1 className="text-white text-lg">
+                Hello, {user?.fullName.split(" ")[0]}
+              </h1>
               <p className="text-[#6B7280] text-sm">Welcome back</p>
             </div>
           </div>
-          {/* <div className="flex items-center gap-1 bg-backgroundLight px-3 py-1 rounded-full cursor-pointer">
-            <span className="text-white">560</span>
-            <span>🔥</span>
-          </div> */}
           <XPComponent
             xp={560}
-            username={user?.fullName}
+            username={user?.fullName.split(" ")[0]}
             level={5}
             nextLevelXP={1000}
           />
