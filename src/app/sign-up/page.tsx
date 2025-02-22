@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useCallback } from "react";
+
+import React, { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -15,6 +16,7 @@ import {
   Pin,
 } from "lucide-react";
 import InputField from "../../components/InputField";
+import { useAuth } from "@/context/AuthContext";
 
 interface SignupData {
   fullName: string;
@@ -30,6 +32,7 @@ const SignupWizard: React.FC = () => {
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<SignupData>>({});
+  const { onboardingData, setSignupData } = useAuth();
   const [formData, setFormData] = useState<SignupData>({
     fullName: "",
     username: "",
@@ -40,6 +43,10 @@ const SignupWizard: React.FC = () => {
     town: ""
   });
 
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, ...onboardingData }));
+  }, [onboardingData]);
+
   const steps = [
     { number: 1, title: "Personal Info", icon: UserCircle },
     { number: 2, title: "Account Details", icon: Mail },
@@ -48,7 +55,7 @@ const SignupWizard: React.FC = () => {
 
   const validateStep = () => {
     const newErrors: Partial<SignupData> = {};
-    
+
     if (step === 1) {
       if (!formData.fullName) newErrors.fullName = "Full name is required";
       if (!formData.username) newErrors.username = "Username is required";
@@ -70,12 +77,15 @@ const SignupWizard: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const updateFormData = useCallback((key: keyof SignupData, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
-    if (errors[key]) {
-      setErrors((prev) => ({ ...prev, [key]: undefined }));
-    }
-  }, [errors]);
+  const updateFormData = useCallback(
+    (key: keyof SignupData, value: string) => {
+      setFormData((prev) => ({ ...prev, [key]: value }));
+      if (errors[key]) {
+        setErrors((prev) => ({ ...prev, [key]: undefined }));
+      }
+    },
+    [errors]
+  );
 
   const renderStepContent = () => {
     switch (step) {
@@ -150,7 +160,11 @@ const SignupWizard: React.FC = () => {
                   value={formData.password}
                   onChange={(e) => updateFormData("password", e.target.value)}
                   className={`w-full bg-backgroundDark rounded-xl p-3 pr-10 text-white border
-                    ${errors.password ? 'border-red-500' : 'border-white/10 focus:border-primaryColor'}
+                    ${
+                      errors.password
+                        ? "border-red-500"
+                        : "border-white/10 focus:border-primaryColor"
+                    }
                     focus:outline-none focus:ring-1 focus:ring-primaryColor/20`}
                   placeholder="Create a password"
                 />
@@ -175,7 +189,9 @@ const SignupWizard: React.FC = () => {
               icon={Lock}
               type={showPassword ? "text" : "password"}
               value={formData.confirmPassword}
-              onChange={(value: string) => updateFormData("confirmPassword", value)}
+              onChange={(value: string) =>
+                updateFormData("confirmPassword", value)
+              }
               error={errors.confirmPassword}
               placeholder="Confirm your password"
             />
@@ -193,18 +209,16 @@ const SignupWizard: React.FC = () => {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      console.log("Form submitted:", formData);
-      // Handle form submission
+      setSignupData(formData);
+      console.log("Form submitted:", formData); // Log only the form data
     }
   };
 
   return (
     <div className="min-h-screen bg-backgroundDark">
-      {/* Top Gradient Bar */}
       <div className="h-2 bg-primaryColor rounded-b-lg" />
 
       <div className="max-w-md mx-auto p-4">
-        {/* Steps Progress */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
             {steps.map((s, index) => (
@@ -217,7 +231,11 @@ const SignupWizard: React.FC = () => {
                     }}
                     className={`w-8 h-8 rounded-full flex items-center justify-center
                       transition-colors duration-200
-                      ${step >= s.number ? "bg-primaryColor text-black" : "bg-backgroundLight text-white/50"}`}
+                      ${
+                        step >= s.number
+                          ? "bg-primaryColor text-black"
+                          : "bg-backgroundLight text-white/50"
+                      }`}
                   >
                     {step > s.number ? (
                       <Check className="w-5 h-5" />
@@ -230,7 +248,11 @@ const SignupWizard: React.FC = () => {
                 {index < steps.length - 1 && (
                   <div
                     className={`flex-1 h-0.5 mx-4 transition-colors duration-200
-                      ${step > s.number ? "bg-primaryColor" : "bg-backgroundLight"}`}
+                      ${
+                        step > s.number
+                          ? "bg-primaryColor"
+                          : "bg-backgroundLight"
+                      }`}
                   />
                 )}
               </React.Fragment>
@@ -238,7 +260,6 @@ const SignupWizard: React.FC = () => {
           </div>
         </div>
 
-        {/* Form */}
         <div className="bg-backgroundLight rounded-3xl p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {renderStepContent()}
@@ -269,7 +290,6 @@ const SignupWizard: React.FC = () => {
           </form>
         </div>
 
-        {/* Sign In Link */}
         <p className="text-center mt-6 text-[#6B7280]">
           Already have an account?{" "}
           <a href="/sign-in" className="text-primaryColor hover:underline">
