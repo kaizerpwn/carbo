@@ -15,14 +15,18 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Reset error state
     try {
       const response = await AuthAPI.loginUser(formData);
       console.log("Login successful:", response);
+      // Handle successful login (e.g., redirect, show message, etc.)
     } catch (error) {
       console.error("Login error:", error);
+      setError("Invalid email or password. Please try again.");
     }
   };
 
@@ -45,6 +49,11 @@ const Login: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="bg-red-500 text-white text-sm p-2 rounded">
+              {error}
+            </div>
+          )}
           <div className="space-y-2">
             <label
               htmlFor="email"
