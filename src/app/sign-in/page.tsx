@@ -5,6 +5,7 @@ import { Eye, EyeOff, LogIn } from "lucide-react";
 import { AuthAPI } from "@/lib/Auth/Auth";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import Logo from "@/components/Logo";
 
 interface LoginFormData {
   email: string;
@@ -35,12 +36,18 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-backgroundDark flex flex-col">
+    <div className="min-h-screen bg-backgroundDark flex flex-col relative overflow-hidden">
       <div className="h-2 bg-primaryColor rounded-b-lg" />
 
-      <div className="flex-1 flex flex-col p-4 max-w-md mx-auto w-full">
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[200%] h-48 bg-gradient-to-b from-[#FFFFFF33] to-transparent opacity-50 animate-fade" />
+
+      <div className="flex-1 flex flex-col p-4 max-w-md mx-auto w-full relative z-10">
+          <div className="flex items-center justify-center my-8">
+            <Logo />
+          </div>
+
         <div className="flex items-center gap-3 mb-12 mt-8">
-          <div className="w-12 h-12 rounded-full bg-primaryColor flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-primaryColor flex items-center justify-center pb-1">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
               <path d="M12 6C9.79 6 8 7.79 8 10C8 12.21 9.79 14 12 14C14.21 14 16 12.21 16 10C16 7.79 14.21 6 12 6Z" />
               <path d="M12 16C9.33 16 4 17.34 4 20V22H20V20C20 17.34 14.67 16 12 16Z" />
@@ -139,3 +146,18 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
+// Add the following CSS to your global styles or a CSS module
+<style jsx>{`
+  @keyframes fade {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .animate-fade {
+    animation: fade 3s infinite;
+  }
+`}</style>

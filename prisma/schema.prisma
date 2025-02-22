@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid()) @db.VarChar(36)
-  email        String   @unique @db.VarChar(255)
-  passwordHash String   @map("password_hash") @db.VarChar(255)
-  username     String   @unique @db.VarChar(50)
-  fullName     String?  @map("full_name") @db.VarChar(100)
-  isVerified   Boolean  @default(false) @map("is_verified")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  locationId   String   @map("location_id") @db.VarChar(36)
+  id               String   @id @default(uuid()) @db.VarChar(36)
+  email            String   @unique @db.VarChar(255)
+  passwordHash     String   @map("password_hash") @db.VarChar(255)
+  username         String   @unique @db.VarChar(50)
+  fullName         String?  @map("full_name") @db.VarChar(100)
+  isVerified       Boolean  @default(false) @map("is_verified")
+  finishedTutorial Boolean  @default(false) @map("finished_tutorial")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  locationId       String   @map("location_id") @db.VarChar(36)
 
   transport String? @db.VarChar(100)
   energy    String? @db.VarChar(100)
