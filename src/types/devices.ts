@@ -37,3 +37,7 @@ export interface ScheduleModalProps {
   onClose: () => void;
   onSave: (deviceId: string, schedule: Omit<Schedule, "id">) => void;
 }
+export interface OnboardingStepProps {
+  onComplete: (data: Record<string, string | number | boolean>) => void;
+  onBack?: () => void;
+}

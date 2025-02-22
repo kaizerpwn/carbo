@@ -16,6 +16,7 @@ model User {
   isVerified   Boolean  @default(false) @map("is_verified")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
+  locationId   String   @map("location_id") @db.VarChar(36)
 
   userStats        UserStats?
   devices          Device[]
@@ -161,4 +162,12 @@ enum Status {
   active
   completed
   failed
+}
+
+model Location {
+  id              String  @id @default(uuid()) @db.VarChar(36)
+  country            String   @db.VarChar(100)
+  town               String   @db.VarChar(100)
+
+  @@map("locations")
 }

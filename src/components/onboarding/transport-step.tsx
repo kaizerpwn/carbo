@@ -1,10 +1,21 @@
 import Image from "next/image";
+import { useState } from "react";
 
 interface TransportStepProps {
-  onContinue: () => void;
+  onContinue: (data: any) => void;
 }
 
 export default function TransportStep({ onContinue }: TransportStepProps) {
+  const [selectedTransport, setSelectedTransport] = useState<string | null>(
+    null
+  );
+
+  const handleContinue = () => {
+    if (selectedTransport) {
+      onContinue({ transport: selectedTransport });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 p-6 text-white">
       <div className="flex justify-center mb-2">
@@ -21,7 +32,10 @@ export default function TransportStep({ onContinue }: TransportStepProps) {
         {["🚗 Car", "🚶 Walk", "🚴 Bicycle", "🚎 Public transport"].map((i) => (
           <button
             key={i}
-            className="relative bg-gray-800 rounded-lg p-4 h-16 flex items-center justify-center group"
+            onClick={() => setSelectedTransport(i)}
+            className={`relative bg-gray-800 rounded-lg p-4 h-16 flex items-center justify-center group ${
+              selectedTransport === i ? "border-2 border-primaryColor" : ""
+            }`}
           >
             <div className="absolute left-0 h-full w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
             <span className="text-gray-200">{i}</span>
@@ -30,7 +44,7 @@ export default function TransportStep({ onContinue }: TransportStepProps) {
       </div>
 
       <button
-        onClick={onContinue}
+        onClick={handleContinue}
         className="w-full bg-primaryColor text-white py-4 rounded-lg text-lg font-medium hover:bg-emerald-600 transition-colors"
       >
         Continue
