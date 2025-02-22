@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { ShoppingBag, Award, LogOut } from "lucide-react";
+import { ShoppingBag, Award } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";

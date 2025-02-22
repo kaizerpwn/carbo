@@ -1,13 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { Camera, Upload, Award, CheckCircle, XCircle, Flame } from "lucide-react";
+import {
+  Camera,
+  Upload,
+  Award,
+  CheckCircle,
+  XCircle,
+  Flame,
+} from "lucide-react";
 import NavBar from "@/components/NavBar";
 import { ScanResult } from "@/types/scan";
 import { ResultModal } from "@/components/ResultModal";
 import CameraComponent from "./Camera";
-import { calculateCoins } from "@/util/coinCalculator"; // Import the utility function
-import prisma from "@/lib/prisma"; // Import Prisma client
+import { calculateCoins } from "@/util/coinCalculator";
 
 interface RecentScan {
   id: number;
@@ -23,7 +29,9 @@ const ProductScanView: React.FC = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [isScanningReceipt, setIsScanningReceipt] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const [receiptScanResult, setReceiptScanResult] = useState<boolean | null>(null);
+  const [receiptScanResult, setReceiptScanResult] = useState<boolean | null>(
+    null
+  );
   const [coins, setCoins] = useState(0);
 
   const recentScans: RecentScan[] = [
@@ -59,8 +67,8 @@ const ProductScanView: React.FC = () => {
     let file: File;
     if (typeof imageSrc === "string") {
       // Convert base64 image to a File object
-      const byteString = atob(imageSrc.split(',')[1]);
-      const mimeString = imageSrc.split(',')[0].split(':')[1].split(';')[0];
+      const byteString = atob(imageSrc.split(",")[1]);
+      const mimeString = imageSrc.split(",")[0].split(":")[1].split(";")[0];
       const ab = new ArrayBuffer(byteString.length);
       const ia = new Uint8Array(ab);
       for (let i = 0; i < byteString.length; i++) {
@@ -80,7 +88,11 @@ const ProductScanView: React.FC = () => {
         body: formData,
       });
       const data = await res.json();
-      if (!data.text || data.ecofriendly_meter === undefined || !data.eco_facts) {
+      if (
+        !data.text ||
+        data.ecofriendly_meter === undefined ||
+        !data.eco_facts
+      ) {
         alert("Error: Missing product data.");
         return;
       }
@@ -89,7 +101,7 @@ const ProductScanView: React.FC = () => {
         score: data.ecofriendly_meter,
         reasons: data.eco_facts,
         potentialPoints: data.ecofriendly_meter,
-        text: data.text, // Set the text property
+        text: data.text,
       });
     } catch (error) {
       console.error("Error scanning product:", error);
@@ -105,13 +117,13 @@ const ProductScanView: React.FC = () => {
       alert("Please scan a product first.");
       return;
     }
-  
+
     setIsScanningReceipt(true);
-  
+
     const formData = new FormData();
     formData.append("file", receiptFile);
     formData.append("productText", scanResult.text);
-  
+
     try {
       const res = await fetch("/api/receipt", {
         method: "POST",
@@ -119,12 +131,12 @@ const ProductScanView: React.FC = () => {
       });
       const data = await res.json();
       console.log("Receipt scan response:", data);
-  
+
       if (data.confirmed === undefined) {
         alert("Error: Missing confirmation data.");
         return;
       }
-  
+
       const userJSON = localStorage.getItem("user");
       if (userJSON) {
         const user = JSON.parse(userJSON);
@@ -134,12 +146,12 @@ const ProductScanView: React.FC = () => {
         console.log("User not found in localStorage.");
         throw new Error("User not found in localStorage.");
       }
-  
+
       if (data.confirmed) {
         const coins = calculateCoins(scanResult.score);
         setCoins(coins);
         console.log("Coins to be added:", coins);
-  
+
         try {
           const updateRes = await fetch("/api/userStats", {
             method: "POST",
@@ -160,7 +172,7 @@ const ProductScanView: React.FC = () => {
           throw new Error("Error updating user stats.");
         }
       }
-  
+
       setReceiptScanResult(data.confirmed);
     } catch (error) {
       console.error("Error processing receipt image:", error);
@@ -243,7 +255,10 @@ const ProductScanView: React.FC = () => {
 
               <div className="space-y-3">
                 {recentScans.map((scan) => (
-                  <div key={scan.id} className="bg-backgroundLight rounded-xl p-4">
+                  <div
+                    key={scan.id}
+                    className="bg-backgroundLight rounded-xl p-4"
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div
@@ -309,7 +324,11 @@ const ProductScanView: React.FC = () => {
           {receiptScanResult !== null && (
             <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
               <div className="bg-backgroundLight rounded-3xl w-full max-w-sm overflow-hidden">
-                <div className={`p-6 ${receiptScanResult ? "bg-[#4ADE80]" : "bg-red-500"}`}>
+                <div
+                  className={`p-6 ${
+                    receiptScanResult ? "bg-[#4ADE80]" : "bg-red-500"
+                  }`}
+                >
                   <div className="flex items-center gap-5">
                     {receiptScanResult ? (
                       <CheckCircle className="w-8 h-8 text-black" />
@@ -321,7 +340,10 @@ const ProductScanView: React.FC = () => {
                         {receiptScanResult ? (
                           <div className="flex flex-col">
                             <p className="font-bold">Purchase completed.</p>
-                            <p className="flex items-center ">You have recieved <b className="ml-1">{coins}</b> <Flame className="mb-[1px] w-4 h-4 group-hover:animate-bounce" /></p> 
+                            <p className="flex items-center ">
+                              You have recieved <b className="ml-1">{coins}</b>{" "}
+                              <Flame className="mb-[1px] w-4 h-4 group-hover:animate-bounce" />
+                            </p>
                           </div>
                         ) : (
                           "Purchase Not Confirmed"
@@ -342,7 +364,7 @@ const ProductScanView: React.FC = () => {
             </div>
           )}
 
-          <NavBar />
+          <NavBar className={isScanning ? "opacity-50" : ""} />
         </>
       )}
     </div>

@@ -151,7 +151,7 @@ export async function POST(req: AuthenticatedNextRequest) {
             ecoScore: resultJSON.ecofriendly_meter,
             category: "Unknown",
             carbonFootprint: 0,
-            recyclable: sanitizedEcoFacts.some((fact) =>
+            recyclable: sanitizedEcoFacts.some((fact: string) =>
               fact.toLowerCase().includes("recycl")
             ),
             brand: null,
@@ -174,14 +174,14 @@ export async function POST(req: AuthenticatedNextRequest) {
           },
         });
 
-        console.log("UserScan created:", userScan);
+        console.log("UserScan created:", userScan); */
 
         return NextResponse.json({
           text: sanitizedText,
           ecofriendly_meter: resultJSON.ecofriendly_meter,
           eco_facts: sanitizedEcoFacts,
           productId: product.id,
-          scanId: userScan.id,
+          /* scanId: userScan.id, */
         });
       } catch (dbError) {
         console.error("Full database error:", dbError);
