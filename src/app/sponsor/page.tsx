@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { ShoppingBag, ChevronRight, Leaf } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ShoppingBag, ChevronRight, CheckCircle } from "lucide-react";
 import NavBar from "@/components/NavBar";
 
 interface Product {
@@ -14,23 +14,12 @@ interface Product {
   imageUrl: string;
 }
 
-export interface User {
-  id: string;
-  email: string;
-  name?: string;
-}
-
-export interface AuthContextType {
-  user: User | null;
-  login: (credentials: { email: string; password: string }) => Promise<void>;
-  logout: () => Promise<void>;
-  loading: boolean;
-}
-
 const SponsorProducts: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
+  const [showPurchaseConfirmation, setShowPurchaseConfirmation] =
+    useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(100);
   const products: Product[] = [
     {
       id: 1,
@@ -76,15 +65,34 @@ const SponsorProducts: React.FC = () => {
 
   const handleConfirmPurchase = (): void => {
     if (selectedProduct) {
-      alert(
-        `Purchased ${selectedProduct.name} for $${selectedProduct.price} USD`
-      );
-      handleCloseModal();
+      setIsModalOpen(false);
+      setShowPurchaseConfirmation(true);
+      setProgress(100);
+
+      setTimeout(() => {
+        setShowPurchaseConfirmation(false);
+      }, 3000);
     }
   };
 
+  useEffect(() => {
+    if (showPurchaseConfirmation) {
+      const interval = setInterval(() => {
+        setProgress((prevProgress) => {
+          if (prevProgress > 0) {
+            return prevProgress - 1;
+          }
+          clearInterval(interval);
+          return 0;
+        });
+      }, 30);
+
+      return () => clearInterval(interval);
+    }
+  }, [showPurchaseConfirmation]);
+
   return (
-    <div className="min-h-screen bg-backgroundDark p-6 text-white">
+    <div className="min-h-screen bg-backgroundDark p-6 text-white relative">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-semibold">Eco Store</h1>
@@ -134,8 +142,8 @@ const SponsorProducts: React.FC = () => {
       </div>
 
       {isModalOpen && selectedProduct && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-          <div className="bg-backgroundLight p-8 rounded-2xl text-white max-w-md w-full mx-4 shadow-2xl transform animate-slideUp">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-backgroundLight p-8 rounded-2xl text-white max-w-md w-full mx-4 shadow-2xl">
             <div className="flex flex-col items-center text-center mb-6">
               <div className="w-24 h-24 rounded-lg overflow-hidden mb-4">
                 <img
@@ -169,6 +177,43 @@ const SponsorProducts: React.FC = () => {
           </div>
         </div>
       )}
+
+      {showPurchaseConfirmation && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-backgroundLight p-8 rounded-2xl text-white max-w-md w-full mx-4 shadow-2xl animate-slideIn relative">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gray-700 rounded-t-2xl">
+              <div
+                className="h-full bg-primaryColor rounded-t-2xl"
+                style={{
+                  width: `${progress}%`,
+                  transition: "width 0.03s linear",
+                }}
+              />
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <CheckCircle className="w-12 h-12 text-green-500 mb-4" />
+              <h2 className="text-2xl font-semibold mb-2">
+                Purchase Successful!
+              </h2>
+              <p className="text-gray-400">
+                You have successfully purchased{" "}
+                <span className="text-primaryColor font-medium">
+                  {selectedProduct?.name}
+                </span>
+                .
+              </p>
+              <button
+                className="w-full bg-primaryColor px-4 py-3 rounded-xl font-medium hover:bg-primaryColor/70 transition-colors mt-6"
+                onClick={() => setShowPurchaseConfirmation(false)}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <NavBar />
     </div>
   );

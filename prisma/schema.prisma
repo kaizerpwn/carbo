@@ -49,22 +49,38 @@ model UserStats {
 }
 
 model Device {
-  id           String   @id @default(uuid()) @db.VarChar(36)
-  userId       String   @map("user_id") @db.VarChar(36)
-  name         String   @db.VarChar(100)
-  powerRating  Decimal? @map("power_rating") @db.Decimal(10, 2)
-  standbyPower Decimal? @map("standby_power") @db.Decimal(10, 2)
-  location     String?  @db.VarChar(50)
-  isActive     Boolean  @default(true) @map("is_active")
-  isFavorite   Boolean  @default(true) @map("is_favorite")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id           String     @id @default(uuid()) @db.VarChar(36)
+  userId       String     @map("user_id") @db.VarChar(36)
+  name         String     @db.VarChar(100)
+  powerRating  Decimal?   @map("power_rating") @db.Decimal(10, 2)
+  standbyPower Decimal?   @map("standby_power") @db.Decimal(10, 2)
+  location     String?    @db.VarChar(50)
+  isActive     Boolean    @default(true) @map("is_active")
+  isFavorite   Boolean    @default(true) @map("is_favorite")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   powerReadings PowerReading[]
+  schedules     Schedule[]     // Add this line to relate to Schedule model
 
   @@index([userId])
   @@map("devices")
+}
+
+model Schedule {
+  id       String   @id @default(uuid()) @db.VarChar(36)
+  deviceId String   @map("device_id") @db.VarChar(36)
+  on       String   @db.VarChar(5)  // Store time as "HH:MM"
+  off      String   @db.VarChar(5)  // Store time as "HH:MM"
+  days     String   @db.VarChar(255) // Store days as comma-separated string
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId])
+  @@map("schedules")
 }
 
 model PowerReading {

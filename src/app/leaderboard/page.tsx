@@ -127,7 +127,7 @@ const LeaderboardView: React.FC = () => {
         <div className="mt-8 grid grid-cols-2 gap-3">
           <button
             onClick={() => setFilter("weekly")}
-            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative ${
+            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-backgroundDark transition-colors relative ${
               filter === "weekly" ? "border-2 border-[#4ADE80]" : ""
             }`}
           >
@@ -137,7 +137,7 @@ const LeaderboardView: React.FC = () => {
           </button>
           <button
             onClick={() => setFilter("monthly")}
-            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative ${
+            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-backgroundDark transition-colors relative ${
               filter === "monthly" ? "border-2 border-[#4ADE80]" : ""
             }`}
           >
@@ -149,7 +149,7 @@ const LeaderboardView: React.FC = () => {
           </button>
           <button
             onClick={() => setFilter("all-time")}
-            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative ${
+            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-backgroundDark transition-colors relative ${
               filter === "all-time" ? "border-2 border-[#4ADE80]" : ""
             }`}
           >
@@ -159,7 +159,7 @@ const LeaderboardView: React.FC = () => {
           </button>
           <button
             onClick={() => setLocation(location ? "" : "userCity")}
-            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative ${
+            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-backgroundDark transition-colors relative ${
               location ? "border-2 border-[#4ADE80]" : ""
             }`}
           >
