@@ -10,14 +10,14 @@ import { Airplay, Navigation, PlaneLanding } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Dashboard() {
-  const coEmissionPercent = 10;
-
   const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
   const [xp, setXp] = useState<number>(0);
   const [level, setLevel] = useState<number>(0);
   const [nextLevelXP, setNextLevelXP] = useState<number>(0);
+  const [coEmissionPercent, setCoEmissionPercent] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(0);
 
   const steps = [
     {
@@ -96,8 +96,28 @@ export default function Dashboard() {
       }
     };
 
+    const fetchCO2Emission = async () => {
+      try {
+        const response = await UserAPI.getUserCO2Emission(user?.id);
+        setCoEmissionPercent(response.carbonSaved);
+      } catch (error) {
+        console.error("Error fetching CO2 emission data:", error);
+      }
+    };
+
+    const fetchProgress = async () => {
+      try {
+        const response = await UserAPI.getUserProgress(user?.id);
+        setProgress(response.progress);
+      } catch (error) {
+        console.error("Error fetching progress data:", error);
+      }
+    };
+
     if (user) {
       fetchXP();
+      fetchCO2Emission();
+      fetchProgress();
     }
   }, [user]);
 
@@ -203,7 +223,8 @@ export default function Dashboard() {
 
                   <div className="ml-2">
                     <div className="text-white text-4xl font-[1000]">
-                      13<span className="text-xl font-[300]">%</span>
+                      {progress}
+                      <span className="text-xl font-[300]">%</span>
                     </div>
                     <div className="text-[#6B7280] text-sm">Progress</div>
                   </div>
