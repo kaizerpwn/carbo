@@ -1,8 +1,11 @@
-import NavBar from '@/components/NavBar';
-import { Zap } from 'lucide-react';
+import SemiCircleProgress from "@/components/CircularProgress";
+import NavBar from "@/components/NavBar";
+import { Zap } from "lucide-react";
 
 export default function Dashboard() {
-  const coEmissionPercent = 70;
+  const coEmissionPercent = 10;
+
+  // 20% = 20
   const CoTreeSvg = () => {
     if (coEmissionPercent < 50) {
       return (
@@ -175,14 +178,11 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className='bg-backgroundLight rounded-2xl mb-6'>
-          <div className='flex relative overflow-hidden'>
-            <div className='flex justify-between items-start'>
-              <div className='bg-[#FFFFFF07] p-4 pr-7 relative w-full'>
-                <div
-                  className='absolute left-0 top-0 bottom-0 w-2 rounded-bl-lg rounded-tl-lg'
-                  style={{ backgroundColor: statusColor }}
-                />
+        <div className="bg-backgroundLight rounded-2xl mb-6">
+          <div className="flex relative overflow-hidden">
+            <div className="flex justify-between items-start relative w-[35%]">
+              <div className="bg-[#FFFFFF07] p-4 pr-7">
+                <div className="absolute left-0 top-0 bottom-0 w-2 rounded-bl-lg rounded-tl-lg" style={{ backgroundColor: statusColor }} />
 
                 <div className='mb-6 ml-2'>
                   <div className='text-white text-4xl font-[1000]'>
@@ -201,36 +201,9 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className='flex justify-center p-4 absolute right-0 mr-4'>
-              <div className='relative w-48 h-48'>
-                <svg
-                  width='250'
-                  height='250'
-                  viewBox='-5 -50 250 250'
-                  version='1.1'
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='rotate-[90deg]'
-                >
-                  <circle
-                    r='90'
-                    cx='100'
-                    cy='100'
-                    fill='transparent'
-                    stroke='#e0e0e0'
-                    strokeWidth='6'
-                  ></circle>
-                  <circle
-                    r='90'
-                    cx='100'
-                    cy='100'
-                    stroke={statusColor}
-                    strokeWidth='6'
-                    strokeLinecap='round'
-                    strokeDashoffset='200px'
-                    fill='transparent'
-                    strokeDasharray='565.48px'
-                  ></circle>
-                </svg>
+            <div className="flex justify-center p-4 absolute right-0 w-[65%]">
+              <SemiCircleProgress percentage={coEmissionPercent} color={statusColor} />
+              <div className="relative w-48 h-48">
 
                 <div className='absolute inset-0 flex items-center justify-center p-10 mt-4'>
                   {CoTreeSvg()}
