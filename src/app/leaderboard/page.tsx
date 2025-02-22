@@ -1,5 +1,6 @@
 import React from "react";
 import { Trophy, Medal, ChevronRight } from "lucide-react";
+import NavBar from "@/components/NavBar";
 
 interface User {
   id: string;
@@ -151,6 +152,7 @@ const LeaderboardView: React.FC = () => {
             <p className="text-[#6B7280] text-sm">Compare with friends</p>
           </button>
         </div>
+        <NavBar />
       </div>
     </div>
   );
