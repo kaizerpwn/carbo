@@ -15,6 +15,9 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [xp, setXp] = useState<number>(0);
+  const [level, setLevel] = useState<number>(0);
+  const [nextLevelXP, setNextLevelXP] = useState<number>(0);
 
   const steps = [
     {
@@ -80,6 +83,23 @@ export default function Dashboard() {
       }
     }
   }, [currentStep, showTutorial]);
+
+  useEffect(() => {
+    const fetchXP = async () => {
+      try {
+        const response = await UserAPI.getUserStats(user?.id);
+        setXp(response.totalPoints);
+        setLevel(response.level);
+        setNextLevelXP(response.nextLevelXP);
+      } catch (error) {
+        console.error("Error fetching XP data:", error);
+      }
+    };
+
+    if (user) {
+      fetchXP();
+    }
+  }, [user]);
 
   const CoTreeSvg = () => {
     if (coEmissionPercent < 50) {
@@ -147,10 +167,10 @@ export default function Dashboard() {
             </div>
           </div>
           <XPComponent
-            xp={560}
+            xp={xp}
             username={user?.fullName.split(" ")[0]}
-            level={5}
-            nextLevelXP={1000}
+            level={level}
+            nextLevelXP={nextLevelXP}
           />
         </div>
 

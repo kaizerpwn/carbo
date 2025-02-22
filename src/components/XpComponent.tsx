@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { Flame, X, Star, Trophy, Award, ArrowUp, Medal } from "lucide-react";
 
 interface XPComponentProps {
-  xp?: number;
-  username?: string;
-  level?: number;
-  nextLevelXP?: number;
+  xp: number;
+  username: string;
+  level: number;
+  nextLevelXP: number;
   carbonSaved?: number;
   rank?: number;
 }
@@ -28,10 +28,10 @@ const RANKS = [
 ] as const;
 
 const XPComponent: React.FC<XPComponentProps> = ({
-  xp = 0,
-  username = "User",
-  level = 1,
-  nextLevelXP = 100,
+  xp,
+  username,
+  level,
+  nextLevelXP,
   carbonSaved = 0,
   rank = 0,
 }) => {
