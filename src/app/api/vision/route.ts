@@ -1,117 +1,195 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import prisma from "@/lib/prisma";
+import { authMiddleware } from "@/app/middleware";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
 function sanitizeString(input: string): string {
-  return input.replace(/[`]/g, '');
+  return input.replace(/[`]/g, "");
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-    if (!file) {
-      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-    }
+interface AuthenticatedNextRequest extends NextRequest {
+  user: {
+    userId: string;
+  };
+}
 
-    const bytes = await file.arrayBuffer();
-    const base64Image = Buffer.from(bytes).toString("base64");
-    const imageFormat = base64Image.match(/^data:image\/(\w+);base64,/);
-    const format = imageFormat ? imageFormat[1] : "jpeg";
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an expert in environmental analysis. Your task is to analyze a product image. Extract all text from the image and evaluate its eco-friendliness on a scale from 1 to 100. Return your answer as a single JSON object with exactly two keys: \"text\" (a string) and \"ecofriendly_meter\" (a number). For example: { \"text\": \"Organic almond milk with recyclable packaging\", \"ecofriendly_meter\": 85 }. Do not include any extra text, explanation, or formatting. Your response must not contain markdown formatting, code blocks, or backticks.",
-        },
-        {
-          role: "user",
-          content: [
-            { type: "text", text: "Analyze the following product image:" },
-            {
-              type: "image_url",
-              image_url: { url: `data:image/${format};base64,${base64Image.replace(/^data:image\/\w+;base64,/, "")}` },
-            },
-          ],
-        },
-      ],
-      max_tokens: 500,
-      temperature: 0.1,
-    });
-
-
-    const content = response.choices[0].message.content;
-    console.log(content)
-    if (!content) throw new Error("No content in the response");
-    let resultJSON;
+export async function POST(req: AuthenticatedNextRequest) {
+  return authMiddleware(req, async () => {
     try {
-      resultJSON = JSON.parse(content);
-    } catch (e) {
-      throw new Error("Failed to parse JSON from the first response");
+      const formData = await req.formData();
+      const file = formData.get("file") as File;
+      const userId = req.user.userId;
+
+      if (!file || !userId) {
+        return NextResponse.json(
+          { error: "File and user ID are required" },
+          { status: 400 }
+        );
+      }
+
+      const bytes = await file.arrayBuffer();
+      const base64Image = Buffer.from(bytes).toString("base64");
+      const imageFormat = file.type.split("/")[1] || "jpeg";
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content:
+              'You are an expert in environmental analysis. Your task is to analyze a product image. Extract all text from the image and evaluate its eco-friendliness on a scale from 1 to 100. Return your answer as a single JSON object with exactly two keys: "text" (a string) and "ecofriendly_meter" (a number). For example: { "text": "Organic almond milk with recyclable packaging", "ecofriendly_meter": 85 }. Do not include any extra text, explanation, or formatting.',
+          },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: "Analyze the following product image:" },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:image/${imageFormat};base64,${base64Image}`,
+                },
+              },
+            ],
+          },
+        ],
+        max_tokens: 500,
+        temperature: 0.1,
+      });
+
+      const content = response.choices[0]?.message?.content;
+      console.log("First response content:", content);
+
+      if (!content) {
+        return NextResponse.json(
+          { error: "No content in the response" },
+          { status: 500 }
+        );
+      }
+
+      let resultJSON;
+      try {
+        resultJSON = JSON.parse(content);
+      } catch (e) {
+        return NextResponse.json(
+          { error: "Failed to parse initial response JSON" },
+          { status: 500 }
+        );
+      }
+
+      if (
+        !resultJSON.text ||
+        typeof resultJSON.ecofriendly_meter !== "number"
+      ) {
+        return NextResponse.json(
+          { error: "Invalid response format from initial analysis" },
+          { status: 500 }
+        );
+      }
+
+      const ecoFactsResponse = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content:
+              'You are an expert in environmental analysis. Given the extracted product text, list 2 to 4 ecologically specific facts about the product, focusing on aspects like recyclable packaging, CO2 emissions, energy efficiency, or sustainable materials. Each fact must be expressed in no more than three words. Return your answer as a single JSON object with exactly one key: "eco_facts", whose value is an array of strings.',
+          },
+          {
+            role: "user",
+            content: resultJSON.text,
+          },
+        ],
+        max_tokens: 150,
+        temperature: 0.1,
+      });
+
+      const ecoContent = ecoFactsResponse.choices[0]?.message?.content;
+      console.log("Eco facts response content:", ecoContent);
+
+      if (!ecoContent) {
+        return NextResponse.json(
+          { error: "No content in eco facts response" },
+          { status: 500 }
+        );
+      }
+
+      let ecoResult;
+      try {
+        ecoResult = JSON.parse(ecoContent);
+      } catch (e) {
+        return NextResponse.json(
+          { error: "Failed to parse eco facts JSON" },
+          { status: 500 }
+        );
+      }
+
+      if (!Array.isArray(ecoResult.eco_facts)) {
+        ecoResult.eco_facts = [];
+      }
+
+      const sanitizedText = sanitizeString(resultJSON.text);
+      const sanitizedEcoFacts = ecoResult.eco_facts.map((fact: string) =>
+        sanitizeString(fact)
+      );
+
+      try {
+        // Create product
+        const product = await prisma.product.create({
+          data: {
+            name: sanitizedText,
+            ecoScore: resultJSON.ecofriendly_meter,
+            category: "Unknown",
+            carbonFootprint: 0,
+            recyclable: sanitizedEcoFacts.some((fact) =>
+              fact.toLowerCase().includes("recycl")
+            ),
+            brand: null,
+            energyRating: null,
+          },
+        });
+
+        console.log("Product created:", product);
+
+        // Create user scan
+        const userScan = await prisma.userScan.create({
+          data: {
+            user_id: userId, // promijenili smo userId u user_id da odgovara mapiranju
+            product_id: product.id, // promijenili smo productId u product_id da odgovara mapiranju
+            location: "Unknown",
+            added_to_favorites: false, // promijenili smo addedToFavorites u added_to_favorites
+          },
+        });
+
+        console.log("UserScan created:", userScan);
+
+        return NextResponse.json({
+          text: sanitizedText,
+          ecofriendly_meter: resultJSON.ecofriendly_meter,
+          eco_facts: sanitizedEcoFacts,
+          productId: product.id,
+          scanId: userScan.id,
+        });
+      } catch (dbError) {
+        console.error("Database operation failed:", dbError);
+        return NextResponse.json(
+          {
+            error: "Database operation failed",
+            details:
+              dbError instanceof Error ? dbError.message : "Unknown error",
+          },
+          { status: 500 }
+        );
+      }
+    } catch (error) {
+      console.error("Error processing image:", error);
+      return NextResponse.json(
+        { error: "Failed to process image" },
+        { status: 500 }
+      );
     }
-    if (
-      typeof resultJSON.text !== "string" ||
-      typeof resultJSON.ecofriendly_meter !== "number"
-    ) {
-      throw new Error("First response JSON missing required keys");
-    }
-
-    const ecoFactsResponse = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an expert in environmental analysis. Given the extracted product text, list 2 to 4 ecologically specific facts about the product, focusing on aspects like recyclable packaging, CO2 emissions, energy efficiency, or sustainable materials. Each fact must be expressed in no more than three words (e.g. 'reusable packaging', 'low CO2'). Return your answer as a single JSON object with exactly one key: \"eco_facts\", whose value is an array of strings. For example: { \"eco_facts\": [\"reusable packaging\", \"low CO2\"] }. Do not include any extra text, explanation, or formatting. Your response must not contain markdown formatting, code blocks, or backticks.",
-        },
-        {
-          role: "user",
-          content: [
-            { type: "text", text: "Extracted product text:" },
-            { type: "text", text: resultJSON.text },
-          ],
-        },
-      ],
-      max_tokens: 150,
-      temperature: 0.1,
-    });
-
-    const ecoContent = ecoFactsResponse.choices[0].message.content;
-    console.log(ecoContent)
-    if (!ecoContent) throw new Error("No content in eco facts response");
-    let ecoResult;
-    try {
-      ecoResult = JSON.parse(ecoContent);
-    } catch (e) {
-      throw new Error("Failed to parse JSON from eco facts response");
-    }
-    if (!Array.isArray(ecoResult.eco_facts)) {
-      throw new Error("Eco facts response JSON missing 'eco_facts' key");
-    }
-
-    const sanitizedText = sanitizeString(resultJSON.text);
-    const sanitizedEcoFacts = ecoResult.eco_facts.map((fact: string) =>
-      sanitizeString(fact)
-    );
-
-    const finalResult = {
-      text: sanitizedText,
-      ecofriendly_meter: resultJSON.ecofriendly_meter,
-      eco_facts: sanitizedEcoFacts,
-    };
-
-    return NextResponse.json(finalResult);
-  } catch (error) {
-    console.error("Error processing image:", error);
-    return NextResponse.json(
-      { error: "Failed to process image" },
-      { status: 500 }
-    );
-  }
+  });
 }
