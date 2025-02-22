@@ -1,91 +1,191 @@
-'use client';
+"use client";
 
-import React, { useRef, useState, useCallback } from 'react';
-import Webcam from 'react-webcam';
+import React, { useState } from "react";
+import { Camera, Upload, Award } from "lucide-react";
+import NavBar from "@/components/NavBar";
+import { ScanResult } from "@/types/scan";
+import { ResultModal } from "@/components/ResultModal";
 
-export default function ScanPage() {
-  const webcamRef = useRef<Webcam>(null);
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+interface RecentScan {
+  id: number;
+  productName: string;
+  date: string;
+  isEcoFriendly: boolean;
+  points: number;
+  claimed: boolean;
+}
 
-  // Konfiguracija za react-webcam (dimenzije, sl.):
-  const videoConstraints = {
-    facingMode: 'environment', // "user" za prednju kameru na mobitelu
-    width: 1280,
-    height: 720,
+const ProductScanView: React.FC = () => {
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+
+  const recentScans: RecentScan[] = [
+    {
+      id: 1,
+      productName: "Eco Paper Towels",
+      date: "Today",
+      isEcoFriendly: true,
+      points: 50,
+      claimed: true,
+    },
+    {
+      id: 2,
+      productName: "Glass Cleaner",
+      date: "Yesterday",
+      isEcoFriendly: true,
+      points: 30,
+      claimed: false,
+    },
+    {
+      id: 3,
+      productName: "Plastic Bottles",
+      date: "2 days ago",
+      isEcoFriendly: false,
+      points: 0,
+      claimed: false,
+    },
+  ];
+
+  const handleScan = async (file: File) => {
+    setIsScanning(true);
+    setTimeout(() => {
+      setScanResult({
+        isEcoFriendly: true,
+        score: 85,
+        reasons: [
+          "Recyclable packaging",
+          "Low carbon footprint",
+          "Sustainable materials",
+        ],
+        potentialPoints: 50,
+      });
+      setIsScanning(false);
+    }, 1500);
   };
 
-  // Funkcija koja "hvata" sliku iz webcama:
-  const capture = useCallback(() => {
-    if (webcamRef.current) {
-      const screenshot = webcamRef.current.getScreenshot();
-      setImageSrc(screenshot);
-    }
-  }, [webcamRef]);
-
-  // Funkcija za slanje slike na /api/scan rutu:
-  const handleSendImage = async () => {
-    if (!imageSrc) return;
-    setLoading(true);
-
-    try {
-      // Napravi POST request na API rutu:
-      const response = await fetch('/api/scan', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ image: imageSrc }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Greška prilikom slanja slike na API');
-      }
-
-      const data = await response.json();
-      console.log('Odgovor s API-ja:', data);
-      alert('Slika uspješno poslana!');
-    } catch (error) {
-      console.error(error);
-      alert('Dogodila se greška prilikom slanja slike.');
-    } finally {
-      setLoading(false);
-    }
+  const handleScanReceipt = () => {
+    console.log("Scanning receipt...");
   };
 
   return (
-    <div style={{ textAlign: 'center' }}>
-      <h1>Scan stranica</h1>
+    <div className="min-h-screen bg-backgroundDark pb-20">
+      <div className="h-2 bg-[#4ADE80] rounded-b-lg" />
 
-      {/* Kamera */}
-      {!imageSrc && (
-        <Webcam
-          audio={false}
-          ref={webcamRef}
-          screenshotFormat='image/jpeg'
-          videoConstraints={videoConstraints}
-          style={{ width: '100%', maxWidth: '400px' }}
+      <div className="p-4 max-w-md mx-auto">
+        <div className="mb-6">
+          <h1 className="text-white text-xl font-bold">Scan Product</h1>
+          <p className="text-[#6B7280] text-sm">
+            Scan or upload product details to check eco-friendliness
+          </p>
+        </div>
+
+        <div className="space-y-4 mb-8">
+          <button className="w-full bg-backgroundLight rounded-2xl p-6 text-left hover:bg-backgroundLight/80 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-[#374151] flex items-center justify-center">
+                <Camera className="w-6 h-6 text-[#4ADE80]" />
+              </div>
+              <div>
+                <h3 className="text-white font-medium">Use Camera</h3>
+                <p className="text-[#6B7280] text-sm">
+                  Scan product using camera
+                </p>
+              </div>
+            </div>
+          </button>
+
+          <div className="relative">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                e.target.files?.[0] && handleScan(e.target.files[0])
+              }
+              className="absolute inset-0 opacity-0 cursor-pointer z-10"
+            />
+            <div className="w-full bg-backgroundLight rounded-2xl p-6 text-left hover:bg-backgroundLight/80 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-[#374151] flex items-center justify-center">
+                  <Upload className="w-6 h-6 text-[#4ADE80]" />
+                </div>
+                <div>
+                  <h3 className="text-white font-medium">Upload Image</h3>
+                  <p className="text-[#6B7280] text-sm">
+                    Choose product image from gallery
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-white font-medium">Recent Scans</h2>
+            <button className="text-[#4ADE80] text-sm hover:underline">
+              View All
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {recentScans.map((scan) => (
+              <div key={scan.id} className="bg-backgroundLight rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        scan.isEcoFriendly ? "bg-[#4ADE80]" : "bg-red-500"
+                      }`}
+                    />
+                    <div>
+                      <h3 className="text-white text-sm font-medium">
+                        {scan.productName}
+                      </h3>
+                      <p className="text-[#6B7280] text-xs">{scan.date}</p>
+                    </div>
+                  </div>
+                  {scan.isEcoFriendly && (
+                    <div className="text-right">
+                      <div className="flex items-center gap-1">
+                        <span className="text-[#4ADE80] text-sm font-medium">
+                          +{scan.points}
+                        </span>
+                        <Award className="w-4 h-4 text-[#4ADE80]" />
+                      </div>
+                      {!scan.claimed && (
+                        <button className="text-[#6B7280] text-xs hover:text-[#4ADE80]">
+                          Claim Points
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {isScanning && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+          <div className="bg-backgroundLight rounded-2xl p-6 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4ADE80] mx-auto mb-4" />
+            <p className="text-white">Analyzing product...</p>
+          </div>
+        </div>
+      )}
+
+      {scanResult && (
+        <ResultModal
+          result={scanResult}
+          onClose={() => setScanResult(null)}
+          onScanReceipt={handleScanReceipt}
         />
       )}
 
-      {/* Gumbi */}
-      {!imageSrc ? (
-        <button onClick={capture}>Slikaj</button>
-      ) : (
-        <>
-          <img
-            src={imageSrc}
-            alt='Captured'
-            style={{ width: '100%', maxWidth: '400px', marginTop: '20px' }}
-          />
-          <div style={{ marginTop: '10px' }}>
-            <button onClick={() => setImageSrc(null)}>Pokušaj ponovo</button>
-            <button onClick={handleSendImage} disabled={loading}>
-              {loading ? 'Šaljem...' : 'Pošalji sliku'}
-            </button>
-          </div>
-        </>
-      )}
+      <NavBar />
     </div>
   );
-}
+};
+
+export default ProductScanView;

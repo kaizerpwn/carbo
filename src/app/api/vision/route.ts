@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       max_tokens: 500,
+      temperature: 0.4,
     });
 
     const content = response.choices[0].message.content;
