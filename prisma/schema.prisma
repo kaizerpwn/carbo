@@ -55,6 +55,7 @@ model Device {
   standbyPower Decimal? @map("standby_power") @db.Decimal(10, 2)
   location     String?  @db.VarChar(50)
   isActive     Boolean  @default(true) @map("is_active")
+  isFavorite   Boolean  @default(true) @map("is_favorite")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
