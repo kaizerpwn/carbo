@@ -20,10 +20,13 @@ const Login: React.FC = () => {
     password: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
+
     try {
       await loginUser({
         email: formData.email,
@@ -33,6 +36,8 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error("Login error:", error);
       setError("Invalid email or password. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -129,9 +134,16 @@ const Login: React.FC = () => {
           <button
             type="submit"
             className="w-full bg-primaryColor text-white py-3 rounded-xl font-medium hover:bg-[#3aa568] transition-colors flex items-center justify-center gap-2"
+            disabled={isLoading}
           >
-            <LogIn size={20} />
-            Sign In
+            {isLoading ? (
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+            ) : (
+              <>
+                <LogIn size={20} />
+                Sign In
+              </>
+            )}
           </button>
 
           <p className="text-center text-[#6B7280] text-sm">
