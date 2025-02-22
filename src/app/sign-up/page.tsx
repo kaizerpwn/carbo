@@ -20,6 +20,7 @@ import Dropdown from "../../components/Dropdown";
 import { useAuth } from "@/context/AuthContext";
 import { AuthAPI } from "@/lib/Auth/Auth";
 import { useRouter } from "next/navigation";
+import Logo from "@/components/Logo";
 
 interface SignupData {
   fullName: string;
@@ -296,10 +297,20 @@ const SignupWizard: React.FC = () => {
     <div className="min-h-screen bg-backgroundDark">
       <div className="h-2 bg-primaryColor rounded-b-lg" />
 
+      <div className="flex items-center justify-center my-8">
+        <Logo />
+      </div>
+
       <div className="max-w-md mx-auto p-4">
+      <div className="flex justify-center text-center items-center gap-3 mb-12 mt-2">
+          <div>
+            <h1 className="text-white text-2xl font-bold">Welcome to CARBO</h1>
+            <p className="text-[#6B7280] text-sm">Sign up to continue</p>
+          </div>
+        </div>
         <div className="mb-8">
-          <div className="flex justify-between items-center">
-            {steps.map((s, index) => (
+          <div className="flex justify-between items-center gap-3">
+            {steps.map((s) => (
               <React.Fragment key={s.number}>
                 <div className="flex items-center">
                   <motion.div
@@ -323,16 +334,7 @@ const SignupWizard: React.FC = () => {
                   </motion.div>
                   <span className="ml-2 text-sm text-white/70">{s.title}</span>
                 </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`flex-1 h-0.5 mx-4 transition-colors duration-200
-                      ${
-                        step > s.number
-                          ? "bg-primaryColor"
-                          : "bg-backgroundLight"
-                      }`}
-                  />
-                )}
+              
               </React.Fragment>
             ))}
           </div>
