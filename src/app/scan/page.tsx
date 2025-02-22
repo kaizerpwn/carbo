@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Camera, Upload, Award, CheckCircle, XCircle } from "lucide-react";
+import { Camera, Upload, Award, CheckCircle, XCircle, Flame } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import { ScanResult } from "@/types/scan";
 import { ResultModal } from "@/components/ResultModal";
@@ -24,6 +24,7 @@ const ProductScanView: React.FC = () => {
   const [isScanningReceipt, setIsScanningReceipt] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [receiptScanResult, setReceiptScanResult] = useState<boolean | null>(null);
+  const [coins, setCoins] = useState(0);
 
   const recentScans: RecentScan[] = [
     {
@@ -136,6 +137,7 @@ const ProductScanView: React.FC = () => {
   
       if (data.confirmed) {
         const coins = calculateCoins(scanResult.score);
+        setCoins(coins);
         console.log("Coins to be added:", coins);
   
         try {
@@ -288,7 +290,7 @@ const ProductScanView: React.FC = () => {
           )}
 
           {isScanningReceipt && (
-            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-60">
+            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-100">
               <div className="bg-backgroundLight rounded-2xl p-6 text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4ADE80] mx-auto mb-4" />
                 <p className="text-white">Analyzing receipt...</p>
@@ -315,8 +317,15 @@ const ProductScanView: React.FC = () => {
                       <XCircle className="w-8 h-8 text-white" />
                     )}
                     <div>
-                      <h2 className="text-black text-lg font-medium">
-                        {receiptScanResult ? "Purchase Confirmed" : "Purchase Not Confirmed"}
+                      <h2 className="text-black text-lg font-medium flex items-center">
+                        {receiptScanResult ? (
+                          <span className="font-bold flex items-center">
+                            Purchase completed. You have received {coins}
+                            <Flame className="ml-2 w-4 h-4 group-hover:animate-bounce" />
+                          </span>
+                        ) : (
+                          "Purchase Not Confirmed"
+                        )}
                       </h2>
                     </div>
                   </div>
