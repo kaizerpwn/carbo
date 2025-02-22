@@ -23,32 +23,40 @@ export async function POST(req: AuthenticatedNextRequest) {
       const schedules = await req.json();
       console.log("Received schedules:", schedules);
 
-      if (!Array.isArray(schedules) || schedules.length === 0) {
+      if (!Array.isArray(schedules)) {
         return NextResponse.json(
-          { error: "Missing required fields" },
+          { error: "Schedules must be an array" },
           { status: 400 }
         );
       }
 
-      const createdSchedules = await Promise.all(
-        schedules.map((schedule) => {
-          console.log("Creating schedule:", schedule);
-          return prisma.schedule.create({
-            data: {
-              deviceId,
-              on: schedule.on,
-              off: schedule.off,
-              days: Array.isArray(schedule.days) ? schedule.days.join(",") : "",
-            },
-          });
-        })
-      );
+      await prisma.schedule.deleteMany({
+        where: { deviceId },
+      });
 
-      return NextResponse.json(createdSchedules);
+      const createdSchedules = await prisma.schedule.createMany({
+        data: schedules.map((schedule) => ({
+          deviceId,
+          on: schedule.on,
+          off: schedule.off,
+          days: Array.isArray(schedule.days)
+            ? schedule.days.join(",")
+            : schedule.days,
+        })),
+      });
+
+      const newSchedules = await prisma.schedule.findMany({
+        where: { deviceId },
+      });
+
+      return NextResponse.json(newSchedules);
     } catch (error: any) {
       console.error("Error creating schedule:", error);
       return NextResponse.json(
-        { error: "Failed to create schedule" },
+        {
+          error: "Failed to create schedule",
+          details: error.message,
+        },
         { status: 500 }
       );
     }
@@ -71,7 +79,12 @@ export async function GET(req: AuthenticatedNextRequest) {
         where: { deviceId },
       });
 
-      return NextResponse.json(schedules);
+      const formattedSchedules = schedules.map((schedule) => ({
+        ...schedule,
+        days: schedule.days.split(","),
+      }));
+
+      return NextResponse.json(formattedSchedules);
     } catch (error: any) {
       console.error("Error fetching schedules:", error);
       return NextResponse.json(

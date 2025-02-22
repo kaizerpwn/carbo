@@ -137,7 +137,14 @@ export async function POST(req: AuthenticatedNextRequest) {
       );
 
       try {
-        // Create product
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+        });
+
+        if (!user) {
+          throw new Error(`User with ID ${userId} not found`);
+        }
+
         const product = await prisma.product.create({
           data: {
             name: sanitizedText,
@@ -174,7 +181,8 @@ export async function POST(req: AuthenticatedNextRequest) {
           scanId: userScan.id,
         });
       } catch (dbError) {
-        console.error("Database operation failed:", dbError);
+        console.error("Full database error:", dbError);
+
         return NextResponse.json(
           {
             error: "Database operation failed",

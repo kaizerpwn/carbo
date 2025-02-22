@@ -79,11 +79,11 @@ export const DevicesView: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>; // Or better loading component
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>; // Or better error component
+    return <div>Error: {error}</div>;
   }
 
   const favoriteDevices = devices.filter((d) => d.isFavorite);
@@ -210,7 +210,9 @@ export const DevicesView: React.FC = () => {
         />
       )}
 
-      <NavBar />
+      <NavBar
+        className={showDeleteModal ? "opacity-50 pointer-events-none" : ""}
+      />
     </div>
   );
 };
