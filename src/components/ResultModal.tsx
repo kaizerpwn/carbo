@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { ScanResult } from "@/types/scan";
 import { Award, CheckCircle, Receipt, XCircle } from "lucide-react";
+import { calculateCoins } from "@/util/coinCalculator";
 
 export const ResultModal: React.FC<{
   result: ScanResult;
@@ -37,22 +38,16 @@ export const ResultModal: React.FC<{
             )}
             <div>
               <h2 className="text-black text-lg font-medium">
-                {result.isEcoFriendly
-                  ? "Eco-Friendly Product"
-                  : "Not Eco-Friendly"}
+                {result.isEcoFriendly ? "Eco-Friendly Product" : "Not Eco-Friendly"}
               </h2>
-              <p className="text-black/70 text-sm">
-                Eco Score: {result.score}/100
-              </p>
+              <p className="text-black/70 text-sm">Eco Score: {result.score}/100</p>
             </div>
           </div>
         </div>
 
         <div className="p-6 space-y-4">
           <div className="space-y-2">
-            <h3 className="text-white text-sm font-medium">
-              Analysis Results:
-            </h3>
+            <h3 className="text-white text-sm font-medium">Analysis Results:</h3>
             {result.reasons.map((reason, index) => (
               <div
                 key={index}
@@ -68,12 +63,10 @@ export const ResultModal: React.FC<{
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Award className="w-5 h-5 text-[#4ADE80]" />
-                  <span className="text-white text-sm font-medium">
-                    Potential Points
-                  </span>
+                  <span className="text-white text-sm font-medium">You will get: </span>
                 </div>
                 <span className="text-[#4ADE80] font-bold">
-                  +{result.potentialPoints}
+                  +{calculateCoins(result.score)}
                 </span>
               </div>
               <div className="space-y-2">

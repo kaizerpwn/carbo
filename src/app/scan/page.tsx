@@ -6,6 +6,8 @@ import NavBar from "@/components/NavBar";
 import { ScanResult } from "@/types/scan";
 import { ResultModal } from "@/components/ResultModal";
 import CameraComponent from "./Camera";
+import { calculateCoins } from "@/util/coinCalculator"; // Import the utility function
+import prisma from "@/lib/prisma"; // Import Prisma client
 
 interface RecentScan {
   id: number;
@@ -55,6 +57,7 @@ const ProductScanView: React.FC = () => {
 
     let file: File;
     if (typeof imageSrc === "string") {
+      // Convert base64 image to a File object
       const byteString = atob(imageSrc.split(',')[1]);
       const mimeString = imageSrc.split(',')[0].split(':')[1].split(';')[0];
       const ab = new ArrayBuffer(byteString.length);
@@ -85,7 +88,7 @@ const ProductScanView: React.FC = () => {
         score: data.ecofriendly_meter,
         reasons: data.eco_facts,
         potentialPoints: data.ecofriendly_meter,
-        text: data.text, 
+        text: data.text, // Set the text property
       });
     } catch (error) {
       console.error("Error scanning product:", error);
@@ -101,27 +104,69 @@ const ProductScanView: React.FC = () => {
       alert("Please scan a product first.");
       return;
     }
-
+  
     setIsScanningReceipt(true);
-
+  
     const formData = new FormData();
     formData.append("file", receiptFile);
     formData.append("productText", scanResult.text);
-
+  
     try {
       const res = await fetch("/api/receipt", {
         method: "POST",
         body: formData,
       });
       const data = await res.json();
+      console.log("Receipt scan response:", data);
+  
       if (data.confirmed === undefined) {
         alert("Error: Missing confirmation data.");
         return;
       }
+  
+      const userJSON = localStorage.getItem("user");
+      if (userJSON) {
+        const user = JSON.parse(userJSON);
+        var currentUserId = user.id;
+        console.log("Current user ID:", currentUserId);
+      } else {
+        console.log("User not found in localStorage.");
+        throw new Error("User not found in localStorage.");
+      }
+  
+      if (data.confirmed) {
+        const coins = calculateCoins(scanResult.score);
+        console.log("Coins to be added:", coins);
+  
+        try {
+          const updateRes = await fetch("/api/userStats", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId: currentUserId, coins }),
+          });
+          const updateData = await updateRes.json();
+          if (updateRes.ok) {
+            console.log("User stats updated successfully.");
+          } else {
+            console.error("Error updating user stats:", updateData.error);
+            throw new Error("Error updating user stats.");
+          }
+        } catch (dbError) {
+          console.error("Error updating user stats:", dbError);
+          throw new Error("Error updating user stats.");
+        }
+      }
+  
       setReceiptScanResult(data.confirmed);
     } catch (error) {
       console.error("Error processing receipt image:", error);
-      alert("Error processing receipt image.");
+      if (error instanceof Error) {
+        alert(`Error processing receipt image: ${error.message}`);
+      } else {
+        alert("Error processing receipt image.");
+      }
     } finally {
       setIsScanningReceipt(false);
     }
