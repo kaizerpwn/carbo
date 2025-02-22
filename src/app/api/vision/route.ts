@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import prisma from "@/lib/prisma";
 import { authMiddleware } from "@/app/middleware";
+import { Prisma } from "@prisma/client";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -137,57 +138,127 @@ export async function POST(req: AuthenticatedNextRequest) {
       );
 
       try {
-        const user = await prisma.user.findUnique({
-          where: { id: userId },
+        const result = await prisma.$transaction(async (tx) => {
+          const user = await tx.user.findUnique({
+            where: { id: userId },
+          });
+
+          if (!user) {
+            throw new Error(`User with ID ${userId} not found`);
+          }
+
+          const truncatedName = sanitizedText.slice(0, 255);
+          const validatedEcoScore = Math.max(
+            0,
+            Math.min(100, resultJSON.ecofriendly_meter)
+          );
+
+          let product = await tx.product.findFirst({
+            where: { name: truncatedName },
+          });
+
+          if (!product) {
+            product = await tx.product.create({
+              data: {
+                name: truncatedName.split(" ").slice(0, 4).join(" "),
+                ecoScore: validatedEcoScore,
+                category: "Unknown",
+                carbonFootprint: new Prisma.Decimal(0),
+                recyclable: sanitizedEcoFacts.some((fact) =>
+                  fact.toLowerCase().includes("recycl")
+                ),
+                brand: null,
+                energyRating: null,
+              },
+            });
+          }
+
+          const userScan = await tx.userScan.create({
+            data: {
+              userId: user.id,
+              productId: product.id,
+              location: "Unknown",
+              addedToFavorites: false,
+              scannedAt: new Date(),
+            },
+          });
+
+          try {
+            await tx.userStats.upsert({
+              where: {
+                userId: user.id,
+              },
+              update: {
+                totalScans: { increment: 1 },
+              },
+              create: {
+                userId: user.id,
+                totalScans: 1,
+                totalPoints: 0,
+                carbonSaved: new Prisma.Decimal(0),
+                currentStreak: 0,
+                ecoProductsBought: 0,
+              },
+            });
+          } catch (statsError) {
+            console.warn("Failed to update user stats:", statsError);
+          }
+
+          return { product, userScan };
         });
-
-        if (!user) {
-          throw new Error(`User with ID ${userId} not found`);
-        }
-
-        const product = await prisma.product.create({
-          data: {
-            name: sanitizedText,
-            ecoScore: resultJSON.ecofriendly_meter,
-            category: "Unknown",
-            carbonFootprint: 0,
-            recyclable: sanitizedEcoFacts.some((fact: string) =>
-              fact.toLowerCase().includes("recycl")
-            ),
-            brand: null,
-            energyRating: null,
-          },
-        });
-
-        console.log("Product created:", product);
-
-        // Create user scan
-        const userScan = await prisma.userScan.create({
-          data: {
-            userId: userId, // promijenili smo userId u user_id da odgovara mapiranju
-            productId: product.id, // promijenili smo productId u product_id da odgovara mapiranju
-            location: "Unknown",
-            addedToFavorites: false, // promijenili smo addedToFavorites u added_to_favorites
-          },
-        });
-
-        console.log("UserScan created:", userScan);
 
         return NextResponse.json({
           text: sanitizedText,
           ecofriendly_meter: resultJSON.ecofriendly_meter,
           eco_facts: sanitizedEcoFacts,
-          productId: product.id,
-          scanId: userScan.id,
+          productId: result.product.id,
+          scanId: result.userScan.id,
+          success: true,
         });
-      } catch (dbError) {
-        console.error("Full database error:", dbError);
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientValidationError) {
+          return NextResponse.json(
+            {
+              error: "Validation error",
+              details: "Invalid data format provided",
+            },
+            { status: 400 }
+          );
+        }
+
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          switch (error.code) {
+            case "P2002":
+              return NextResponse.json(
+                {
+                  error: "Duplicate entry",
+                  details: "This record already exists",
+                },
+                { status: 409 }
+              );
+            case "P2003":
+              return NextResponse.json(
+                {
+                  error: "Invalid reference",
+                  details: "Referenced record does not exist",
+                },
+                { status: 400 }
+              );
+            default:
+              return NextResponse.json(
+                {
+                  error: "Database error",
+                  details: error.message,
+                },
+                { status: 500 }
+              );
+          }
+        }
 
         return NextResponse.json(
           {
-            error: "Database operation failed",
-            details:
-              dbError instanceof Error ? dbError.message : "Unknown error",
+            error: "Server error",
+            details: error instanceof Error ? error.message : "Unknown error",
           },
           { status: 500 }
         );
