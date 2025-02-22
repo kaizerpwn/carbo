@@ -27,7 +27,6 @@ let isUpdatingDevice = false;
 let isDeletingDevice = false;
 
 export const DeviceAPI = {
-  // Create new device
   createDevice: async (values: CreateDeviceValues) => {
     if (isCreatingDevice) return;
 
@@ -48,7 +47,6 @@ export const DeviceAPI = {
     return response.data;
   },
 
-  // Get single device
   getDevice: async (id: string) => {
     const response = await http.get(`/devices?id=${id}`);
     if (response.status !== 200) {
@@ -57,7 +55,6 @@ export const DeviceAPI = {
     return response.data;
   },
 
-  // Update device
   updateDevice: async (values: UpdateDeviceValues) => {
     if (isUpdatingDevice) return;
 
@@ -73,7 +70,6 @@ export const DeviceAPI = {
     }
   },
 
-  // Delete device
   deleteDevice: async (id: string) => {
     if (isDeletingDevice) return;
 
@@ -89,7 +85,6 @@ export const DeviceAPI = {
     }
   },
 
-  // Toggle device favorite status
   toggleFavorite: async (id: string, isFavorite: boolean) => {
     const response = await http.put(`/devices?id=${id}`, { isFavorite });
     if (response.status !== 200) {
@@ -98,7 +93,6 @@ export const DeviceAPI = {
     return response.data;
   },
 
-  // Toggle device active status
   toggleActive: async (id: string, isActive: boolean) => {
     const response = await http.put(`/devices?id=${id}`, { isActive });
     if (response.status !== 200) {
@@ -123,7 +117,6 @@ export const DeviceAPI = {
     }
   },
 
-  // Dobavi sve schedules za uređaj
   getSchedules: async (deviceId: string) => {
     try {
       const response = await http.get(`/devices/${deviceId}/schedules`);
@@ -134,7 +127,6 @@ export const DeviceAPI = {
     }
   },
 
-  // Ažuriraj schedule
   updateSchedule: async (
     deviceId: string,
     scheduleId: string,
@@ -152,7 +144,6 @@ export const DeviceAPI = {
     }
   },
 
-  // Obriši schedule
   deleteSchedule: async (deviceId: string, scheduleId: string) => {
     try {
       await http.delete(`/devices/${deviceId}/schedules/${scheduleId}`);
