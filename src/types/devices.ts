@@ -19,6 +19,7 @@ export interface Device {
   schedules: Schedule[];
   createdAt: Date;
   updatedAt: Date;
+  userId: string;
 }
 
 // export interface DeviceCardProps {

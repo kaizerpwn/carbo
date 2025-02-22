@@ -1,7 +1,7 @@
 import http from "../http";
-import { Device } from "@/types/devices";
 
 export interface CreateDeviceValues {
+  userId: string;
   name: string;
   location: string;
   powerRating: number;
@@ -108,12 +108,18 @@ export const DeviceAPI = {
     return response.data;
   },
 
-    addSchedule: async (deviceId: string, scheduleData: Omit<Schedule, 'id' | 'deviceId'>) => {
+  addSchedule: async (
+    deviceId: string,
+    scheduleData: Omit<Schedule, "id" | "deviceId">
+  ) => {
     try {
-      const response = await http.post(`/devices/${deviceId}/schedules`, scheduleData);
+      const response = await http.post(
+        `/devices/${deviceId}/schedules`,
+        scheduleData
+      );
       return response.data;
     } catch (error) {
-      console.error('Error adding schedule:', error);
+      console.error("Error adding schedule:", error);
       throw error;
     }
   },
@@ -124,18 +130,25 @@ export const DeviceAPI = {
       const response = await http.get(`/devices/${deviceId}/schedules`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching schedules:', error);
+      console.error("Error fetching schedules:", error);
       throw error;
     }
   },
 
   // Ažuriraj schedule
-  updateSchedule: async (deviceId: string, scheduleId: string, scheduleData: Partial<Schedule>) => {
+  updateSchedule: async (
+    deviceId: string,
+    scheduleId: string,
+    scheduleData: Partial<Schedule>
+  ) => {
     try {
-      const response = await http.put(`/devices/${deviceId}/schedules/${scheduleId}`, scheduleData);
+      const response = await http.put(
+        `/devices/${deviceId}/schedules/${scheduleId}`,
+        scheduleData
+      );
       return response.data;
     } catch (error) {
-      console.error('Error updating schedule:', error);
+      console.error("Error updating schedule:", error);
       throw error;
     }
   },
@@ -146,8 +159,8 @@ export const DeviceAPI = {
       await http.delete(`/devices/${deviceId}/schedules/${scheduleId}`);
       return true;
     } catch (error) {
-      console.error('Error deleting schedule:', error);
+      console.error("Error deleting schedule:", error);
       throw error;
     }
-  }
+  },
 };
