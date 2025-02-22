@@ -3,6 +3,7 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { ShoppingBag, Award } from 'lucide-react';
+import NavBar from '@/components/NavBar';
 
 interface PurchasedProduct {
   id: number;
@@ -145,6 +146,7 @@ const ProfilePage: React.FC = () => {
           ))}
         </div>
       </div>
+      <NavBar />
     </div>
   );
 };
