@@ -15,7 +15,7 @@ export const AddDeviceModal: React.FC<AddDeviceModalProps> = ({
   const [location, setLocation] = useState("");
   const [powerRating, setPowerRating] = useState(0);
   const [standbyPower, setStandbyPower] = useState(0);
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, _] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {

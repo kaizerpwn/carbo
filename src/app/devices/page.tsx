@@ -7,56 +7,42 @@ import { DeviceCard } from "@/components/DeviceCard";
 import { AddDeviceModal } from "@/components/AddDevicesModal";
 import { ScheduleModal } from "@/components/ScheduleModal";
 import NavBar from "@/components/NavBar";
-import { useDevices } from "@/context/DeviceContext";
+import { useDevicesContext } from "@/hooks/useDevicesManagement";
 import { DeleteConfirmationModal } from "@/components/DeleteConfirmationModal";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
 
 export const DevicesView: React.FC = () => {
-  const { user } = useAuth();
   const {
     devices,
     isLoading,
     error,
-    addDevice,
     toggleDeviceStatus,
     toggleFavorite,
-    updateDevice,
     deleteDevice,
     addSchedule,
-  } = useDevices();
-
+    updateDevice,
+  } = useDevicesContext();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [deviceToDelete, setDeviceToDelete] = useState<Device | null>(null);
 
-  const handleAddDevice = async (
-    deviceData: Omit<Device, "id" | "createdAt" | "updatedAt"> & {
-      userId: string;
-    }
-  ) => {
+  const handleAddDevice = async () => {
     try {
-      if (!user) {
-        throw new Error("User not authenticated");
-      }
-      await addDevice({ ...deviceData, userId: user.id });
       setShowAddModal(false);
+      queryClient.invalidateQueries({ queryKey: ["devices", user?.id] });
     } catch (error) {
       console.error("Failed to add device:", error);
     }
   };
 
-  const handleScheduleSave = async (deviceId: string, scheduleData: any) => {
+  const handleScheduleSave = async (deviceId: string, schedule: any) => {
     try {
-      await addSchedule(deviceId, {
-        on: scheduleData.on,
-        off: scheduleData.off,
-        days: scheduleData.days,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+      await addSchedule(deviceId, schedule);
       setShowScheduleModal(false);
       setSelectedDevice(null);
     } catch (error) {
@@ -66,6 +52,7 @@ export const DevicesView: React.FC = () => {
 
   const handleEditDevice = async (updatedDevice: Device) => {
     try {
+      await updateDevice(updatedDevice.id, updatedDevice);
     } catch (error) {
       console.error("Failed to update device:", error);
     }
@@ -223,17 +210,6 @@ export const DevicesView: React.FC = () => {
         />
       )}
 
-      {showEditModal && selectedDevice && (
-        // <showEditModal
-        //   device={selectedDevice}
-        //   onClose={() => {
-        //     setShowScheduleModal(false);
-        //     setSelectedDevice(null);
-        //   }}
-        //   onSave={handleScheduleSave}
-        // />
-        <></>
-      )}
       <NavBar />
     </div>
   );
