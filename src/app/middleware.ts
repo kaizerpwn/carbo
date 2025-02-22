@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import type { NextRequest as NextRequestBase } from "next/server";
+
+interface NextRequest extends NextRequestBase {
+  user?: any;
+}
 import * as jose from "jose";
+import jwt from "jsonwebtoken";
+import prisma from "@/lib/prisma";
+
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined in environment variables");
+}
 
 const jwtConfig = {
   secret: new TextEncoder().encode(process.env.JWT_SECRET),
@@ -75,6 +85,37 @@ export async function middleware(request: NextRequest) {
 
   return redirectResponse || NextResponse.next();
 }
+
+export const authMiddleware = async (
+  req: NextRequest,
+  next: () => Promise<NextResponse>
+) => {
+  const token = req.cookies.get("accessToken")?.value;
+  if (!token) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    req.user = decoded;
+    return next();
+  } catch (error: any) {
+    console.error(error);
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+};
+
+export const validateDeviceOwnership = async (
+  req: NextRequest,
+  deviceId: string
+) => {
+  const device = await prisma.device.findUnique({
+    where: { id: String(deviceId) },
+  });
+  if (!device || device.userId !== req.user.userId) {
+    return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+  }
+};
 
 export const config = {
   matcher: [
