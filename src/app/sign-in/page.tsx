@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { AuthAPI } from "@/lib/Auth/Auth";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 interface LoginFormData {
   email: string;
@@ -10,7 +12,9 @@ interface LoginFormData {
 }
 
 const Login: React.FC = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const { loginUser } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -22,7 +26,8 @@ const Login: React.FC = () => {
     setError(null);
     try {
       const response = await AuthAPI.loginUser(formData);
-      console.log("Login successful:", response);
+      loginUser(response.user);
+      router.push("/");
     } catch (error) {
       console.error("Login error:", error);
       setError("Invalid email or password. Please try again.");
