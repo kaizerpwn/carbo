@@ -17,10 +17,21 @@ export async function GET(req: AuthenticatedNextRequest) {
     return NextResponse.json(devices);
   });
 }
+
 export async function POST(req: AuthenticatedNextRequest) {
   return authMiddleware(req, async () => {
     const { name, powerRating, standbyPower, location, isActive, isFavorite } =
       await req.json();
+
+    // Validate required fields
+    if (!name || !powerRating || !standbyPower || !location) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Proceed to create the device if all required fields are present
     const device = await prisma.device.create({
       data: {
         name,
@@ -32,9 +43,18 @@ export async function POST(req: AuthenticatedNextRequest) {
         userId: req.user.userId,
       },
     });
-    return NextResponse.json(device, { status: 201 });
+
+    // Ensure the device object is serializable
+    const serializedDevice = {
+      ...device,
+      createdAt: device.createdAt ? device.createdAt.toISOString() : null, // Handle missing or invalid createdAt
+      updatedAt: device.updatedAt ? device.updatedAt.toISOString() : null, // Handle missing or invalid updatedAt
+    };
+
+    return NextResponse.json(serializedDevice, { status: 201 });
   });
 }
+
 export async function PUT(req: AuthenticatedNextRequest) {
   return authMiddleware(req, async () => {
     const url = new URL(req.url);
