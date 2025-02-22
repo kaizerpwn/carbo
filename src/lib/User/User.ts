@@ -15,4 +15,12 @@ export const UserAPI = {
     }
     return response.data;
   },
+  getUserCO2Emission: async (userId: string) => {
+    const response = await http.get(`/user/co2?userId=${userId}`);
+    return response.data;
+  },
+  getUserProgress: async (userId: string) => {
+    const response = await http.get(`/user/progress?userId=${userId}`);
+    return response.data;
+  },
 };
