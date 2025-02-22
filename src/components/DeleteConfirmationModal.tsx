@@ -2,6 +2,7 @@
 
 import React from "react";
 import { X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface DeleteConfirmationModalProps {
   deviceName: string;
@@ -13,42 +14,55 @@ export const DeleteConfirmationModal: React.FC<
   DeleteConfirmationModalProps
 > = ({ deviceName, onConfirm, onCancel }) => {
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
-      <div className="bg-backgroundLight rounded-3xl w-full max-w-sm overflow-hidden">
-        <div className="bg-[#4ADE80] p-4 relative">
-          <div className="flex justify-between items-center">
-            <h2 className="text-black text-lg font-medium">Delete Device</h2>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-backgroundDark/60 flex items-center justify-center p-4 z-50"
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="bg-backgroundLight rounded-2xl w-full max-w-sm overflow-hidden shadow-lg"
+        >
+          <div className="p-6 border-b border-gray-700 flex justify-between items-center">
+            <h2 className="text-white text-xl font-semibold">Delete Device</h2>
             <button
               onClick={onCancel}
-              className="text-black/70 hover:text-black transition-colors"
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="Close"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
           </div>
-        </div>
 
-        <div className="p-4 space-y-4">
-          <p className="text-white">
-            Are you sure you want to delete the device{" "}
-            <strong>{deviceName}</strong>?
-          </p>
-          <div className="flex justify-end gap-4">
+          <div className="p-6">
+            <p className="text-gray-300">
+              Are you sure you want to delete the device{" "}
+              <strong className="text-white">{deviceName}</strong>? This action
+              cannot be undone.
+            </p>
+          </div>
+
+          <div className="p-6 bg-backgroundLight flex justify-end gap-4">
             <button
               onClick={onCancel}
-              className="bg-backgroundDark text-white py-2 px-4 rounded-lg hover:bg-backgroundLight transition-colors"
+              className="bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={onConfirm}
-              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
+              className="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 transition-colors"
             >
               Delete
             </button>
           </div>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

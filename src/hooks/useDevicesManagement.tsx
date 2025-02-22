@@ -107,7 +107,9 @@ export const DeviceProvider: React.FC<{ children: ReactNode }> = ({
     scheduleData: Omit<Schedule, "id" | "deviceId">
   ) => {
     try {
+      console.log("Sending request to add schedule:", scheduleData);
       await DeviceAPI.addSchedule(deviceId, scheduleData);
+      console.log("Schedule added successfully");
       queryClient.invalidateQueries({ queryKey: ["devices", user?.id] });
     } catch (error) {
       console.error("Failed to add schedule:", error);

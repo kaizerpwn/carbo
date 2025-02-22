@@ -120,7 +120,7 @@ const ProductScanView: React.FC = () => {
         score: data.ecofriendly_meter,
         reasons: data.eco_facts,
         potentialPoints: data.ecofriendly_meter,
-        text: data.text, // Set the text property
+        text: data.text,
       });
     } catch (error) {
       console.error('Error scanning product:', error);
@@ -392,7 +392,7 @@ const ProductScanView: React.FC = () => {
             </div>
           )}
 
-          <NavBar />
+          <NavBar className={isScanning ? 'opacity-50' : ''} />
         </>
       )}
     </div>
