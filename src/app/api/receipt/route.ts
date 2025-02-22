@@ -5,7 +5,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
-// Funkcija za sanitizaciju stringova (uklanja backtickove)
 function sanitizeString(input: string): string {
   return input.replace(/[`]/g, '');
 }
@@ -26,14 +25,13 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const base64Image = Buffer.from(bytes).toString("base64");
 
-    // Prvi poziv: Ekstrakcija teksta sa računa
     const responseExtract = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
           content:
-            "You are an expert in OCR extraction. Extract all text from the receipt image and return valid JSON with exactly one key: 'text'. Do not include any extra text or formatting, and do not use backticks or markdown formatting.",
+            "You are an expert in OCR extraction. Extract all text from the receipt image and return valid JSON with exactly one key: 'text'. For example: { \"text\": \"Organic almond milk bla bla bla\" }. Do not include any extra text or formatting, do not use backticks or markdown formatting and dont use any characters that may not be parsable into JSON.",
         },
         {
           role: "user",
@@ -53,17 +51,16 @@ export async function POST(req: NextRequest) {
     const extractContent = responseExtract.choices[0].message.content;
     if (!extractContent) throw new Error("No content in extraction response");
     const extractResult = JSON.parse(extractContent);
-    // Sanitiziramo ekstraktovani tekst
     const extractedText = sanitizeString(extractResult.text);
+    console.log(extractContent)
 
-    // Drugi poziv: Usporedba proizvoda i računa
     const responseCompare = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
           content:
-            "You are an expert in receipt analysis. Given a product description and the extracted receipt text, determine if the receipt confirms the purchase of that product. Be lenient if the receipt text is unclear. Return valid JSON with exactly one key: 'confirmed' (a boolean value). Do not include any extra text or formatting, and do not use backticks or markdown formatting.",
+            "You are an expert in product ingredient comparing. Given a product description and the extracted receipt text, determine if there is any similarity between the two. Be lenient: if the receipt text at least a little bit corresponds to the product description, return true, unless there is VERY CLEAR evidence that it is not a valid purchase. Additionally, if strong similarity is not found, check if at least one ingredient or component appears in the product description that can be inside the product from the reciept; if so, consider the purchase as confirmed. Return valid JSON with exactly one key: 'confirmed' (a boolean). Make sure to use this format strictly as in example: { \"confirmed\": true }. Do not include any extra text or formatting, and do not use backticks or markdown formatting.",
         },
         {
           role: "user",
@@ -83,6 +80,7 @@ export async function POST(req: NextRequest) {
     if (!compareContent) throw new Error("No content in compare response");
     const compareResult = JSON.parse(compareContent);
     const confirmed = compareResult.confirmed;
+    console.log(compareContent)
 
     return NextResponse.json({ confirmed });
   } catch (error) {
