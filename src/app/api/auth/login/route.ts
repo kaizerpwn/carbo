@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     });
 
     response.cookies.set({
-      name: "token",
+      name: "accessToken",
       value: token,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
