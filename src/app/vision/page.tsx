@@ -3,12 +3,11 @@
 import { useState } from "react";
 
 function UploadImages() {
-  // Stanje za rezultat skeniranog proizvoda (text i ecofriendly_meter)
   const [productResult, setProductResult] = useState<{
     text: string;
     ecofriendly_meter: number;
+    eco_facts: string[];
   } | null>(null);
-  // Stanje za rezultat skeniranog računa (text i confirmed)
   const [receiptResult, setReceiptResult] = useState<{
     text: string;
     confirmed: boolean;
@@ -33,12 +32,15 @@ function UploadImages() {
         body: formData,
       });
       const data = await res.json();
-      // Očekujemo da API vrati JSON: { text: string, ecofriendly_meter: number }
-      if (!data.text || data.ecofriendly_meter === undefined) {
+      if (!data.text || data.ecofriendly_meter === undefined || !data.eco_facts) {
         alert("Došlo je do greške: nedostaju podaci za proizvod.");
         return;
       }
-      setProductResult({ text: data.text, ecofriendly_meter: data.ecofriendly_meter });
+      setProductResult({
+        text: data.text,
+        ecofriendly_meter: data.ecofriendly_meter,
+        eco_facts: data.eco_facts,
+      });
     } catch (error) {
       console.error("Greška pri slanju slike proizvoda:", error);
       setProductResult(null);
@@ -48,7 +50,7 @@ function UploadImages() {
 
   async function handleUploadReceipt(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-  
+
     if (!receiptFile) {
       alert("Molimo odaberite sliku računa.");
       return;
@@ -57,11 +59,11 @@ function UploadImages() {
       alert("Prvo morate uspješno skenirati proizvod.");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("file", receiptFile);
     formData.append("productText", productResult.text);
-  
+
     try {
       const res = await fetch("/api/receipt", {
         method: "POST",
@@ -79,12 +81,9 @@ function UploadImages() {
       alert("Došlo je do greške pri obradi slike računa.");
     }
   }
-  
-  
 
   return (
     <div className="w-full flex flex-col items-center space-y-8">
-      {/* Sekcija za skeniranje proizvoda */}
       <div>
         <h3 className="mb-2 font-bold">Proizvod</h3>
         <form onSubmit={handleUploadProduct} className="flex flex-col space-y-2">
@@ -101,14 +100,17 @@ function UploadImages() {
         </form>
         {productResult && (
           <div className="mt-2 p-2 bg-gray-100 rounded">
-            <h4 className="font-bold">Ekstraktovani tekst iz proizvoda:</h4>
-            <p>{productResult.text}</p>
+            <h4 className="font-bold">Ekološke činjenice:</h4>
+            <ul>
+              {productResult.eco_facts.map((fact, index) => (
+                <li key={index}>{fact}</li>
+              ))}
+            </ul>
             <p>Eco-friendly meter: {productResult.ecofriendly_meter}%</p>
           </div>
         )}
       </div>
 
-      {/* Sekcija za skeniranje računa */}
       <div>
         <h3 className="mb-2 font-bold">Račun</h3>
         <form onSubmit={handleUploadReceipt} className="flex flex-col space-y-2">
