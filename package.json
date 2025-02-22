@@ -11,6 +11,7 @@
   "dependencies": {
     "@prisma/extension-accelerate": "^1.2.2",
     "@types/jsonwebtoken": "^9.0.8",
+    "axios": "^1.7.9",
     "bcryptjs": "^3.0.2",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",

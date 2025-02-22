@@ -21,12 +21,12 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1E1E1E] flex flex-col">
-      <div className="h-2 bg-[#4ADE80] rounded-b-lg" />
+    <div className="min-h-screen bg-backgroundDark flex flex-col">
+      <div className="h-2 bg-primaryColor rounded-b-lg" />
 
       <div className="flex-1 flex flex-col p-4 max-w-md mx-auto w-full">
         <div className="flex items-center gap-3 mb-12 mt-8">
-          <div className="w-12 h-12 rounded-full bg-[#4ADE80] flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-primaryColor flex items-center justify-center">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
               <path d="M12 6C9.79 6 8 7.79 8 10C8 12.21 9.79 14 12 14C14.21 14 16 12.21 16 10C16 7.79 14.21 6 12 6Z" />
               <path d="M12 16C9.33 16 4 17.34 4 20V22H20V20C20 17.34 14.67 16 12 16Z" />
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full bg-[#2A2A2A] rounded-xl px-4 py-3 text-white border border-[#404040] focus:border-[#4ADE80] focus:outline-none transition-colors"
+                className="w-full bg-backgroundLight rounded-xl px-4 py-3 text-white border border-[#404040] focus:border-primaryColor focus:outline-none transition-colors"
                 placeholder="Enter your email"
                 required
               />
@@ -76,7 +76,7 @@ const Login: React.FC = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                className="w-full bg-[#2A2A2A] rounded-xl px-4 py-3 text-white border border-[#404040] focus:border-[#4ADE80] focus:outline-none transition-colors pr-12"
+                className="w-full bg-backgroundLight rounded-xl px-4 py-3 text-white border border-[#404040] focus:border-primaryColor focus:outline-none transition-colors pr-12"
                 placeholder="Enter your password"
                 required
               />
@@ -93,7 +93,7 @@ const Login: React.FC = () => {
           <div className="text-right">
             <a
               href="/forgot-password"
-              className="text-[#4ADE80] text-sm hover:underline"
+              className="text-primaryColor text-sm hover:underline"
             >
               Forgot password?
             </a>
@@ -101,7 +101,7 @@ const Login: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#4ADE80] text-white py-3 rounded-xl font-medium hover:bg-[#3aa568] transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-primaryColor text-white py-3 rounded-xl font-medium hover:bg-[#3aa568] transition-colors flex items-center justify-center gap-2"
           >
             <LogIn size={20} />
             Sign In
@@ -109,7 +109,7 @@ const Login: React.FC = () => {
 
           <p className="text-center text-[#6B7280] text-sm">
             Don&apos;t have an account?{" "}
-            <a href="/signup" className="text-[#4ADE80] hover:underline">
+            <a href="/signup" className="text-primaryColor hover:underline">
               Sign up
             </a>
           </p>
