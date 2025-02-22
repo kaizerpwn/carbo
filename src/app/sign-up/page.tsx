@@ -1,6 +1,6 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   ArrowLeft,
@@ -9,7 +9,10 @@ import {
   Mail,
   User,
   UserCircle,
+  Eye,
+  EyeOff,
 } from "lucide-react";
+import InputField from "../../components/InputField";
 
 interface SignupData {
   fullName: string;
@@ -21,6 +24,8 @@ interface SignupData {
 
 const SignupWizard: React.FC = () => {
   const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<Partial<SignupData>>({});
   const [formData, setFormData] = useState<SignupData>({
     fullName: "",
     username: "",
@@ -29,68 +34,78 @@ const SignupWizard: React.FC = () => {
     confirmPassword: "",
   });
 
-  const updateFormData = (key: keyof SignupData, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
+  const steps = [
+    { number: 1, title: "Personal Info", icon: UserCircle },
+    { number: 2, title: "Account Details", icon: Mail },
+    { number: 3, title: "Security", icon: Lock },
+  ];
+
+  const validateStep = () => {
+    const newErrors: Partial<SignupData> = {};
+    
+    if (step === 1) {
+      if (!formData.fullName) newErrors.fullName = "Full name is required";
+      if (!formData.username) newErrors.username = "Username is required";
+    } else if (step === 2) {
+      if (!formData.email) newErrors.email = "Email is required";
+      else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = "Please enter a valid email";
+      }
+    } else if (step === 3) {
+      if (!formData.password) newErrors.password = "Password is required";
+      if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = "Passwords don't match";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const steps = [
-    { number: 1, title: "Personal Info" },
-    { number: 2, title: "Account Details" },
-    { number: 3, title: "Security" },
-  ];
+  const updateFormData = useCallback((key: keyof SignupData, value: string) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+    if (errors[key]) {
+      setErrors((prev) => ({ ...prev, [key]: undefined }));
+    }
+  }, [errors]);
 
   const renderStepContent = () => {
     switch (step) {
       case 1:
         return (
           <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm text-white/90 flex items-center gap-2">
-                <UserCircle className="w-4 h-4" />
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={formData.fullName}
-                onChange={(e) => updateFormData("fullName", e.target.value)}
-                className="w-full bg-backgroundDark rounded-xl p-3 text-white border border-white/10 focus:border-primaryColor focus:outline-none"
-                placeholder="Enter your full name"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm text-white/90 flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Username
-              </label>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => updateFormData("username", e.target.value)}
-                className="w-full bg-backgroundDark rounded-xl p-3 text-white border border-white/10 focus:border-primaryColor focus:outline-none"
-                placeholder="Choose a username"
-                required
-              />
-            </div>
+            <InputField
+              label="Full Name"
+              icon={UserCircle}
+              type="text"
+              value={formData.fullName}
+              onChange={(value: string) => updateFormData("fullName", value)}
+              error={errors.fullName}
+              placeholder="Enter your full name"
+            />
+            <InputField
+              label="Username"
+              icon={User}
+              type="text"
+              value={formData.username}
+              onChange={(value: string) => updateFormData("username", value)}
+              error={errors.username}
+              placeholder="Choose a username"
+            />
           </div>
         );
       case 2:
         return (
           <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm text-white/90 flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => updateFormData("email", e.target.value)}
-                className="w-full bg-backgroundDark rounded-xl p-3 text-white border border-white/10 focus:border-primaryColor focus:outline-none"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
+            <InputField
+              label="Email Address"
+              icon={Mail}
+              type="email"
+              value={formData.email}
+              onChange={(value: string) => updateFormData("email", value)}
+              error={errors.email}
+              placeholder="Enter your email"
+            />
           </div>
         );
       case 3:
@@ -101,31 +116,41 @@ const SignupWizard: React.FC = () => {
                 <Lock className="w-4 h-4" />
                 Password
               </label>
-              <input
-                type="password"
-                value={formData.password}
-                onChange={(e) => updateFormData("password", e.target.value)}
-                className="w-full bg-backgroundDark rounded-xl p-3 text-white border border-white/10 focus:border-primaryColor focus:outline-none"
-                placeholder="Create a password"
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) => updateFormData("password", e.target.value)}
+                  className={`w-full bg-backgroundDark rounded-xl p-3 pr-10 text-white border
+                    ${errors.password ? 'border-red-500' : 'border-white/10 focus:border-primaryColor'}
+                    focus:outline-none focus:ring-1 focus:ring-primaryColor/20`}
+                  placeholder="Create a password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-xs text-red-500 mt-1">{errors.password}</p>
+              )}
             </div>
-            <div className="space-y-2">
-              <label className="text-sm text-white/90 flex items-center gap-2">
-                <Lock className="w-4 h-4" />
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                value={formData.confirmPassword}
-                onChange={(e) =>
-                  updateFormData("confirmPassword", e.target.value)
-                }
-                className="w-full bg-backgroundDark rounded-xl p-3 text-white border border-white/10 focus:border-primaryColor focus:outline-none"
-                placeholder="Confirm your password"
-                required
-              />
-            </div>
+            <InputField
+              label="Confirm Password"
+              icon={Lock}
+              type={showPassword ? "text" : "password"}
+              value={formData.confirmPassword}
+              onChange={(value: string) => updateFormData("confirmPassword", value)}
+              error={errors.confirmPassword}
+              placeholder="Confirm your password"
+            />
           </div>
         );
       default:
@@ -135,6 +160,8 @@ const SignupWizard: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateStep()) return;
+
     if (step < 3) {
       setStep(step + 1);
     } else {
@@ -155,26 +182,27 @@ const SignupWizard: React.FC = () => {
             {steps.map((s, index) => (
               <React.Fragment key={s.number}>
                 <div className="flex items-center">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      step >= s.number
-                        ? "bg-primaryColor text-black"
-                        : "bg-backgroundLight text-white/50"
-                    }`}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      scale: step >= s.number ? 1 : 0.95,
+                    }}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center
+                      transition-colors duration-200
+                      ${step >= s.number ? "bg-primaryColor text-black" : "bg-backgroundLight text-white/50"}`}
                   >
                     {step > s.number ? (
                       <Check className="w-5 h-5" />
                     ) : (
                       <span>{s.number}</span>
                     )}
-                  </div>
+                  </motion.div>
                   <span className="ml-2 text-sm text-white/70">{s.title}</span>
                 </div>
                 {index < steps.length - 1 && (
                   <div
-                    className={`flex-1 h-0.5 mx-4 ${
-                      step > s.number ? "bg-primaryColor" : "bg-backgroundLight"
-                    }`}
+                    className={`flex-1 h-0.5 mx-4 transition-colors duration-200
+                      ${step > s.number ? "bg-primaryColor" : "bg-backgroundLight"}`}
                   />
                 )}
               </React.Fragment>
@@ -192,19 +220,23 @@ const SignupWizard: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setStep(step - 1)}
-                  className="flex items-center gap-2 text-white/70 hover:text-white"
+                  className="flex items-center gap-2 text-white/70 hover:text-white
+                    transition-colors duration-200"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back
                 </button>
               )}
-              <button
+              <motion.button
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
                 type="submit"
-                className={`flex items-center gap-2 bg-primaryColor text-black font-medium px-6 py-2 rounded-xl ml-auto`}
+                className="flex items-center gap-2 bg-primaryColor text-black font-medium
+                  px-6 py-2 rounded-xl ml-auto transition-colors duration-200"
               >
                 {step === 3 ? "Complete" : "Continue"}
                 {step < 3 && <ArrowRight className="w-4 h-4" />}
-              </button>
+              </motion.button>
             </div>
           </form>
         </div>
