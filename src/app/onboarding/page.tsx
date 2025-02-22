@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import WelcomeStep from "../../components/onboarding/welcome-step";
-import TransportStep from "../../components/onboarding/transport-step";
-import ProgressBar from "@/components/Progresbar";
-import ReusableBags from "../../components/onboarding/reusable-bags";
-import RecycleBehave from "../../components/onboarding/recycle-behave";
-import CompletionPage from "../../components/onboarding/finish-page";
+import { useState } from 'react';
+import WelcomeStep from '../../components/onboarding/welcome-step';
+import TransportStep from '../../components/onboarding/transport-step';
+import ProgressBar from '@/components/Progresbar';
+import ReusableBags from '../../components/onboarding/reusable-bags';
+import RecycleBehave from '../../components/onboarding/recycle-behave';
+import CompletionPage from '../../components/onboarding/finish-page';
 
 export default function OnBoardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -20,9 +20,9 @@ export default function OnBoardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-backgroundDark flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="h-[10px]">
+    <div className='min-h-screen bg-backgroundDark flex items-center justify-center p-4'>
+      <div className='w-full max-w-md'>
+        <div className='h-[10px]'>
           <ProgressBar progress={progress} />
         </div>
 
