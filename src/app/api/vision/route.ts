@@ -14,29 +14,44 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    // Convert file to buffer and then base64
     const bytes = await file.arrayBuffer();
     const base64Image = Buffer.from(bytes).toString("base64");
 
-    // ✅ Ask OpenAI Vision API to extract text from the image
+    // Prompt sa jasnim uputstvima da se vrati isključivo validan JSON
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "Extract and return all the text present in the image." },
+        {
+          role: "system",
+          content:
+            "You are an expert in environmental analysis. Given an image of a product, extract all the text present in the image and evaluate how eco-friendly the product is on a scale from 1 to 100. Return your answer as valid JSON with exactly two keys: 'text' and 'ecofriendly_meter'. Do not include any extra text, explanation, or formatting (such as markdown code fences, backticks, etc.).",
+        },
         {
           role: "user",
           content: [
-            { type: "text", text: "Extract all readable text from this image." },
-            { type: "image_url", image_url: { url: `data:image/jpeg;base64,${base64Image}` } }, // ✅ Base64 Image
+            { type: "text", text: "Please analyze this image:" },
+            {
+              type: "image_url",
+              image_url: { url: `data:image/jpeg;base64,${base64Image}` },
+            },
           ],
         },
       ],
       max_tokens: 500,
     });
 
-    return NextResponse.json({ text: response.choices[0].message.content });
+    const content = response.choices[0].message.content;
+    if (!content) {
+      throw new Error("No content in the response");
+    }
+
+    const resultJSON = JSON.parse(content);
+    return NextResponse.json(resultJSON);
   } catch (error) {
     console.error("Error processing image:", error);
-    return NextResponse.json({ error: "Failed to process image" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to process image" },
+      { status: 500 }
+    );
   }
 }
