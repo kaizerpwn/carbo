@@ -129,24 +129,24 @@ const LeaderboardView: React.FC = () => {
         </div>
 
         <div className="mt-8 grid grid-cols-2 gap-3">
-          <button className="bg-backgroundLight rounded-xl p-4 text-left hover:bg-[#333] transition-colors relative">
+          <button className="bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative">
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
             <h3 className="text-white font-medium">Weekly</h3>
             <p className="text-[#6B7280] text-sm">This week&apos;s heroes</p>
           </button>
-          <button className="bg-backgroundLight rounded-xl p-4 text-left hover:bg-[#333] transition-colors relative">
+          <button className="bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative">
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
             <h3 className="text-white font-medium">Monthly</h3>
             <p className="text-[#6B7280] text-sm">
               This month&apos;s champions
             </p>
           </button>
-          <button className="bg-backgroundLight rounded-xl p-4 text-left hover:bg-[#333] transition-colors relative">
+          <button className="bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative">
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
             <h3 className="text-white font-medium">All Time</h3>
             <p className="text-[#6B7280] text-sm">Legendary players</p>
           </button>
-          <button className="bg-backgroundLight rounded-xl p-4 text-left hover:bg-[#333] transition-colors relative">
+          <button className="bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative">
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
             <h3 className="text-white font-medium">Friends</h3>
             <p className="text-[#6B7280] text-sm">Compare with friends</p>
