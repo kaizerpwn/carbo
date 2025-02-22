@@ -82,7 +82,7 @@ const SponsorProducts: React.FC = () => {
           <p className='text-gray-400'>Support sustainable products</p>
         </div>
         <div className='bg-gray-800 px-4 py-2 rounded-full flex items-center'>
-          <ShoppingBag className='w-4 h-4 text-emerald-500 mr-2' />
+          <ShoppingBag className='w-4 h-4 text-primaryColor mr-2' />
           <span className='text-sm'>550 points</span>
         </div>
       </div>
@@ -96,8 +96,8 @@ const SponsorProducts: React.FC = () => {
           >
             <div className='flex items-center justify-between mb-4'>
               <div className='flex items-center'>
-                <div className='w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center mr-4'>
-                  <Leaf className='w-6 h-6 text-emerald-500' />
+                <div className='w-12 h-12 bg-primaryColor/20 rounded-full flex items-center justify-center mr-4'>
+                  <Leaf className='w-6 h-6 text-primaryColor' />
                 </div>
                 <div>
                   <h3 className='font-medium'>{product.name}</h3>
@@ -109,10 +109,10 @@ const SponsorProducts: React.FC = () => {
 
             <div className='flex items-center justify-between'>
               <div>
-                <p className='text-sm text-emerald-500'>{product.ecoImpact}</p>
+                <p className='text-sm text-primaryColor'>{product.ecoImpact}</p>
                 <p className='text-sm text-gray-400'>{product.points} points</p>
               </div>
-              <button className='bg-emerald-500 px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors'>
+              <button className='bg-primaryColor px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors'>
                 ${product.price} USD
               </button>
             </div>
@@ -120,36 +120,24 @@ const SponsorProducts: React.FC = () => {
         ))}
       </div>
 
-      <div className='fixed bottom-0 left-0 right-0 bg-gray-800 p-4'>
-        <div className='flex justify-between items-center max-w-md mx-auto'>
-          <div>
-            <p className='text-sm text-gray-400'>Total available</p>
-            <p className='font-medium'>550 points</p>
-          </div>
-          <button className='bg-emerald-500 px-6 py-3 rounded-lg font-medium hover:bg-emerald-600 transition-colors'>
-            View Cart
-          </button>
-        </div>
-      </div>
-
       {isModalOpen && selectedProduct && (
         <div className='fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn'>
           <div className='bg-gray-800 p-8 rounded-2xl text-white max-w-md w-full mx-4 shadow-2xl transform animate-slideUp'>
             <div className='flex flex-col items-center text-center mb-6'>
-              <div className='w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mb-4'>
-                <Leaf className='w-8 h-8 text-emerald-500' />
+              <div className='w-16 h-16 bg-primaryColor/20 rounded-full flex items-center justify-center mb-4'>
+                <Leaf className='w-8 h-8 text-primaryColor' />
               </div>
               <h2 className='text-2xl font-semibold mb-2'>Confirm Purchase</h2>
               <p className='text-gray-400'>You&apos;re about to purchase:</p>
               <p className='text-xl font-medium mt-2'>{selectedProduct.name}</p>
-              <p className='text-emerald-500 text-2xl font-bold mt-4'>
+              <p className='text-primaryColor text-2xl font-bold mt-4'>
                 ${selectedProduct.price} USD
               </p>
             </div>
 
             <div className='space-y-3'>
               <button
-                className='w-full bg-emerald-500 px-4 py-3 rounded-xl font-medium hover:bg-emerald-600 transition-colors'
+                className='w-full bg-primaryColor px-4 py-3 rounded-xl font-medium hover:bg-emerald-600 transition-colors'
                 onClick={handleConfirmPurchase}
               >
                 Confirm Purchase
