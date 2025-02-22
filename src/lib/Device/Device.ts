@@ -40,9 +40,8 @@ export const DeviceAPI = {
     }
   },
 
-  // Get all devices
-  getDevices: async () => {
-    const response = await http.get("/devices");
+  getDevices: async (userId: string) => {
+    const response = await http.get(`/devices?userId=${userId}`);
     if (response.status !== 200) {
       throw new Error("Failed to fetch devices");
     }
@@ -80,8 +79,8 @@ export const DeviceAPI = {
 
     try {
       isDeletingDevice = true;
-      const response = await http.delete(`/devices?id=${id}`);
-      if (response.status !== 204) {
+      const response = await http.delete(`/api/devices?id=${id}`);
+      if (response.status !== 200) {
         throw new Error("Failed to delete device");
       }
       return true;

@@ -10,14 +10,13 @@ import React, {
 import { Device } from "@/types/devices";
 import { DeviceAPI } from "@/lib/Device/Device";
 import { Schedule } from "@/types/devices";
+import { useAuth } from "./AuthContext";
 
 interface DeviceContextProps {
   devices: Device[];
   isLoading: boolean;
   error: string | null;
-  addDevice: (
-    deviceData: Omit<Device, "id" | "createdAt" | "updatedAt">
-  ) => Promise<void>;
+  addDevice: () => Promise<void>;
   updateDevice: (
     deviceId: string,
     deviceData: Partial<Device>
@@ -45,13 +44,14 @@ export const DeviceProvider: React.FC<{ children: ReactNode }> = ({
   const [devices, setDevices] = useState<Device[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchDevices = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const fetchedDevices = await DeviceAPI.getDevices();
+        const fetchedDevices = await DeviceAPI.getDevices(user.id);
         setDevices(fetchedDevices);
       } catch (error) {
         setError("Failed to fetch devices");

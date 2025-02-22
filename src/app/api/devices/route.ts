@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { authMiddleware, validateDeviceOwnership } from "@/app/middleware";
 
@@ -9,14 +8,31 @@ interface AuthenticatedNextRequest extends NextRequest {
   };
 }
 
-export async function GET(req: AuthenticatedNextRequest) {
-  return authMiddleware(req, async () => {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId");
+
+  if (!userId) {
+    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+  }
+
+  try {
     const devices = await prisma.device.findMany({
-      where: { userId: req.user.userId },
-      include: { schedules: true },
+      where: { userId },
+      include: {
+        powerReadings: true,
+        schedules: true,
+      },
     });
-    return NextResponse.json({ devices });
-  });
+
+    return NextResponse.json(devices);
+  } catch (error) {
+    console.error("Error fetching devices:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch devices" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(req: NextRequest) {
