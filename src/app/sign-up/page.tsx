@@ -11,6 +11,8 @@ import {
   UserCircle,
   Eye,
   EyeOff,
+  Globe,
+  Pin,
 } from "lucide-react";
 import InputField from "../../components/InputField";
 
@@ -20,6 +22,8 @@ interface SignupData {
   email: string;
   password: string;
   confirmPassword: string;
+  country: string;
+  town: string;
 }
 
 const SignupWizard: React.FC = () => {
@@ -32,6 +36,8 @@ const SignupWizard: React.FC = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    country: "",
+    town: ""
   });
 
   const steps = [
@@ -51,6 +57,8 @@ const SignupWizard: React.FC = () => {
       else if (!/\S+@\S+\.\S+/.test(formData.email)) {
         newErrors.email = "Please enter a valid email";
       }
+      if (!formData.country) newErrors.country = "Country is required";
+      if (!formData.town) newErrors.town = "Town is required";
     } else if (step === 3) {
       if (!formData.password) newErrors.password = "Password is required";
       if (formData.password !== formData.confirmPassword) {
@@ -106,6 +114,26 @@ const SignupWizard: React.FC = () => {
               error={errors.email}
               placeholder="Enter your email"
             />
+            <div className="flex justify-between space-x-4">
+              <InputField
+                label="Country"
+                icon={Globe}
+                type="text"
+                value={formData.country}
+                onChange={(value: string) => updateFormData("country", value)}
+                error={errors.country}
+                placeholder="Enter your country"
+              />
+              <InputField
+                label="Town"
+                icon={Pin}
+                type="text"
+                value={formData.town}
+                onChange={(value: string) => updateFormData("town", value)}
+                error={errors.town}
+                placeholder="Enter your town"
+              />
+            </div>
           </div>
         );
       case 3:
@@ -244,7 +272,7 @@ const SignupWizard: React.FC = () => {
         {/* Sign In Link */}
         <p className="text-center mt-6 text-[#6B7280]">
           Already have an account?{" "}
-          <a href="/signin" className="text-primaryColor hover:underline">
+          <a href="/sign-in" className="text-primaryColor hover:underline">
             Sign in
           </a>
         </p>
