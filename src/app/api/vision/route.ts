@@ -5,6 +5,10 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
+function sanitizeString(input: string): string {
+  return input.replace(/[`]/g, '');
+}
+
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -22,7 +26,7 @@ export async function POST(req: NextRequest) {
         {
           role: "system",
           content:
-            "You are an expert in environmental analysis. Given an image of a product, extract all the text present in the image and evaluate how eco-friendly the product is on a scale from 1 to 100. Return your answer as valid JSON with exactly two keys: 'text' and 'ecofriendly_meter'. Do not include any extra text or formatting.",
+            "You are an expert in environmental analysis. Given an image of a product, extract all the text present in the image and evaluate how eco-friendly the product is on a scale from 1 to 100. Return your answer as valid JSON with exactly two keys: 'text' and 'ecofriendly_meter'. Do not include any extra text or formatting, and do not use backticks or markdown formatting.",
         },
         {
           role: "user",
@@ -49,7 +53,7 @@ export async function POST(req: NextRequest) {
         {
           role: "system",
           content:
-            "You are an expert in environmental analysis. Given the extracted product text, list 2 to 4 ecologically specific facts about the product. Focus on aspects like recyclable packaging, CO2 emissions, energy efficiency, or sustainable materials. Return valid JSON with exactly one key: 'eco_facts' (an array of strings). Do not include any extra text or formatting.",
+            "You are an expert in environmental analysis. Given the extracted product text, list 2 to 4 ecologically specific facts about the product. Focus on aspects like recyclable packaging, CO2 emissions, energy efficiency, or sustainable materials. Return valid JSON with exactly one key: 'eco_facts' (an array of strings). Do not include any extra text or formatting, and do not use backticks or markdown formatting.",
         },
         {
           role: "user",
@@ -60,16 +64,22 @@ export async function POST(req: NextRequest) {
         },
       ],
       max_tokens: 150,
-      temperature: 0.1
+      temperature: 0.1,
     });
 
     const ecoContent = ecoFactsResponse.choices[0].message.content;
     if (!ecoContent) throw new Error("No content in eco facts response");
     const ecoResult = JSON.parse(ecoContent);
 
+    const sanitizedText = sanitizeString(resultJSON.text);
+    const sanitizedEcoFacts = Array.isArray(ecoResult.eco_facts)
+      ? ecoResult.eco_facts.map((fact: string) => sanitizeString(fact))
+      : [];
+
     const finalResult = {
-      ...resultJSON,
-      eco_facts: ecoResult.eco_facts,
+      text: sanitizedText,
+      ecofriendly_meter: resultJSON.ecofriendly_meter,
+      eco_facts: sanitizedEcoFacts,
     };
 
     return NextResponse.json(finalResult);
