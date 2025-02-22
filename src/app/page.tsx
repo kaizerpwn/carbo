@@ -88,12 +88,23 @@ export default function Dashboard() {
     }
   };
 
+  const getZIndexClass = (index) => {
+    if (currentStep === index) return "z-40";
+    if (currentStep > index) return "z-30";
+    return "z-20";
+  };
+
   return (
     <div className="min-h-screen bg-backgroundDark pb-20 max-w-md mx-auto">
       <div className="h-2 bg-primaryColor rounded-b-lg" />
 
       <div className="p-4">
-        <div id="step1" className="flex justify-between items-center mb-6">
+        <div
+          id="step1"
+          className={`flex justify-between items-center mb-6 relative ${getZIndexClass(
+            0
+          )}`}
+        >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primaryColor flex items-center justify-center">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="white">
@@ -112,49 +123,51 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div id="step2" className="bg-backgroundLight rounded-2xl mb-6">
-          <div className="p-4">
-            <h2 className="text-white text-lg font-[1000]">Your tree</h2>
-            <p className="text-[#6B7280] text-sm font-semibold">
-              Metrics during the last 7 days
-            </p>
+        <div id="step2" className={`relative ${getZIndexClass(1)}`}>
+          <div className="bg-backgroundLight rounded-2xl mb-6">
+            <div className="p-4">
+              <h2 className="text-white text-lg font-[1000]">Your tree</h2>
+              <p className="text-[#6B7280] text-sm font-semibold">
+                Metrics during the last 7 days
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div className="bg-backgroundLight rounded-2xl mb-6">
-          <div className="flex relative overflow-hidden">
-            <div className="flex justify-between items-start relative w-[35%]">
-              <div className="bg-[#FFFFFF07] p-4 pr-7">
-                <div
-                  className="absolute left-0 top-0 bottom-0 w-2 rounded-bl-lg rounded-tl-lg"
-                  style={{ backgroundColor: statusColor }}
-                />
+          <div className="bg-backgroundLight rounded-2xl mb-6">
+            <div className="flex relative overflow-hidden">
+              <div className="flex justify-between items-start relative w-[35%]">
+                <div className="bg-[#FFFFFF07] p-4 pr-7">
+                  <div
+                    className="absolute left-0 top-0 bottom-0 w-2 rounded-bl-lg rounded-tl-lg"
+                    style={{ backgroundColor: statusColor }}
+                  />
 
-                <div className="mb-6 ml-2">
-                  <div className="text-white text-4xl font-[1000]">
-                    {coEmissionPercent}
-                    <span className="text-xl font-[300]">%</span>
+                  <div className="mb-6 ml-2">
+                    <div className="text-white text-4xl font-[1000]">
+                      {coEmissionPercent}
+                      <span className="text-xl font-[300]">%</span>
+                    </div>
+                    <div className="text-[#6B7280] text-sm">CO2 Emissions</div>
                   </div>
-                  <div className="text-[#6B7280] text-sm">CO2 Emissions</div>
-                </div>
 
-                <div className="ml-2">
-                  <div className="text-white text-4xl font-[1000]">
-                    13<span className="text-xl font-[300]">%</span>
+                  <div className="ml-2">
+                    <div className="text-white text-4xl font-[1000]">
+                      13<span className="text-xl font-[300]">%</span>
+                    </div>
+                    <div className="text-[#6B7280] text-sm">Progress</div>
                   </div>
-                  <div className="text-[#6B7280] text-sm">Progress</div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex justify-center p-4 absolute right-0 w-[65%]">
-              <SemiCircleProgress
-                percentage={coEmissionPercent}
-                color={statusColor}
-              />
-              <div className="relative w-48 h-48">
-                <div className="absolute inset-0 flex items-center justify-center p-10 mt-4">
-                  {CoTreeSvg()}
+              <div className="flex justify-center p-4 absolute right-0 w-[65%]">
+                <SemiCircleProgress
+                  percentage={coEmissionPercent}
+                  color={statusColor}
+                />
+                <div className="relative w-48 h-48">
+                  <div className="absolute inset-0 flex items-center justify-center p-10 mt-4">
+                    {CoTreeSvg()}
+                  </div>
                 </div>
               </div>
             </div>
@@ -162,7 +175,12 @@ export default function Dashboard() {
         </div>
 
         <div>
-          <div id="step3" className="flex justify-between items-center mb-4">
+          <div
+            id="step3"
+            className={`flex justify-between items-center mb-4 relative ${getZIndexClass(
+              2
+            )}`}
+          >
             <h2 className="text-white text-lg">Favorite devices</h2>
             <span className="text-[#6B7280]">Total 4</span>
           </div>
@@ -173,34 +191,31 @@ export default function Dashboard() {
         </div>
 
         {showTutorial && (
-          <div
-            className={`fixed inset-0 flex items-center text-center justify-center z-20 pointer-events-none ${getPositionClass(
-              steps[currentStep].position
-            )}`}
-          >
-            <div className="bg-white rounded-lg p-6 mx-4 pointer-events-auto">
-              <h2 className="text-xl font-bold mb-2">
-                {steps[currentStep].title}
-              </h2>
-              <p className="mb-4">{steps[currentStep].message}</p>
-              <button
-                onClick={nextStep}
-                className="bg-primaryColor text-white px-4 py-2 rounded-lg w-full transition-all duration-300 ease-in-out transform hover:bg-emerald-600 hover:shadow-lg"
-              >
-                {currentStep === steps.length - 1 ? "Finish" : "Next"}
-              </button>
+          <>
+            <div className="fixed inset-0 bg-black opacity-50 z-20 pointer-events-none" />
+            <div
+              className={`fixed inset-0 flex items-center justify-center z-30 pointer-events-none ${getPositionClass(
+                steps[currentStep].position
+              )}`}
+            >
+              <div className="bg-white text-center rounded-lg p-6 mx-4 pointer-events-auto max-w-xs relative">
+                <div className="absolute -top-3 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white" />
+                <h2 className="text-xl font-bold mb-2">
+                  {steps[currentStep].title}
+                </h2>
+                <p className="mb-4">{steps[currentStep].message}</p>
+                <button
+                  onClick={nextStep}
+                  className="bg-primaryColor text-white px-4 py-2 rounded-lg w-full transition-all duration-300 ease-in-out transform hover:bg-emerald-600 hover:shadow-lg"
+                >
+                  {currentStep === steps.length - 1 ? "Finish" : "Next"}
+                </button>
+              </div>
             </div>
-          </div>
-        )}
-        {showTutorial && (
-          <div
-            className={`fixed inset-0 bg-black opacity-50 z-10 ${
-              currentStep !== 0 ? "pointer-events-auto" : ""
-            }`}
-            style={{
-              pointerEvents: currentStep === steps.length - 1 ? "none" : "auto",
-            }}
-          />
+            <div
+              className={`fixed z-25 transition-all duration-300 ease-in-out ${steps[currentStep].target}`}
+            />
+          </>
         )}
       </div>
     </div>
