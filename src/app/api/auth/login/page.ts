@@ -7,7 +7,7 @@ if (!process.env.JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined in environment variables");
 }
 
-export async function POST(req: Request) {
+export default async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
