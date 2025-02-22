@@ -97,7 +97,7 @@ const LeaderboardView: React.FC = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#333] flex items-center justify-center text-white font-bold">
+                  <div className="w-10 h-10 rounded-full bg-backgroundDark flex items-center justify-center text-white font-bold">
                     {user.rank}
                   </div>
                   <div>
@@ -114,7 +114,7 @@ const LeaderboardView: React.FC = () => {
                 <ChevronRight className="w-5 h-5 text-[#6B7280]" />
               </div>
 
-              <div className="mt-3 h-2 bg-[#333] rounded-full overflow-hidden">
+              <div className="mt-3 h-2 bg-backgroundDark rounded-full overflow-hidden">
                 <div
                   className="h-full bg-[#4ADE80] rounded-full"
                   style={{ width: `${(user.points / 2500) * 100}%` }}

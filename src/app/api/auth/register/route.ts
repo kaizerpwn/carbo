@@ -65,6 +65,17 @@ export async function POST(req: Request) {
       throw new Error("User creation failed");
     }
 
+    await prisma.userStats.create({
+      data: {
+        userId: user.id,
+        totalPoints: 0,
+        carbonSaved: 0,
+        currentStreak: 0,
+        totalScans: 0,
+        ecoProductsBought: 0,
+      },
+    });
+
     return NextResponse.json({ user });
   } catch (error) {
     console.error("Registration error:", error);
