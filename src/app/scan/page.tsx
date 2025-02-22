@@ -13,8 +13,7 @@ import NavBar from "@/components/NavBar";
 import { ScanResult } from "@/types/scan";
 import { ResultModal } from "@/components/ResultModal";
 import CameraComponent from "./Camera";
-import { calculateCoins } from "@/util/coinCalculator"; // Import the utility function
-import prisma from "@/lib/prisma"; // Import Prisma client
+import { calculateCoins } from "@/util/coinCalculator";
 
 interface RecentScan {
   id: number;
@@ -102,7 +101,7 @@ const ProductScanView: React.FC = () => {
         score: data.ecofriendly_meter,
         reasons: data.eco_facts,
         potentialPoints: data.ecofriendly_meter,
-        text: data.text, // Set the text property
+        text: data.text,
       });
     } catch (error) {
       console.error("Error scanning product:", error);
