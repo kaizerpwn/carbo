@@ -198,12 +198,12 @@ export default function Dashboard() {
                 steps[currentStep].position
               )}`}
             >
-              <div className="bg-white text-center rounded-lg p-6 mx-4 pointer-events-auto max-w-xs relative">
+              <div className="bg-white bg-opacity-10 backdrop-blur-lg text-center rounded-lg p-6 mx-4 pointer-events-auto max-w-[15rem] relative shadow-xl border border-white/30">
                 <div className="absolute -top-3 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white" />
-                <h2 className="text-xl font-bold mb-2">
+                <h2 className="text-xl font-bold mb-2 text-white">
                   {steps[currentStep].title}
                 </h2>
-                <p className="mb-4">{steps[currentStep].message}</p>
+                <p className="mb-4 text-white">{steps[currentStep].message}</p>
                 <button
                   onClick={nextStep}
                   className="bg-primaryColor text-white px-4 py-2 rounded-lg w-full transition-all duration-300 ease-in-out transform hover:bg-emerald-600 hover:shadow-lg"
