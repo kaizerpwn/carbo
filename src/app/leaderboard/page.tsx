@@ -1,53 +1,49 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Trophy, Medal, ChevronRight } from "lucide-react";
 import NavBar from "@/components/NavBar";
+import { useAuth } from "@/context/AuthContext";
 
 interface User {
   id: string;
   name: string;
-  avatar?: string;
   points: number;
   rank: number;
   co2Saved: number;
-  progress: number;
 }
 
 const LeaderboardView: React.FC = () => {
-  const users: User[] = [
-    {
-      id: "1",
-      name: "Sarah Connor",
-      points: 2430,
-      rank: 1,
-      co2Saved: 245.8,
-      progress: 92,
-    },
-    {
-      id: "2",
-      name: "John Smith",
-      points: 2180,
-      rank: 2,
-      co2Saved: 198.3,
-      progress: 87,
-    },
-    {
-      id: "3",
-      name: "Ahmed Spahic",
-      points: 1890,
-      rank: 3,
-      co2Saved: 176.5,
-      progress: 82,
-    },
-  ];
+  const { user } = useAuth();
+  const [users, setUsers] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [filter, setFilter] = useState<string>("all-time");
+  const [location, setLocation] = useState<string>("");
 
-  const currentUser: User = {
-    id: "3",
-    name: "Ahmed Spahic",
-    points: 1890,
-    rank: 3,
-    co2Saved: 176.5,
-    progress: 82,
-  };
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const locationFilter = location ? user?.locationId : "";
+        const response = await fetch(
+          `/api/leaderboard?period=${filter}&locationId=${locationFilter}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch leaderboard data");
+        }
+
+        const data = await response.json();
+        console.log("Leaderboard data:", data);
+        setUsers(data);
+
+        setCurrentUser(data[2]);
+      } catch (error) {
+        console.error("Error fetching leaderboard data:", error);
+      }
+    };
+
+    fetchLeaderboard();
+  }, [filter, location, user]);
 
   return (
     <div className="min-h-screen bg-backgroundDark pb-20">
@@ -96,7 +92,7 @@ const LeaderboardView: React.FC = () => {
             <div
               key={user.id}
               className={`bg-backgroundLight rounded-xl p-4 ${
-                user.id === currentUser.id ? "border-2 border-[#4ADE80]" : ""
+                user.id === currentUser?.id ? "border-2 border-[#4ADE80]" : ""
               }`}
             >
               <div className="flex items-center justify-between">
@@ -121,7 +117,7 @@ const LeaderboardView: React.FC = () => {
               <div className="mt-3 h-2 bg-[#333] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-[#4ADE80] rounded-full"
-                  style={{ width: `${user.progress}%` }}
+                  style={{ width: `${(user.points / 2500) * 100}%` }}
                 />
               </div>
             </div>
@@ -129,27 +125,47 @@ const LeaderboardView: React.FC = () => {
         </div>
 
         <div className="mt-8 grid grid-cols-2 gap-3">
-          <button className="bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative">
+          <button
+            onClick={() => setFilter("weekly")}
+            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative ${
+              filter === "weekly" ? "border-2 border-[#4ADE80]" : ""
+            }`}
+          >
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
             <h3 className="text-white font-medium">Weekly</h3>
             <p className="text-[#6B7280] text-sm">This week&apos;s heroes</p>
           </button>
-          <button className="bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative">
+          <button
+            onClick={() => setFilter("monthly")}
+            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative ${
+              filter === "monthly" ? "border-2 border-[#4ADE80]" : ""
+            }`}
+          >
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
             <h3 className="text-white font-medium">Monthly</h3>
             <p className="text-[#6B7280] text-sm">
               This month&apos;s champions
             </p>
           </button>
-          <button className="bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative">
+          <button
+            onClick={() => setFilter("all-time")}
+            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative ${
+              filter === "all-time" ? "border-2 border-[#4ADE80]" : ""
+            }`}
+          >
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
             <h3 className="text-white font-medium">All Time</h3>
             <p className="text-[#6B7280] text-sm">Legendary players</p>
           </button>
-          <button className="bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative">
+          <button
+            onClick={() => setLocation(location ? "" : "userCity")}
+            className={`bg-backgroundLight rounded-xl p-4 pl-7 text-left hover:bg-[#333] transition-colors relative ${
+              location ? "border-2 border-[#4ADE80]" : ""
+            }`}
+          >
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
-            <h3 className="text-white font-medium">Friends</h3>
-            <p className="text-[#6B7280] text-sm">Compare with friends</p>
+            <h3 className="text-white font-medium">Location</h3>
+            <p className="text-[#6B7280] text-sm">Compare with your city</p>
           </button>
         </div>
         <NavBar />
