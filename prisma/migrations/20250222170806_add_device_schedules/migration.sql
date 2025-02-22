@@ -6,8 +6,13 @@ CREATE TABLE `users` (
     `username` VARCHAR(50) NOT NULL,
     `full_name` VARCHAR(100) NULL,
     `is_verified` BOOLEAN NOT NULL DEFAULT false,
+    `finished_tutorial` BOOLEAN NOT NULL DEFAULT false,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
+    `location_id` VARCHAR(36) NOT NULL,
+    `transport` VARCHAR(100) NULL,
+    `energy` VARCHAR(100) NULL,
+    `recycle` VARCHAR(100) NULL,
 
     UNIQUE INDEX `users_email_key`(`email`),
     UNIQUE INDEX `users_username_key`(`username`),
@@ -39,10 +44,25 @@ CREATE TABLE `devices` (
     `standby_power` DECIMAL(10, 2) NULL,
     `location` VARCHAR(50) NULL,
     `is_active` BOOLEAN NOT NULL DEFAULT true,
+    `is_favorite` BOOLEAN NOT NULL DEFAULT true,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
     INDEX `devices_user_id_idx`(`user_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `schedules` (
+    `id` VARCHAR(36) NOT NULL,
+    `device_id` VARCHAR(36) NOT NULL,
+    `on` VARCHAR(5) NOT NULL,
+    `off` VARCHAR(5) NOT NULL,
+    `days` VARCHAR(255) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+
+    INDEX `schedules_device_id_idx`(`device_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -136,11 +156,23 @@ CREATE TABLE `user_scans` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `locations` (
+    `id` VARCHAR(36) NOT NULL,
+    `country` VARCHAR(100) NOT NULL,
+    `town` VARCHAR(100) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `user_stats` ADD CONSTRAINT `user_stats_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `devices` ADD CONSTRAINT `devices_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `schedules` ADD CONSTRAINT `schedules_device_id_fkey` FOREIGN KEY (`device_id`) REFERENCES `devices`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `power_readings` ADD CONSTRAINT `power_readings_device_id_fkey` FOREIGN KEY (`device_id`) REFERENCES `devices`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

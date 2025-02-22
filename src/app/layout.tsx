@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
-import { Providers } from "./providers";
+import type { Metadata } from 'next';
+import './globals.css';
+import { AuthProvider } from '@/context/AuthContext';
+import { DeviceProvider } from '@/context/DeviceContext';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: "Carbo - Your personal carbon footprint tracker",
-  description: "Carbo helps you track your carbon footprint",
+  title: 'Carbo - Your personal carbon footprint tracker',
+  description: 'Carbo helps you track your carbon footprint',
 };
 
 export default function RootLayout({
@@ -14,10 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <body className={`antialiased`}>
         <Providers>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <DeviceProvider>{children}</DeviceProvider>
+          </AuthProvider>
         </Providers>
       </body>
     </html>

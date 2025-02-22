@@ -7,95 +7,89 @@ import { DeviceCard } from '@/components/DeviceCard';
 import { AddDeviceModal } from '@/components/AddDevicesModal';
 import { ScheduleModal } from '@/components/ScheduleModal';
 import NavBar from '@/components/NavBar';
+import { useDevices } from '@/context/DeviceContext';
+import { DeleteConfirmationModal } from '@/components/DeleteConfirmationModal';
 
 export const DevicesView: React.FC = () => {
-  const [devices, setDevices] = useState<Device[]>([
-    {
-      id: '1',
-      name: 'Living Room TV',
-      powerRating: 150,
-      standbyPower: 5,
-      location: 'Living Room',
-      isActive: true,
-      isFavorite: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      schedules: [
-        {
-          id: '1',
-          on: '08:00',
-          off: '23:00',
-          days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-        },
-      ],
-    },
-    {
-      id: '2',
-      name: 'Kitchen Oven',
-      powerRating: 2000,
-      standbyPower: 10,
-      location: 'Kitchen',
-      isActive: false,
-      isFavorite: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ]);
+  const {
+    devices,
+    isLoading,
+    error,
+    addDevice,
+    toggleDeviceStatus,
+    toggleFavorite,
+    updateDevice,
+    deleteDevice,
+    addSchedule,
+  } = useDevices();
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(true);
+  const [deviceToDelete, setDeviceToDelete] = useState<Device | null>(null);
 
-  const toggleDeviceStatus = (deviceId: string) => {
-    setDevices(
-      devices.map((device) =>
-        device.id === deviceId ? { ...device, isActive: !device.isActive } : device
-      )
-    );
+  const handleAddDevice = async (deviceData: Omit<Device, 'id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      await addDevice(deviceData);
+      setShowAddModal(false);
+    } catch (error) {
+      console.error('Failed to add device:', error);
+    }
   };
 
-  const toggleFavorite = (deviceId: string) => {
-    setDevices(
-      devices.map((device) =>
-        device.id === deviceId ? { ...device, isFavorite: !device.isFavorite } : device
-      )
-    );
-  };
+  // const handleScheduleSave = (deviceId: string, schedule: any) => {};
 
-  const handleAddDevice = (newDevice: Omit<Device, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const device: Device = {
-      ...newDevice,
-      id: Math.random().toString(36).slice(2),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    setDevices([...devices, device]);
-  };
-
-  const handleScheduleSave = (deviceId: string, schedule: any) => {
-    setDevices(
-      devices.map((device) => {
-        if (device.id === deviceId) {
-          return {
-            ...device,
-            schedules: [
-              ...(device.schedules || []),
-              { id: Math.random().toString(36).slice(2), ...schedule },
-            ],
-          };
-        }
-        return device;
-      })
-    );
+  const handleScheduleSave = async (deviceId: string, scheduleData: any) => {
+    // try {
+    //   await addSchedule(deviceId, {
+    //     on: scheduleData.on,
+    //     off: scheduleData.off,
+    //     days: scheduleData.days,
+    //   });
+    //  Zatvori modal nakon uspješnog dodavanja
+    //   setShowScheduleModal(false);
+    //   setSelectedDevice(null);
+    // } catch (error) {
+    //   console.error('Failed to save schedule:', error);
+    //  Možda dodaj neki error handling UI
+    // }
   };
 
   const handleEditDevice = (updatedDevice: Device) => {
-    setDevices(devices.map((device) => (device.id === updatedDevice.id ? updatedDevice : device)));
+    //setDevices(devices.map((device) => (device.id === updatedDevice.id ? updatedDevice : device)));
+    //updateDevice("asdas", updateDevice)
   };
 
   const handleDeleteDevice = (deviceId: string) => {
-    setDevices(devices.filter((device) => device.id !== deviceId));
+    const device = devices.find((d) => d.id === deviceId);
+    if (device) {
+      setDeviceToDelete(device);
+      setShowDeleteModal(true);
+    }
   };
+
+  const handleConfirmDelete = async () => {
+    if (deviceToDelete) {
+      try {
+        await deleteDevice(deviceToDelete.id);
+        setShowDeleteModal(false);
+        setDeviceToDelete(null);
+      } catch (error) {
+        console.error('Failed to delete device:', error);
+        // Možda dodaj neki error handling UI
+      }
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Or better loading component
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>; // Or better error component
+  }
 
   return (
     <div className='min-h-screen bg-backgroundDark pb-20'>
@@ -190,6 +184,16 @@ export const DevicesView: React.FC = () => {
         <AddDeviceModal onClose={() => setShowAddModal(false)} onAdd={handleAddDevice} />
       )}
 
+      {/* {showScheduleModal && selectedDevice && (
+        <ScheduleModal
+          device={selectedDevice}
+          onClose={() => {
+            setShowScheduleModal(false);
+            setSelectedDevice(null);
+          }}
+          onSave={handleScheduleSave}
+        />
+      )} */}
       {showScheduleModal && selectedDevice && (
         <ScheduleModal
           device={selectedDevice}
@@ -199,6 +203,29 @@ export const DevicesView: React.FC = () => {
           }}
           onSave={handleScheduleSave}
         />
+      )}
+
+      {showDeleteModal && deviceToDelete && (
+        <DeleteConfirmationModal
+          deviceName={deviceToDelete.name}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => {
+            setShowDeleteModal(false);
+            setDeviceToDelete(null);
+          }}
+        />
+      )}
+
+      {showEditModal && selectedDevice && (
+        // <showEditModal
+        //   device={selectedDevice}
+        //   onClose={() => {
+        //     setShowScheduleModal(false);
+        //     setSelectedDevice(null);
+        //   }}
+        //   onSave={handleScheduleSave}
+        // />
+        <></>
       )}
       <NavBar />
     </div>

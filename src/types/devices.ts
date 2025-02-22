@@ -1,8 +1,11 @@
 export interface Schedule {
   id: string;
+  deviceId: string;
   on: string;
   off: string;
   days: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Device {
@@ -13,18 +16,26 @@ export interface Device {
   location: string;
   isActive: boolean;
   isFavorite: boolean;
-  schedules?: Schedule[];
+  schedules: Schedule[];
   createdAt: Date;
   updatedAt: Date;
 }
 
+// export interface DeviceCardProps {
+//   device: Device;
+//   onToggle: (id: string) => void;
+//   onSchedule: (device: Device) => void;
+//   onFavoriteToggle: (id: string) => void;
+//   onEdit: (device: Device) => void;
+//   onDelete: (id: string) => void;
+// }
 export interface DeviceCardProps {
   device: Device;
-  onToggle: (id: string) => void;
+  onToggle: (deviceId: string, isActive: boolean) => Promise<void>;
   onSchedule: (device: Device) => void;
-  onFavoriteToggle: (id: string) => void;
+  onFavoriteToggle: (deviceId: string, isFavorite: boolean) => Promise<void>;
   onEdit: (device: Device) => void;
-  onDelete: (id: string) => void;
+  onDelete: (deviceId: string) => void;
 }
 
 export interface AddDeviceModalProps {
