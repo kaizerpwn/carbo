@@ -58,28 +58,12 @@ export default function Dashboard() {
 
             <div className="flex justify-center p-4 absolute right-0 mr-4">
               <div className="relative w-48 h-48">
-                <svg viewBox="0 0 100 100" className="transform -rotate-90">
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="none"
-                    stroke="#FFF"
-                    strokeWidth="6"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="none"
-                    stroke="#4ADE80"
-                    strokeWidth="6"
-                    strokeDasharray="282.6"
-                    strokeDashoffset="246"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center p-10">
+              <svg width="250" height="250" viewBox="-5 -50 250 250" version="1.1" xmlns="http://www.w3.org/2000/svg" className="rotate-[90deg]">
+              <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" strokeWidth="6"></circle>
+              <circle r="90" cx="100" cy="100" stroke="#76e5b1" strokeWidth="6" strokeLinecap="round" strokeDashoffset="200px" fill="transparent" strokeDasharray="565.48px"></circle>
+              </svg>
+
+                <div className="absolute inset-0 flex items-center justify-center p-10 mt-4">
                   <svg width="583" height="613" viewBox="0 0 583 613" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M260 436.5L240.5 420L216 427L259 472.5L253 613H316.5L311.5 493L369.5 431.5L367.5 411L310.5 459L308.5 397L261.5 394.5L260 436.5Z" fill="#E88687"/>
                     <circle cx="336.5" cy="322.5" r="99.5" fill="#6FD4A1"/>
