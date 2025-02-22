@@ -16,6 +16,7 @@ import {
   Pin,
 } from "lucide-react";
 import InputField from "../../components/InputField";
+import Dropdown from "../../components/Dropdown";
 import { useAuth } from "@/context/AuthContext";
 
 interface SignupData {
@@ -33,6 +34,8 @@ const SignupWizard: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<SignupData>>({});
   const { onboardingData, setSignupData } = useAuth();
+  const [countryData, setCountryData] = useState<{ value: string; label: string }[]>([]);
+  const [townData, setTownData] = useState<{ value: string; label: string }[]>([]);
   const [formData, setFormData] = useState<SignupData>({
     fullName: "",
     username: "",
@@ -44,8 +47,48 @@ const SignupWizard: React.FC = () => {
   });
 
   useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch("https://restcountries.com/v3.1/all?fields=name");
+        const data = await response.json();
+        const formattedData = data.map((country: any) => ({
+          value: country.name.common,
+          label: country.name.common,
+        }));
+        setCountryData(formattedData);
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    };
+
+    fetchCountries();
+
     setFormData((prev) => ({ ...prev, ...onboardingData }));
   }, [onboardingData]);
+
+  const fetchTowns = async (country: string) => {
+    try {
+      const response = await fetch("https://countriesnow.space/api/v0.1/countries/population/cities/filter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          order: "asc",
+          orderBy: "name",
+          country,
+        }),
+      });
+      const data = await response.json();
+      const formattedData = data.data.map((town: any) => ({
+        value: town.city,
+        label: town.city,
+      }));
+      setTownData(formattedData);
+    } catch (error) {
+      console.error("Error fetching towns:", error);
+    }
+  };
 
   const steps = [
     { number: 1, title: "Personal Info", icon: UserCircle },
@@ -87,6 +130,11 @@ const SignupWizard: React.FC = () => {
     [errors]
   );
 
+  const handleCountrySelect = (value: string) => {
+    updateFormData("country", value);
+    fetchTowns(value);
+  };
+
   const renderStepContent = () => {
     switch (step) {
       case 1:
@@ -125,23 +173,21 @@ const SignupWizard: React.FC = () => {
               placeholder="Enter your email"
             />
             <div className="flex justify-between space-x-4">
-              <InputField
+              <Dropdown
                 label="Country"
                 icon={Globe}
-                type="text"
-                value={formData.country}
-                onChange={(value: string) => updateFormData("country", value)}
+                items={countryData}
+                selectedItem={formData.country}
+                onSelect={handleCountrySelect}
                 error={errors.country}
-                placeholder="Enter your country"
               />
-              <InputField
+              <Dropdown
                 label="Town"
                 icon={Pin}
-                type="text"
-                value={formData.town}
-                onChange={(value: string) => updateFormData("town", value)}
+                items={townData}
+                selectedItem={formData.town}
+                onSelect={(value: string) => updateFormData("town", value)}
                 error={errors.town}
-                placeholder="Enter your town"
               />
             </div>
           </div>
