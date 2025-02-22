@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ShoppingBag, ChevronRight, Leaf } from 'lucide-react';
+import NavBar from '@/components/NavBar';
 
 interface Product {
   id: number;
@@ -163,6 +164,7 @@ const SponsorProducts: React.FC = () => {
           </div>
         </div>
       )}
+      <NavBar />
     </div>
   );
 };
