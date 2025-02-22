@@ -155,23 +155,23 @@ export async function POST(req: AuthenticatedNextRequest) {
         console.log("Product created:", product);
 
         // Create user scan
-        /* const userScan = await prisma.userScan.create({
+        const userScan = await prisma.userScan.create({
           data: {
-            user_id: userId, // promijenili smo userId u user_id da odgovara mapiranju
-            product_id: product.id, // promijenili smo productId u product_id da odgovara mapiranju
+            userId: userId, // promijenili smo userId u user_id da odgovara mapiranju
+            productId: product.id, // promijenili smo productId u product_id da odgovara mapiranju
             location: "Unknown",
-            added_to_favorites: false, // promijenili smo addedToFavorites u added_to_favorites
+            addedToFavorites: false, // promijenili smo addedToFavorites u added_to_favorites
           },
         });
 
-        console.log("UserScan created:", userScan); */
+        console.log("UserScan created:", userScan);
 
         return NextResponse.json({
           text: sanitizedText,
           ecofriendly_meter: resultJSON.ecofriendly_meter,
           eco_facts: sanitizedEcoFacts,
           productId: product.id,
-          /* scanId: userScan.id, */
+          scanId: userScan.id,
         });
       } catch (dbError) {
         console.error("Database operation failed:", dbError);
