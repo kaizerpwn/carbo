@@ -79,7 +79,7 @@ export const DeviceAPI = {
 
     try {
       isDeletingDevice = true;
-      const response = await http.delete(`/api/devices?id=${id}`);
+      const response = await http.delete(`/devices?id=${id}`);
       if (response.status !== 200) {
         throw new Error("Failed to delete device");
       }

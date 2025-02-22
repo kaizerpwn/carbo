@@ -16,7 +16,11 @@ interface DeviceContextProps {
   devices: Device[];
   isLoading: boolean;
   error: string | null;
-  addDevice: () => Promise<void>;
+  addDevice: (
+    deviceData: Omit<Device, "id" | "createdAt" | "updatedAt"> & {
+      userId: string;
+    }
+  ) => Promise<void>;
   updateDevice: (
     deviceId: string,
     deviceData: Partial<Device>
