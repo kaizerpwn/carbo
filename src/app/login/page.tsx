@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff, LogIn } from "lucide-react";
+import { AuthAPI } from "@/lib/Auth/Auth";
 
 interface LoginFormData {
   email: string;
@@ -17,7 +18,12 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", formData);
+    try {
+      const response = await AuthAPI.loginUser(formData);
+      console.log("Login successful:", response);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   return (
