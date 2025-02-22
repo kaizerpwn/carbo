@@ -3,12 +3,7 @@ import SemiCircleProgress from "@/components/CircularProgress";
 import CoTreeLarge from "@/components/CoTreeLarge";
 import CoTreeSmall from "@/components/CoTreeSmall";
 import NavBar from "@/components/NavBar";
-import {
-  Airplay,
-  MessageCircleMore,
-  Navigation,
-  PlaneLanding,
-} from "lucide-react";
+import { Airplay, Navigation, PlaneLanding } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Dashboard() {
