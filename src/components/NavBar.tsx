@@ -1,6 +1,14 @@
 'use client';
 
-import { Home, Maximize2, MonitorSmartphone, Trophy, User, ShoppingBag } from 'lucide-react';
+import {
+  Home,
+  Maximize2,
+  MonitorSmartphone,
+  Trophy,
+  User,
+  ShoppingBag,
+  LogOut,
+} from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -21,6 +29,7 @@ const NavBar = () => {
   const additionalMenuItems = [
     { icon: User, route: '/profile', label: 'Profile' },
     { icon: ShoppingBag, route: '/sponsor', label: 'Sponsors' },
+    { icon: LogOut, route: '/logout', label: 'Logout' },
   ];
 
   return (

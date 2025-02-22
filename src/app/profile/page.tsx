@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { ShoppingBag, Award } from 'lucide-react';
+import { ShoppingBag, Award, LogOut } from 'lucide-react';
 import NavBar from '@/components/NavBar';
+import { useRouter } from 'next/navigation';
 
 interface PurchasedProduct {
   id: number;
@@ -56,6 +57,12 @@ const ProfilePage: React.FC = () => {
     { day: 'Sat', consumption: 90 },
     { day: 'Sun', consumption: 100 },
   ];
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // logout korisnika
+  };
 
   return (
     <div className='min-h-screen bg-gray-900 p-6 text-white'>
