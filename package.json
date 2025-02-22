@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/extension-accelerate": "^1.2.2",
+    "bcryptjs": "^3.0.2",
     "install": "^0.13.0",
     "next": "15.1.7",
     "prisma": "^6.4.1",
