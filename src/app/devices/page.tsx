@@ -64,8 +64,11 @@ export const DevicesView: React.FC = () => {
     }
   };
 
-  const handleEditDevice = (updatedDevice: Device) => {
-    updateDevice(updatedDevice.id, updatedDevice);
+  const handleEditDevice = async (updatedDevice: Device) => {
+    try {
+    } catch (error) {
+      console.error("Failed to update device:", error);
+    }
   };
 
   const handleDeleteDevice = (deviceId: string) => {
@@ -96,6 +99,10 @@ export const DevicesView: React.FC = () => {
     return <div>Error: {error}</div>; // Or better error component
   }
 
+  const favoriteDevices = devices.filter((d) => d.isFavorite);
+  const activeDevices = devices.filter((d) => d.isActive && !d.isFavorite);
+  const inactiveDevices = devices.filter((d) => !d.isActive && !d.isFavorite);
+
   return (
     <div className="min-h-screen bg-backgroundDark pb-20">
       <div className="h-2 bg-[#4ADE80] rounded-b-lg" />
@@ -117,28 +124,26 @@ export const DevicesView: React.FC = () => {
         </div>
 
         <div className="space-y-6">
-          {Array.isArray(devices) && devices.some((d) => d.isFavorite) && (
+          {favoriteDevices.length > 0 && (
             <div>
               <h2 className="text-[#6B7280] text-sm font-medium mb-3">
                 Favorite Devices
               </h2>
               <div className="space-y-3">
-                {devices
-                  .filter((d) => d.isFavorite)
-                  ?.map((device) => (
-                    <DeviceCard
-                      key={device.id}
-                      device={device}
-                      onToggle={toggleDeviceStatus}
-                      onSchedule={(device) => {
-                        setSelectedDevice(device);
-                        setShowScheduleModal(true);
-                      }}
-                      onFavoriteToggle={toggleFavorite}
-                      onEdit={handleEditDevice}
-                      onDelete={handleDeleteDevice}
-                    />
-                  ))}
+                {favoriteDevices.map((device) => (
+                  <DeviceCard
+                    key={device.id}
+                    device={device}
+                    onToggle={toggleDeviceStatus}
+                    onSchedule={(device) => {
+                      setSelectedDevice(device);
+                      setShowScheduleModal(true);
+                    }}
+                    onFavoriteToggle={toggleFavorite}
+                    onEdit={handleEditDevice}
+                    onDelete={handleDeleteDevice}
+                  />
+                ))}
               </div>
             </div>
           )}
@@ -148,23 +153,20 @@ export const DevicesView: React.FC = () => {
               Active Devices
             </h2>
             <div className="space-y-3">
-              {Array.isArray(devices) &&
-                devices
-                  .filter((d) => d.isActive && !d.isFavorite)
-                  .map((device) => (
-                    <DeviceCard
-                      key={device.id}
-                      device={device}
-                      onToggle={toggleDeviceStatus}
-                      onSchedule={(device) => {
-                        setSelectedDevice(device);
-                        setShowScheduleModal(true);
-                      }}
-                      onFavoriteToggle={toggleFavorite}
-                      onEdit={handleEditDevice}
-                      onDelete={handleDeleteDevice}
-                    />
-                  ))}
+              {activeDevices.map((device) => (
+                <DeviceCard
+                  key={device.id}
+                  device={device}
+                  onToggle={toggleDeviceStatus}
+                  onSchedule={(device) => {
+                    setSelectedDevice(device);
+                    setShowScheduleModal(true);
+                  }}
+                  onFavoriteToggle={toggleFavorite}
+                  onEdit={handleEditDevice}
+                  onDelete={handleDeleteDevice}
+                />
+              ))}
             </div>
           </div>
 
@@ -173,23 +175,20 @@ export const DevicesView: React.FC = () => {
               Inactive Devices
             </h2>
             <div className="space-y-3">
-              {Array.isArray(devices) &&
-                devices
-                  .filter((d) => !d.isActive && !d.isFavorite)
-                  .map((device) => (
-                    <DeviceCard
-                      key={device.id}
-                      device={device}
-                      onToggle={toggleDeviceStatus}
-                      onSchedule={(device) => {
-                        setSelectedDevice(device);
-                        setShowScheduleModal(true);
-                      }}
-                      onFavoriteToggle={toggleFavorite}
-                      onEdit={handleEditDevice}
-                      onDelete={handleDeleteDevice}
-                    />
-                  ))}
+              {inactiveDevices.map((device) => (
+                <DeviceCard
+                  key={device.id}
+                  device={device}
+                  onToggle={toggleDeviceStatus}
+                  onSchedule={(device) => {
+                    setSelectedDevice(device);
+                    setShowScheduleModal(true);
+                  }}
+                  onFavoriteToggle={toggleFavorite}
+                  onEdit={handleEditDevice}
+                  onDelete={handleDeleteDevice}
+                />
+              ))}
             </div>
           </div>
         </div>
