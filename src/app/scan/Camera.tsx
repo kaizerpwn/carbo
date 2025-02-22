@@ -25,7 +25,7 @@ export default function Camera({ onCapture, isLoading }: CameraProps) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: 'environment', // Use back camera on mobile devices
+          facingMode: 'environment', // 
           width: { ideal: 1920 },
           height: { ideal: 1080 },
         },
@@ -55,11 +55,9 @@ export default function Camera({ onCapture, isLoading }: CameraProps) {
 
       const context = canvas.getContext('2d');
       if (context) {
-        // Draw the current frame from the video
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
-        // Convert the canvas to a base64 encoded JPEG
-        const imageSrc = canvas.toDataURL('image/jpeg', 0.8); // 0.8 quality for better file size
+        const imageSrc = canvas.toDataURL('image/jpeg', 0.8); // 
         onCapture(imageSrc);
       }
     }
@@ -83,15 +81,12 @@ export default function Camera({ onCapture, isLoading }: CameraProps) {
 
   return (
     <div className='fixed inset-0 bg-black'>
-      {/* Close Button */}
       <button onClick={() => router.push('/')} className='absolute top-4 right-4 z-10 p-2'>
         <X className='w-6 h-6 text-white' />
       </button>
 
-      {/* Camera Preview */}
       <video ref={videoRef} autoPlay playsInline className='h-full w-full object-cover' />
 
-      {/* Document Frame Overlay */}
       <div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
         <div className='relative w-[85%] aspect-[3/4] border-2 border-yellow-400/50'>
           <div className='absolute -left-1 -top-1 w-6 h-6 border-l-4 border-t-4 border-yellow-400'></div>
@@ -101,7 +96,7 @@ export default function Camera({ onCapture, isLoading }: CameraProps) {
         </div>
       </div>
 
-      {/* Capture Button */}
+      
       <button
         onClick={captureImage}
         disabled={isLoading}

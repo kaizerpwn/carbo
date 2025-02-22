@@ -3,4 +3,5 @@ export interface ScanResult {
   score: number;
   reasons: string[];
   potentialPoints: number;
+  text: string; // Add this line
 }

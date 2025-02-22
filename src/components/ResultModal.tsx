@@ -1,11 +1,26 @@
+import { useState, useRef } from "react";
 import { ScanResult } from "@/types/scan";
 import { Award, CheckCircle, Receipt, XCircle } from "lucide-react";
 
 export const ResultModal: React.FC<{
   result: ScanResult;
   onClose: () => void;
-  onScanReceipt: () => void;
+  onScanReceipt: (receiptFile: File) => void;
 }> = ({ result, onClose, onScanReceipt }) => {
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleReceiptUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      setReceiptFile(e.target.files[0]);
+      onScanReceipt(e.target.files[0]);
+    }
+  };
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
       <div className="bg-backgroundLight rounded-3xl w-full max-w-sm overflow-hidden">
@@ -61,13 +76,22 @@ export const ResultModal: React.FC<{
                   +{result.potentialPoints}
                 </span>
               </div>
-              <button
-                onClick={onScanReceipt}
-                className="w-full bg-[#4ADE80] text-black font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2"
-              >
-                <Receipt className="w-4 h-4" />
-                Scan Receipt to Claim Points
-              </button>
+              <div className="space-y-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleReceiptUpload}
+                  className="hidden"
+                />
+                <button
+                  onClick={handleButtonClick}
+                  className="w-full bg-[#4ADE80] text-black font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2"
+                >
+                  <Receipt className="w-4 h-4" />
+                  Scan Receipt to Claim Points
+                </button>
+              </div>
             </div>
           )}
 
