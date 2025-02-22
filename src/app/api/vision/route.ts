@@ -144,7 +144,7 @@ export async function POST(req: AuthenticatedNextRequest) {
             ecoScore: resultJSON.ecofriendly_meter,
             category: "Unknown",
             carbonFootprint: 0,
-            recyclable: sanitizedEcoFacts.some((fact) =>
+            recyclable: sanitizedEcoFacts.some((fact: string) =>
               fact.toLowerCase().includes("recycl")
             ),
             brand: null,
@@ -155,7 +155,7 @@ export async function POST(req: AuthenticatedNextRequest) {
         console.log("Product created:", product);
 
         // Create user scan
-        const userScan = await prisma.userScan.create({
+        /* const userScan = await prisma.userScan.create({
           data: {
             user_id: userId, // promijenili smo userId u user_id da odgovara mapiranju
             product_id: product.id, // promijenili smo productId u product_id da odgovara mapiranju
@@ -164,14 +164,14 @@ export async function POST(req: AuthenticatedNextRequest) {
           },
         });
 
-        console.log("UserScan created:", userScan);
+        console.log("UserScan created:", userScan); */
 
         return NextResponse.json({
           text: sanitizedText,
           ecofriendly_meter: resultJSON.ecofriendly_meter,
           eco_facts: sanitizedEcoFacts,
           productId: product.id,
-          scanId: userScan.id,
+          /* scanId: userScan.id, */
         });
       } catch (dbError) {
         console.error("Database operation failed:", dbError);
