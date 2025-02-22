@@ -33,33 +33,30 @@ export default function Dashboard() {
 
         <div className="bg-backgroundLight rounded-2xl mb-6">
           <div className="p-4">
-            <h2 className="text-white text-lg mb-1">Your tree</h2>
-            <p className="text-[#6B7280] text-sm">How is your tree doing?</p>
+            <h2 className="text-white text-lg font-[1000]">Your tree</h2>
+            <p className="text-[#6B7280] text-sm font-semibold">Metrics during the last 7 days</p>
           </div>
+        </div>
 
-          <div className="p-4">
+        <div className="bg-backgroundLight rounded-2xl mb-6">
+          <div className="flex relative overflow-hidden">
             <div className="flex justify-between items-start">
-              <div className="bg-backgroundDark w-48 rounded-r-lg p-4 relative">
+              <div className="bg-[#FFFFFF07] p-4 pr-7 relative w-full">
                 <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
 
                 <div className="mb-6 ml-2">
-                  <div className="text-white text-4xl font-semibold">85%</div>
+                  <div className="text-white text-4xl font-[1000]">85<span className="text-xl font-[300]">%</span></div>
                   <div className="text-[#6B7280] text-sm">CO2 Emissions</div>
                 </div>
 
                 <div className="ml-2">
-                  <div className="text-white text-4xl font-semibold">13%</div>
+                  <div className="text-white text-4xl font-[1000]">13<span className="text-xl font-[300]">%</span></div>
                   <div className="text-[#6B7280] text-sm">Progress</div>
                 </div>
               </div>
-
-              <div className="text-right">
-                <div className="text-[#6B7280] text-sm">Last 7 Days</div>
-                <div className="text-white text-sm">Metrics</div>
-              </div>
             </div>
 
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-center p-4 absolute right-0 mr-4">
               <div className="relative w-48 h-48">
                 <svg viewBox="0 0 100 100" className="transform -rotate-90">
                   <circle
@@ -67,8 +64,8 @@ export default function Dashboard() {
                     cy="50"
                     r="45"
                     fill="none"
-                    stroke="#21242D"
-                    strokeWidth="10"
+                    stroke="#FFF"
+                    strokeWidth="6"
                   />
                   <circle
                     cx="50"
@@ -76,19 +73,23 @@ export default function Dashboard() {
                     r="45"
                     fill="none"
                     stroke="#4ADE80"
-                    strokeWidth="10"
+                    strokeWidth="6"
                     strokeDasharray="282.6"
                     strokeDashoffset="246"
                     strokeLinecap="round"
                   />
                 </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg width="60" height="60" viewBox="0 0 60 60">
-                    <path
-                      d="M30 10 C20 10 15 20 15 30 C15 40 20 45 30 45 C40 45 45 40 45 30 C45 20 40 10 30 10"
-                      fill="#4ADE80"
-                    />
-                    <rect x="28" y="45" width="4" height="8" fill="#bc8a5f" />
+                <div className="absolute inset-0 flex items-center justify-center p-10">
+                  <svg width="583" height="613" viewBox="0 0 583 613" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M260 436.5L240.5 420L216 427L259 472.5L253 613H316.5L311.5 493L369.5 431.5L367.5 411L310.5 459L308.5 397L261.5 394.5L260 436.5Z" fill="#E88687"/>
+                    <circle cx="336.5" cy="322.5" r="99.5" fill="#6FD4A1"/>
+                    <ellipse cx="483.5" cy="303.5" rx="99.5" ry="103.5" fill="#6FD4A1"/>
+                    <ellipse cx="436.5" cy="158.5" rx="99.5" ry="103.5" fill="#6FD4A1"/>
+                    <circle cx="299.5" cy="103.5" r="103.5" fill="#6FD4A1"/>
+                    <circle cx="179.5" cy="158.5" r="103.5" fill="#6FD4A1"/>
+                    <circle cx="103.5" cy="284.5" r="103.5" fill="#6FD4A1"/>
+                    <circle cx="198.5" cy="326.5" r="103.5" fill="#6FD4A1"/>
+                    <circle cx="295.5" cy="215.5" r="103.5" fill="#6FD4A1"/>
                   </svg>
                 </div>
               </div>
