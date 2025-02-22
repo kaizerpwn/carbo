@@ -37,8 +37,12 @@ const SignupWizard: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<SignupData>>({});
   const { onboardingData, setSignupData, setUser } = useAuth();
-  const [countryData, setCountryData] = useState<{ value: string; label: string }[]>([]);
-  const [townData, setTownData] = useState<{ value: string; label: string }[]>([]);
+  const [countryData, setCountryData] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [townData, setTownData] = useState<{ value: string; label: string }[]>(
+    []
+  );
   const [formData, setFormData] = useState<SignupData>({
     fullName: "",
     username: "",
@@ -52,7 +56,9 @@ const SignupWizard: React.FC = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch("https://restcountries.com/v3.1/all?fields=name");
+        const response = await fetch(
+          "https://restcountries.com/v3.1/all?fields=name"
+        );
         const data = await response.json();
         const formattedData = data.map((country: any) => ({
           value: country.name.common,
@@ -71,17 +77,20 @@ const SignupWizard: React.FC = () => {
 
   const fetchTowns = async (country: string) => {
     try {
-      const response = await fetch("https://countriesnow.space/api/v0.1/countries/population/cities/filter", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          order: "asc",
-          orderBy: "name",
-          country,
-        }),
-      });
+      const response = await fetch(
+        "https://countriesnow.space/api/v0.1/countries/population/cities/filter",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            order: "asc",
+            orderBy: "name",
+            country,
+          }),
+        }
+      );
       const data = await response.json();
       const formattedData = data.data.map((town: any) => ({
         value: town.city,

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -7,7 +7,7 @@ if (!process.env.JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined in environment variables");
 }
 
-export default async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
@@ -15,7 +15,7 @@ export default async function POST(req: Request) {
       where: { email },
     });
 
-    if (!user) {
+    if (!user || !user.passwordHash) {
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 }
@@ -40,7 +40,7 @@ export default async function POST(req: Request) {
       { expiresIn: "7d" }
     );
 
-    const { ...userWithoutPassword } = user;
+    const { passwordHash, ...userWithoutPassword } = user;
 
     const response = NextResponse.json({
       user: userWithoutPassword,
