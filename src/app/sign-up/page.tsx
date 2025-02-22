@@ -62,10 +62,12 @@ const SignupWizard: React.FC = () => {
           "https://restcountries.com/v3.1/all?fields=name"
         );
         const data = await response.json();
-        const formattedData = data.map((country: any) => ({
-          value: country.name.common,
-          label: country.name.common,
-        }));
+        const formattedData = data
+          .map((country: any) => ({
+            value: country.name.common,
+            label: country.name.common,
+          }))
+          .sort((a: any, b: any) => a.label.localeCompare(b.label));
         setCountryData(formattedData);
       } catch (error) {
         console.error("Error fetching countries:", error);
@@ -94,10 +96,12 @@ const SignupWizard: React.FC = () => {
         }
       );
       const data = await response.json();
-      const formattedData = data.data.map((town: any) => ({
-        value: town.city,
-        label: town.city,
-      }));
+      const formattedData = data.data
+        .map((town: any) => ({
+          value: town.city,
+          label: town.city,
+        }))
+        .sort((a: any, b: any) => a.label.localeCompare(b.label));
       setTownData(formattedData);
     } catch (error) {
       console.error("Error fetching towns:", error);
