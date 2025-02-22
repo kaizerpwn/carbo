@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Plus, Trash2 } from "lucide-react";
+import { X, Plus, Trash2, Clock, Calendar } from "lucide-react";
 import { ScheduleModalProps } from "@/types/devices";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -83,43 +83,54 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-backgroundLight rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center p-4 border-b border-[#374151] sticky top-0 bg-backgroundLight">
-          <div>
-            <h2 className="text-white text-lg font-medium">Schedule Device</h2>
-            <p className="text-[#6B7280] text-sm">{device.name}</p>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+      <div className="bg-backgroundLight rounded-3xl w-full max-w-sm overflow-hidden">
+        {/* Header */}
+        <div className="bg-[#4ADE80] p-4 relative">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-black text-lg font-medium">
+                Schedule Device
+              </h2>
+              <p className="text-black/70 text-sm">{device.name}</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="text-black/70 hover:text-black transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="text-[#6B7280] hover:text-white transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-6">
+        <form onSubmit={handleSubmit} className="p-4 space-y-4">
           {schedules.map((schedule, index) => (
             <div
               key={schedule.id}
-              className="p-4 bg-[#374151] rounded-xl space-y-4"
+              className="p-4 bg-backgroundDark rounded-xl space-y-4"
             >
               <div className="flex justify-between items-center">
-                <h3 className="text-white font-medium">Schedule {index + 1}</h3>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-[#4ADE80]" />
+                  <h3 className="text-white font-medium">
+                    Schedule {index + 1}
+                  </h3>
+                </div>
                 {schedules.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeSchedule(schedule.id)}
-                    className="text-[#6B7280] hover:text-red-500 transition-colors"
+                    className="text-[#6B7280] hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-500/10"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 )}
               </div>
 
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="text-sm text-white mb-1 block">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-white/90 text-sm">
+                    <Clock className="w-4 h-4" />
                     Turn On
                   </label>
                   <input
@@ -128,11 +139,12 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
                     onChange={(e) =>
                       updateScheduleTime(schedule.id, "on", e.target.value)
                     }
-                    className="w-full bg-backgroundLight rounded-lg px-3 py-2 text-white border border-[#4B5563] focus:border-[#4ADE80] focus:outline-none"
+                    className="w-full bg-backgroundLight rounded-xl p-3 text-white border border-white/10 focus:border-[#4ADE80] focus:outline-none"
                   />
                 </div>
-                <div className="flex-1">
-                  <label className="text-sm text-white mb-1 block">
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-white/90 text-sm">
+                    <Clock className="w-4 h-4" />
                     Turn Off
                   </label>
                   <input
@@ -141,13 +153,14 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
                     onChange={(e) =>
                       updateScheduleTime(schedule.id, "off", e.target.value)
                     }
-                    className="w-full bg-backgroundLight rounded-lg px-3 py-2 text-white border border-[#4B5563] focus:border-[#4ADE80] focus:outline-none"
+                    className="w-full bg-backgroundLight rounded-xl p-3 text-white border border-white/10 focus:border-[#4ADE80] focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="text-sm text-white mb-2 block">
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-white/90 text-sm">
+                  <Calendar className="w-4 h-4" />
                   Repeat On
                 </label>
                 <div className="flex gap-2 flex-wrap">
@@ -156,10 +169,10 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
                       key={day}
                       type="button"
                       onClick={() => toggleDay(schedule.id, day)}
-                      className={`px-3 py-1 rounded-full text-sm border transition-colors ${
+                      className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
                         schedule.days.includes(day)
-                          ? "border-[#4ADE80] bg-[#4ADE80] bg-opacity-10 text-[#4ADE80]"
-                          : "border-[#4B5563] text-[#6B7280] hover:border-[#4ADE80] hover:text-white"
+                          ? "bg-[#4ADE80] text-black font-medium"
+                          : "bg-backgroundLight text-white/70 hover:text-white hover:bg-backgroundLight/80"
                       }`}
                     >
                       {day}
@@ -173,15 +186,15 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
           <button
             type="button"
             onClick={addNewSchedule}
-            className="w-full py-2 border-2 border-dashed border-[#4B5563] rounded-xl text-[#6B7280] hover:border-[#4ADE80] hover:text-[#4ADE80] transition-colors flex items-center justify-center gap-2"
+            className="w-full p-3 bg-backgroundDark rounded-xl text-white/70 hover:text-[#4ADE80] transition-colors flex items-center justify-center gap-2 group"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 group-hover:scale-110 transition-transform" />
             Add Another Schedule
           </button>
 
           <button
             type="submit"
-            className="w-full bg-[#4ADE80] text-white py-3 rounded-xl hover:bg-[#3aa568] transition-colors"
+            className="w-full bg-[#4ADE80] text-black font-medium p-3 rounded-xl mt-2"
           >
             Save Schedules
           </button>
