@@ -20,6 +20,7 @@ export default function OnBoardingPage() {
   const progress = (currentStep / (totalSteps - 1)) * 100;
 
   const handleContinue = (data: any) => {
+    console.log("data je:", data);
     setOnboardingData((prev: any) => ({ ...prev, ...data }));
     if (currentStep < totalSteps - 1) {
       setCurrentStep((prev) => prev + 1);

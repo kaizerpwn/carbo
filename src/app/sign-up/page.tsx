@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import InputField from "../../components/InputField";
 import { useAuth } from "@/context/AuthContext";
+import { AuthAPI } from "@/lib/Auth/Auth";
 
 interface SignupData {
   fullName: string;
@@ -40,7 +41,7 @@ const SignupWizard: React.FC = () => {
     password: "",
     confirmPassword: "",
     country: "",
-    town: ""
+    town: "",
   });
 
   useEffect(() => {
@@ -202,15 +203,32 @@ const SignupWizard: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateStep()) return;
 
     if (step < 3) {
       setStep(step + 1);
     } else {
-      setSignupData(formData);
-      console.log("Form submitted:", formData); // Log only the form data
+      try {
+        const { fullName, username, email, password, country, town } = formData;
+        const response = await AuthAPI.registerUser({
+          fullName,
+          username,
+          email,
+          password,
+          country,
+          town,
+          transport: onboardingData.transport,
+          energy: onboardingData.energy,
+          recycle: onboardingData.recycle,
+        });
+        setSignupData(response.user);
+        console.log("Form submitted:", response.user);
+      } catch (error) {
+        console.error("Registration error:", error);
+        setErrors({ email: "Registration failed. Please try again." });
+      }
     }
   };
 
