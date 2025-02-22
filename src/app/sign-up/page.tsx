@@ -36,6 +36,7 @@ const SignupWizard: React.FC = () => {
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<SignupData>>({});
+
   const { onboardingData, setSignupData, setUser } = useAuth();
   const [countryData, setCountryData] = useState<
     { value: string; label: string }[]
