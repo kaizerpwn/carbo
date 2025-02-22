@@ -158,10 +158,9 @@ export async function POST(req: AuthenticatedNextRequest) {
           });
 
           if (!product) {
-
             product = await tx.product.create({
               data: {
-                name: truncatedName.split(' ').slice(0, 4).join(' ');,
+                name: truncatedName.split(" ").slice(0, 4).join(" "),
                 ecoScore: validatedEcoScore,
                 category: "Unknown",
                 carbonFootprint: new Prisma.Decimal(0),
