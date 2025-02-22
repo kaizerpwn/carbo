@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { ShoppingBag, Award, Leaf } from 'lucide-react';
+import { ShoppingBag, Award } from 'lucide-react';
 
 interface PurchasedProduct {
   id: number;

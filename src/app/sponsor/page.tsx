@@ -12,6 +12,19 @@ interface Product {
   ecoImpact: string;
 }
 
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
+
+export interface AuthContextType {
+  user: User | null;
+  login: (credentials: { email: string; password: string }) => Promise<void>;
+  logout: () => Promise<void>;
+  loading: boolean;
+}
+
 const SponsorProducts: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -62,7 +75,6 @@ const SponsorProducts: React.FC = () => {
 
   return (
     <div className='min-h-screen bg-gray-900 p-6 text-white'>
-      {/* Header */}
       <div className='flex items-center justify-between mb-8'>
         <div>
           <h1 className='text-2xl font-semibold'>Eco Store</h1>
@@ -74,7 +86,6 @@ const SponsorProducts: React.FC = () => {
         </div>
       </div>
 
-      {/* Products Grid */}
       <div className='space-y-4'>
         {products.map((product) => (
           <div
@@ -108,7 +119,6 @@ const SponsorProducts: React.FC = () => {
         ))}
       </div>
 
-      {/* Bottom Navigation */}
       <div className='fixed bottom-0 left-0 right-0 bg-gray-800 p-4'>
         <div className='flex justify-between items-center max-w-md mx-auto'>
           <div>
@@ -121,7 +131,6 @@ const SponsorProducts: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {isModalOpen && selectedProduct && (
         <div className='fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn'>
           <div className='bg-gray-800 p-8 rounded-2xl text-white max-w-md w-full mx-4 shadow-2xl transform animate-slideUp'>
@@ -130,7 +139,7 @@ const SponsorProducts: React.FC = () => {
                 <Leaf className='w-8 h-8 text-emerald-500' />
               </div>
               <h2 className='text-2xl font-semibold mb-2'>Confirm Purchase</h2>
-              <p className='text-gray-400'>You're about to purchase:</p>
+              <p className='text-gray-400'>You&apos;re about to purchase:</p>
               <p className='text-xl font-medium mt-2'>{selectedProduct.name}</p>
               <p className='text-emerald-500 text-2xl font-bold mt-4'>
                 ${selectedProduct.price} USD
