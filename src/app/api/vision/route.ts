@@ -1,35 +1,42 @@
+import { NextRequest, NextResponse } from "next/server";
+import OpenAI from "openai";
 
-import { NextResponse } from 'next/server';
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY!,
+});
 
-export async function GET(request: Request): Promise<Response> {
-  const data = { poruka: 'Pozdrav iz GET metode u TypeScriptu!' };
-  return NextResponse.json(data);
-}
-
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { image } = await request.json()
+    const formData = await req.formData();
+    const file = formData.get("file") as File;
 
-    // Ovde implementirajte logiku za čuvanje slike
-    // Na primer, slanje na vaš backend server ili cloud storage
+    if (!file) {
+      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    }
 
-    // Primer slanja na eksterni API
-    // const response = await fetch('YOUR_API_ENDPOINT', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${process.env.API_KEY}`
-    //   },
-    //   body: JSON.stringify({ image })
-    // })
+    // Convert file to buffer and then base64
+    const bytes = await file.arrayBuffer();
+    const base64Image = Buffer.from(bytes).toString("base64");
 
-    // if (!response.ok) {
-    //   throw new Error('Failed to upload to external API')
-    // }
+    // ✅ Ask OpenAI Vision API to extract text from the image
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: "Extract and return all the text present in the image." },
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "Extract all readable text from this image." },
+            { type: "image_url", image_url: { url: `data:image/jpeg;base64,${base64Image}` } }, // ✅ Base64 Image
+          ],
+        },
+      ],
+      max_tokens: 500,
+    });
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ text: response.choices[0].message.content });
   } catch (error) {
-    console.error("Upload error:", error)
-    return NextResponse.json({ error: "Failed to upload image" }, { status: 500 })
+    console.error("Error processing image:", error);
+    return NextResponse.json({ error: "Failed to process image" }, { status: 500 });
   }
 }
