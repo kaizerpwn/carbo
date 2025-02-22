@@ -290,7 +290,7 @@ const ProductScanView: React.FC = () => {
           )}
 
           {isScanningReceipt && (
-            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-100">
+            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100]">
               <div className="bg-backgroundLight rounded-2xl p-6 text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4ADE80] mx-auto mb-4" />
                 <p className="text-white">Analyzing receipt...</p>
@@ -310,7 +310,7 @@ const ProductScanView: React.FC = () => {
             <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
               <div className="bg-backgroundLight rounded-3xl w-full max-w-sm overflow-hidden">
                 <div className={`p-6 ${receiptScanResult ? "bg-[#4ADE80]" : "bg-red-500"}`}>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-5">
                     {receiptScanResult ? (
                       <CheckCircle className="w-8 h-8 text-black" />
                     ) : (
@@ -319,10 +319,10 @@ const ProductScanView: React.FC = () => {
                     <div>
                       <h2 className="text-black text-lg font-medium flex items-center">
                         {receiptScanResult ? (
-                          <span className="font-bold flex items-center">
-                            Purchase completed. You have received {coins}
-                            <Flame className="ml-2 w-4 h-4 group-hover:animate-bounce" />
-                          </span>
+                          <div className="flex flex-col">
+                            <p className="font-bold">Purchase completed.</p>
+                            <p className="flex items-center ">You have recieved <b className="ml-1">{coins}</b> <Flame className="mb-[1px] w-4 h-4 group-hover:animate-bounce" /></p> 
+                          </div>
                         ) : (
                           "Purchase Not Confirmed"
                         )}

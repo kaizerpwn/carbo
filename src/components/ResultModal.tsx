@@ -23,7 +23,7 @@ export const ResultModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[50]">
       <div className="bg-backgroundLight rounded-3xl w-full max-w-sm overflow-hidden">
         <div
           className={`p-6 ${
