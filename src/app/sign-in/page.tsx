@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff, LogIn } from "lucide-react";
+import { AuthAPI } from "@/lib/Auth/Auth";
 
 interface LoginFormData {
   email: string;
@@ -14,10 +15,18 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", formData);
+    setError(null);
+    try {
+      const response = await AuthAPI.loginUser(formData);
+      console.log("Login successful:", response);
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Invalid email or password. Please try again.");
+    }
   };
 
   return (
@@ -39,6 +48,11 @@ const Login: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="bg-red-500 text-white text-sm p-2 rounded">
+              {error}
+            </div>
+          )}
           <div className="space-y-2">
             <label
               htmlFor="email"
@@ -109,7 +123,7 @@ const Login: React.FC = () => {
 
           <p className="text-center text-[#6B7280] text-sm">
             Don&apos;t have an account?{" "}
-            <a href="/signup" className="text-primaryColor hover:underline">
+            <a href="/sign-up" className="text-primaryColor hover:underline">
               Sign up
             </a>
           </p>

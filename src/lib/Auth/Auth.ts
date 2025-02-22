@@ -7,7 +7,10 @@ export interface UserLoginValues {
 
 export const AuthAPI = {
   loginUser: async (values: UserLoginValues) => {
-    const response = await http.post("/auth/login", values);
-    return response;
+    const response = await http.post("/api/auth/login", values);
+    if (response.status !== 200) {
+      throw new Error("Login failed");
+    }
+    return response.data;
   },
 };
