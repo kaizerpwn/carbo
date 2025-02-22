@@ -5,16 +5,4 @@ const http = axios.create({
   withCredentials: true,
 });
 
-http.interceptors.request.use(
-  (config) => {
-    return {
-      ...config,
-      url: `${http.defaults.baseURL}${config.url}`,
-    };
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
 export default http;

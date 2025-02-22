@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff, LogIn } from "lucide-react";
-import { AuthAPI } from "@/lib/Auth/Auth";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Logo from "@/components/Logo";
@@ -26,8 +25,10 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await AuthAPI.loginUser(formData);
-      loginUser(response.user);
+      await loginUser({
+        email: formData.email,
+        password: formData.password,
+      });
       router.push("/");
     } catch (error) {
       console.error("Login error:", error);
@@ -42,9 +43,9 @@ const Login: React.FC = () => {
       <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[200%] h-48 bg-gradient-to-b from-[#FFFFFF33] to-transparent opacity-50 animate-fade" />
 
       <div className="flex-1 flex flex-col p-4 max-w-md mx-auto w-full relative z-10">
-          <div className="flex items-center justify-center my-8">
-            <Logo />
-          </div>
+        <div className="flex items-center justify-center my-8">
+          <Logo />
+        </div>
 
         <div className="flex items-center gap-3 mb-12 mt-8">
           <div className="w-12 h-12 rounded-full bg-primaryColor flex items-center justify-center pb-1">
@@ -150,7 +151,8 @@ export default Login;
 // Add the following CSS to your global styles or a CSS module
 <style jsx>{`
   @keyframes fade {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0.5;
     }
     50% {
@@ -160,4 +162,4 @@ export default Login;
   .animate-fade {
     animation: fade 3s infinite;
   }
-`}</style>
+`}</style>;

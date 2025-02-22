@@ -16,14 +16,19 @@ export interface RegisterUserValues {
   energy: string;
   recycle: string;
 }
+let isLoggingIn = false;
 
 export const AuthAPI = {
   loginUser: async (values: UserLoginValues) => {
-    const response = await http.post("/auth/login", values);
-    if (response.status !== 200) {
-      throw new Error("Login failed");
+    if (isLoggingIn) return;
+
+    try {
+      isLoggingIn = true;
+      const response = await http.post("/auth/login", values);
+      return response.data;
+    } finally {
+      isLoggingIn = false;
     }
-    return response.data;
   },
 
   registerUser: async (values: RegisterUserValues) => {

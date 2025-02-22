@@ -45,7 +45,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const loginUser = async (values: { email: string; password: string }) => {
     try {
       const response = await AuthAPI.loginUser(values);
-      setUser(response.user);
+      if (!user) {
+        setUser(response.user);
+      }
     } catch (error) {
       console.error("Login error:", error);
       throw error;
