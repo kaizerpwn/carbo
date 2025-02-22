@@ -1,0 +1,173 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.VarChar(36)
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  username     String   @unique @db.VarChar(50)
+  fullName     String?  @map("full_name") @db.VarChar(100)
+  isVerified   Boolean  @default(false) @map("is_verified")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  userStats        UserStats?
+  devices          Device[]
+  monthlySummaries MonthlySummary[]
+  userChallenges   UserChallenge[]
+  userScans        UserScan[]
+
+  @@map("users")
+}
+
+model UserStats {
+  id                String   @id @default(uuid()) @db.VarChar(36)
+  userId            String   @unique @map("user_id") @db.VarChar(36)
+  totalPoints       Int      @default(0) @map("total_points")
+  carbonSaved       Decimal  @default(0.00) @map("carbon_saved") @db.Decimal(10, 2)
+  currentStreak     Int      @default(0) @map("current_streak")
+  totalScans        Int      @default(0) @map("total_scans")
+  ecoProductsBought Int      @default(0) @map("eco_products_bought")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_stats")
+}
+
+model Device {
+  id           String   @id @default(uuid()) @db.VarChar(36)
+  userId       String   @map("user_id") @db.VarChar(36)
+  name         String   @db.VarChar(100)
+  powerRating  Decimal? @map("power_rating") @db.Decimal(10, 2)
+  standbyPower Decimal? @map("standby_power") @db.Decimal(10, 2)
+  location     String?  @db.VarChar(50)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  powerReadings PowerReading[]
+
+  @@index([userId])
+  @@map("devices")
+}
+
+model PowerReading {
+  id               String   @id @default(uuid()) @db.VarChar(36)
+  deviceId         String   @map("device_id") @db.VarChar(36)
+  powerConsumption Decimal  @map("power_consumption") @db.Decimal(10, 4)
+  readingTimestamp DateTime @default(now()) @map("reading_timestamp")
+  isStandby        Boolean  @default(false) @map("is_standby")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  // Relations
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId])
+  @@index([readingTimestamp])
+  @@map("power_readings")
+}
+
+model MonthlySummary {
+  id               String   @id @default(uuid()) @db.VarChar(36)
+  userId           String   @map("user_id") @db.VarChar(36)
+  month            DateTime @db.Date
+  totalConsumption Decimal  @map("total_consumption") @db.Decimal(10, 2)
+  totalCost        Decimal? @map("total_cost") @db.Decimal(10, 2)
+  carbonFootprint  Decimal? @map("carbon_footprint") @db.Decimal(10, 2)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, month])
+  @@index([userId, month])
+  @@map("monthly_summaries")
+}
+
+model Challenge {
+  id            String   @id @default(uuid()) @db.VarChar(36)
+  title         String   @db.VarChar(100)
+  description   String   @db.Text
+  points        Int
+  durationHours Int?     @map("duration_hours")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relations
+  userChallenges UserChallenge[]
+
+  @@map("challenges")
+}
+
+model UserChallenge {
+  id           String    @id @default(uuid()) @db.VarChar(36)
+  userId       String    @map("user_id") @db.VarChar(36)
+  challengeId  String    @map("challenge_id") @db.VarChar(36)
+  status       Status    @default(active)
+  startedAt    DateTime  @default(now()) @map("started_at")
+  completedAt  DateTime? @map("completed_at")
+  pointsEarned Int       @default(0) @map("points_earned")
+  energySaved  Decimal   @default(0.00) @map("energy_saved") @db.Decimal(10, 2)
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge Challenge @relation(fields: [challengeId], references: [id])
+
+  @@index([userId])
+  @@map("user_challenges")
+}
+
+model Product {
+  id              String   @id @default(uuid()) @db.VarChar(36)
+  barcode         String?  @unique @db.VarChar(100)
+  name            String   @db.VarChar(255)
+  brand           String?  @db.VarChar(100)
+  category        String?  @db.VarChar(100)
+  ecoScore        Int?     @map("eco_score")
+  energyRating    String?  @map("energy_rating") @db.VarChar(10)
+  carbonFootprint Decimal? @map("carbon_footprint") @db.Decimal(10, 2)
+  recyclable      Boolean  @default(false)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  userScans UserScan[]
+
+  @@index([barcode])
+  @@map("products")
+}
+
+model UserScan {
+  id               String   @id @default(uuid()) @db.VarChar(36)
+  userId           String   @map("user_id") @db.VarChar(36)
+  productId        String   @map("product_id") @db.VarChar(36)
+  scannedAt        DateTime @default(now()) @map("scanned_at")
+  location         String?  @db.VarChar(255)
+  addedToFavorites Boolean  @default(false) @map("added_to_favorites")
+
+  // Relations
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([userId])
+  @@map("user_scans")
+}
+
+enum Status {
+  active
+  completed
+  failed
+}
