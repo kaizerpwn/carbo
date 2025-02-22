@@ -19,6 +19,8 @@ export async function POST(req: NextRequest) {
 
     const bytes = await file.arrayBuffer();
     const base64Image = Buffer.from(bytes).toString("base64");
+    const imageFormat = base64Image.match(/^data:image\/(\w+);base64,/);
+    const format = imageFormat ? imageFormat[1] : "jpeg";
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -34,7 +36,7 @@ export async function POST(req: NextRequest) {
             { type: "text", text: "Please analyze this image:" },
             {
               type: "image_url",
-              image_url: { url: `data:image/jpeg;base64,${base64Image}` },
+              image_url: { url: `data:image/${format};base64,${base64Image.replace(/^data:image\/\w+;base64,/, "")}` },
             },
           ],
         },
@@ -43,7 +45,9 @@ export async function POST(req: NextRequest) {
       temperature: 0.1,
     });
 
+
     const content = response.choices[0].message.content;
+    console.log("Content:", content);
     if (!content) throw new Error("No content in the response");
     const resultJSON = JSON.parse(content);
 
