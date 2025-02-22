@@ -18,6 +18,7 @@ import {
 import InputField from "../../components/InputField";
 import { useAuth } from "@/context/AuthContext";
 import { AuthAPI } from "@/lib/Auth/Auth";
+import { useRouter } from "next/navigation";
 
 interface SignupData {
   fullName: string;
@@ -30,6 +31,7 @@ interface SignupData {
 }
 
 const SignupWizard: React.FC = () => {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<SignupData>>({});
@@ -224,7 +226,8 @@ const SignupWizard: React.FC = () => {
           recycle: onboardingData.recycle,
         });
         setSignupData(response.user);
-        console.log("Form submitted:", response.user);
+
+        router.push("/");
       } catch (error) {
         console.error("Registration error:", error);
         setErrors({ email: "Registration failed. Please try again." });
