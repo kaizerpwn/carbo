@@ -137,7 +137,14 @@ export async function POST(req: AuthenticatedNextRequest) {
       );
 
       try {
-        // Create product
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+        });
+
+        if (!user) {
+          throw new Error(`User with ID ${userId} not found`);
+        }
+
         const product = await prisma.product.create({
           data: {
             name: sanitizedText,
@@ -154,13 +161,16 @@ export async function POST(req: AuthenticatedNextRequest) {
 
         console.log("Product created:", product);
 
-        // Create user scan
         const userScan = await prisma.userScan.create({
           data: {
-            user_id: userId, // promijenili smo userId u user_id da odgovara mapiranju
-            product_id: product.id, // promijenili smo productId u product_id da odgovara mapiranju
+            userId: userId,
+            productId: product.id,
             location: "Unknown",
-            added_to_favorites: false, // promijenili smo addedToFavorites u added_to_favorites
+            addedToFavorites: false,
+          },
+          include: {
+            user: true,
+            product: true,
           },
         });
 
@@ -174,7 +184,8 @@ export async function POST(req: AuthenticatedNextRequest) {
           scanId: userScan.id,
         });
       } catch (dbError) {
-        console.error("Database operation failed:", dbError);
+        console.error("Full database error:", dbError);
+
         return NextResponse.json(
           {
             error: "Database operation failed",
