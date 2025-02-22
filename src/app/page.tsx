@@ -1,10 +1,5 @@
-import {
-  Home,
-  Maximize2,
-  MonitorSmartphone,
-  Settings,
-  Zap,
-} from "lucide-react";
+import NavBar from "@/components/NavBar";
+import { Zap } from "lucide-react";
 
 export default function Dashboard() {
   return (
@@ -34,7 +29,9 @@ export default function Dashboard() {
         <div className="bg-backgroundLight rounded-2xl mb-6">
           <div className="p-4">
             <h2 className="text-white text-lg font-[1000]">Your tree</h2>
-            <p className="text-[#6B7280] text-sm font-semibold">Metrics during the last 7 days</p>
+            <p className="text-[#6B7280] text-sm font-semibold">
+              Metrics during the last 7 days
+            </p>
           </div>
         </div>
 
@@ -45,12 +42,16 @@ export default function Dashboard() {
                 <div className="absolute left-0 top-0 bottom-0 w-2 bg-primaryColor rounded-bl-lg rounded-tl-lg" />
 
                 <div className="mb-6 ml-2">
-                  <div className="text-white text-4xl font-[1000]">85<span className="text-xl font-[300]">%</span></div>
+                  <div className="text-white text-4xl font-[1000]">
+                    85<span className="text-xl font-[300]">%</span>
+                  </div>
                   <div className="text-[#6B7280] text-sm">CO2 Emissions</div>
                 </div>
 
                 <div className="ml-2">
-                  <div className="text-white text-4xl font-[1000]">13<span className="text-xl font-[300]">%</span></div>
+                  <div className="text-white text-4xl font-[1000]">
+                    13<span className="text-xl font-[300]">%</span>
+                  </div>
                   <div className="text-[#6B7280] text-sm">Progress</div>
                 </div>
               </div>
@@ -87,6 +88,8 @@ export default function Dashboard() {
             <span className="text-[#6B7280]">Total 4</span>
           </div>
 
+          <NavBar />
+
           <div className="relative bg-backgroundLight rounded-2xl p-4">
             <div className="absolute left-0 top-0 bottom-0 bg-primaryColor rounded-bl-lg rounded-tl-lg w-2" />
             <div className="relative pl-4">
@@ -110,17 +113,6 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto">
-        <div className="bg-backgroundLight flex justify-around items-center p-5 rounded-t-2xl">
-          <div className="flex items-center gap-2">
-            <Home className="w-5 h-5 text-primaryColor cursor-pointer" />
-          </div>
-          <Maximize2 className="w-5 h-5 text-[#6B7280] cursor-pointer" />
-          <MonitorSmartphone className="w-5 h-5 text-[#6B7280] cursor-pointer" />
-          <Settings className="w-5 h-5 text-[#6B7280] cursor-pointer" />
         </div>
       </div>
     </div>
