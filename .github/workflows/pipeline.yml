@@ -33,11 +33,11 @@ jobs:
           fi
 
       - name: Build Next.js App
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npm run build
+        run: |
+          docker build --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
+                       --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+                       --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+                       -t carbo-hackathon .
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
