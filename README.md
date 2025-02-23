@@ -3,6 +3,8 @@
 
 Carbo is your eco-friendly companion that helps you save money and reduce your carbon footprint. If you're looking to lower your electricity bills and earn money while shopping, Carbo is a must-have! ⭐.
 
+[CLICK HERE](https://carbo.kaizerpwn.dev/onboarding) for the live preview of the app ☺
+
 ---
 
  
@@ -27,7 +29,10 @@ Carbo is your eco-friendly companion that helps you save money and reduce your c
 npm install  
 
 # Start the development server  
-npm run dev  
+npm run dev
+
+# You can also use bun
+bun run dev
 ```
 ## Features
 
@@ -59,8 +64,13 @@ npm run dev
 | ![kaizerpwn](https://avatars.githubusercontent.com/u/70588174?s=28&v=4) [@kaizerpwn](https://www.github.com/kaizerpwn) | Full stack development |
 | ![jqsmiin](https://avatars.githubusercontent.com/u/86678700?s=28&v=4) [@jqsmiin](https://www.github.com/jqsmiin) | Frontend development |
 | ![daddyDOT](https://avatars.githubusercontent.com/u/65982671?s=28&v=4) [@daddyDOT](https://www.github.com/daddyDOT) | Graphics design, frontend development |
-![kosharun](https://avatars.githubusercontent.com/u/121234919?s=28&v=4) [@kosharun](https://github.com/kosharun) | Backend development |
-![IzetDelibasic](https://avatars.githubusercontent.com/u/123022248?s=28&v=4) [@IzetDelibasic](https://github.com/IzetDelibasic) | Frontend development |
+| ![kosharun](https://avatars.githubusercontent.com/u/121234919?s=28&v=4) [@kosharun](https://github.com/kosharun) | Backend development |
+| ![IzetDelibasic](https://avatars.githubusercontent.com/u/123022248?s=28&v=4) [@IzetDelibasic](https://github.com/IzetDelibasic) | Frontend development |
+
+
+## Problems we encountered
+
+- Application in production works well. However, since the lack of the time, it still _can_ produce a bad result. It is possible to encounter the lack of the list of your previously scanned items.
 
 
 ## FAQ
@@ -69,6 +79,14 @@ npm run dev
 
 This project is all about making our world a cleaner, greener place while helping people save electricity. By using smart solutions, we want to reduce waste, lower energy consumption, and make sustainable choices easier for everyone.
 
+#### How did we implement device management system?
+
+All of the data related to it is MOCKED. Why? Since this project is created in less than 35h, it was barely possible to buy an actual IOT device and to test it on it. However, we offer a very good solution of how this system should work - via smart jacks/sockets (bs utičnica) which will contain 90% of the data you need for calculations within the app.
+
 #### Why did you create this project?
 
 We built this project at the BEST Mostar 2025 hackathon, with the tight deadline of 35h. Our goal was to create something meaningful that promotes sustainability and energy efficiency.
+
+#### What are the core features of the app?
+
+The core features are: **Scan items to check their reusability/impact on an environment** and **Energy saving system**, all of that enhanced with gamification to satisfy user and its courage to do better in life.
