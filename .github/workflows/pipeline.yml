@@ -34,7 +34,7 @@ jobs:
 
       - name: Build Next.js App
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }} 
+          JWT_SECRET: ibrakadabra
         run: npm run build
 
       - name: Set up Docker Buildx
