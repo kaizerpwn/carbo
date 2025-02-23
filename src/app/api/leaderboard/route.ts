@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
           totalPoints: "desc",
         },
       },
-      take: 10, // Limit to top 10 users
+      take: 3,
     });
 
     const leaderboardData = leaderboard.map((user, index) => ({
