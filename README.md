@@ -54,6 +54,10 @@ npm run dev
 
 ## Screenshots
 
+<img src="https://i.ibb.co/FfSDXdV/Screen-Shot-2025-02-23-at-08-42-53.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/fzSCqkYP/Screen-Shot-2025-02-23-at-08-44-07.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/N64MpVN1/Screen-Shot-2025-02-23-at-08-44-10.png" alt="screenshot" width="300"/>
+
+<img src="https://i.ibb.co/XxqZ3xZL/Screen-Shot-2025-02-23-at-08-44-15.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/m3Wtk8M/Screen-Shot-2025-02-23-at-08-44-18.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/cG5dJBN/Screen-Shot-2025-02-23-at-08-44-22.png" alt="screenshot" width="300"/>
+
 <img src="https://i.ibb.co/3mXWPdSD/Screen-Shot-2025-02-23-at-07-37-16.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/7J7SVtrB/Screen-Shot-2025-02-23-at-07-37-36.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/rGXLfCpm/Screen-Shot-2025-02-23-at-07-36-55.png" alt="screenshot" width="300"/>
 
 <img src="https://i.ibb.co/5hmCfNxx/Screen-Shot-2025-02-23-at-07-37-01.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/svjWRbVR/Screen-Shot-2025-02-23-at-07-37-04.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/3mXWPdSD/Screen-Shot-2025-02-23-at-07-37-16.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/wFWtBNch/Screen-Shot-2025-02-23-at-07-37-22.png" alt="screenshot" width="300"/>
