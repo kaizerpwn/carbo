@@ -10,7 +10,7 @@ ARG JWT_SECRET
 ARG DATABASE_URL
 ARG OPENAI_API_KEY
 
-# Set environment variables for the build stage
+# Set environment variables for the build stage (only for this stage)
 ENV JWT_SECRET=$JWT_SECRET
 ENV DATABASE_URL=$DATABASE_URL
 ENV OPENAI_API_KEY=$OPENAI_API_KEY
@@ -24,7 +24,7 @@ WORKDIR /app
 COPY --from=build /app ./
 EXPOSE 3000
 
-# Set environment variables for the runtime stage
+# Set environment variables for runtime
 ENV JWT_SECRET=$JWT_SECRET
 ENV DATABASE_URL=$DATABASE_URL
 ENV OPENAI_API_KEY=$OPENAI_API_KEY
