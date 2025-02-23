@@ -61,12 +61,12 @@ function handleRedirection(
     return NextResponse.redirect(new URL("/", requestUrl));
   }
 
-  if (config.requiresAuth && !payload) {
-    if (pathname.startsWith("/api/")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    return NextResponse.redirect(new URL("/login", requestUrl));
-  }
+  // if (config.requiresAuth && !payload) {
+  //   if (pathname.startsWith("/api/")) {
+  //     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  //   }
+  //   return NextResponse.redirect(new URL("/login", requestUrl));
+  // }
 
   return null;
 }
