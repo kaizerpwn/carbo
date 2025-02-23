@@ -36,6 +36,7 @@ model UserStats {
   id                String   @id @default(uuid()) @db.VarChar(36)
   userId            String   @unique @map("user_id") @db.VarChar(36)
   totalPoints       Int      @default(0) @map("total_points")
+  totalCoins        Int      @default(0) @map("total_coins")
   carbonSaved       Decimal  @default(0.00) @map("carbon_saved") @db.Decimal(10, 2)
   currentStreak     Int      @default(0) @map("current_streak")
   totalScans        Int      @default(0) @map("total_scans")
