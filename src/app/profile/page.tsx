@@ -25,6 +25,16 @@ interface EnergyData {
   consumption: number;
 }
 
+interface UserData {
+  id: string;
+  email: string;
+  fullName: string;
+  username: string;
+  energy: string;
+  recycle: string;
+  transport: string;
+}
+
 const ProfilePage: React.FC = () => {
   const userPoints = 560;
   const emissionsProgress = 13;
@@ -35,6 +45,7 @@ const ProfilePage: React.FC = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const weeklyEnergyData: EnergyData[] = [
     { day: "Mon", consumption: 120 },
@@ -47,13 +58,18 @@ const ProfilePage: React.FC = () => {
   ];
 
   useEffect(() => {
+    const userJSON = localStorage.getItem("user");
+    if (userJSON) {
+      const user = JSON.parse(userJSON);
+      setUserData(user);
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchUserScans = async () => {
       try {
-        const userJSON = localStorage.getItem("user");
-        if (!userJSON) return;
-
-        const user = JSON.parse(userJSON);
-        const response = await fetch(`/api/userScans?userId=${user.id}`);
+        if (!userData) return;
+        const response = await fetch(`/api/userScans?userId=${userData.id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch scans");
         }
@@ -65,6 +81,7 @@ const ProfilePage: React.FC = () => {
           name: scan.product.name,
           date: new Date(scan.scannedAt).toLocaleDateString(),
           points: scan.product.ecoScore,
+          status: scan.addedToFavorites ? "completed" : "pending",
         }));
 
         setPurchasedProducts(mappedProducts);
@@ -77,7 +94,7 @@ const ProfilePage: React.FC = () => {
     };
 
     fetchUserScans();
-  }, []);
+  }, [userData]);
 
   return (
     <div className="min-h-screen bg-backgroundDark p-6 text-white">
@@ -85,7 +102,7 @@ const ProfilePage: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold">Profile</h1>
-            <p className="text-gray-400">Ahmed</p>
+            <p className="text-gray-400">{userData ? userData.username : ""}</p>
           </div>
           <div className="bg-backgroundLight px-4 py-2 rounded-full flex items-center">
             <Award className="w-4 h-4 text-primaryColor mr-2" />
