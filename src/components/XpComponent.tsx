@@ -32,7 +32,7 @@ const XPComponent: React.FC<XPComponentProps> = ({
   username,
   level,
   nextLevelXP,
-  carbonSaved = 0,
+  carbonSaved = (xp * 0.233) / 100,
   rank = 0,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

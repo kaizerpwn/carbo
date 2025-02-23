@@ -34,9 +34,16 @@ const LeaderboardView: React.FC = () => {
 
         const data = await response.json();
         console.log("Leaderboard data:", data);
-        setUsers(data);
 
-        setCurrentUser(data[2]);
+        // Izračunaj co2Saved za svakog korisnika
+        const updatedUsers = data.map((user: User) => ({
+          ...user,
+          co2Saved: (user.points * 0.233) / 100,
+        }));
+
+        setUsers(updatedUsers);
+
+        setCurrentUser(updatedUsers[2]);
       } catch (error) {
         console.error("Error fetching leaderboard data:", error);
       }
@@ -106,7 +113,7 @@ const LeaderboardView: React.FC = () => {
                       <span className="text-[#4ADE80]">{user.points} pts</span>
                       <span className="text-[#6B7280]">•</span>
                       <span className="text-[#6B7280]">
-                        {user.co2Saved} kg saved
+                        {user.co2Saved.toFixed(4)} kg saved
                       </span>
                     </div>
                   </div>
