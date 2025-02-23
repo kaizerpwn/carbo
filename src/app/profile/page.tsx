@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -11,8 +11,7 @@ import {
 } from "recharts";
 import { ShoppingBag, Award } from "lucide-react";
 import NavBar from "@/components/NavBar";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import useCoins from "@/hooks/useCoins";
 
 interface PurchasedProduct {
   id: number;
@@ -27,34 +26,27 @@ interface EnergyData {
   consumption: number;
 }
 
+interface UserData {
+  id: string;
+  email: string;
+  fullName: string;
+  username: string;
+  energy: string;
+  recycle: string;
+  transport: string;
+}
+
 const ProfilePage: React.FC = () => {
-  const userPoints = 560;
   const emissionsProgress = 13;
   const co2Reduction = 10;
 
-  const purchasedProducts: PurchasedProduct[] = [
-    {
-      id: 1,
-      name: "Eco Paper Towels",
-      date: "Today",
-      points: 50,
-      status: "completed",
-    },
-    {
-      id: 2,
-      name: "Glass Cleaner",
-      date: "Yesterday",
-      points: 30,
-      status: "completed",
-    },
-    {
-      id: 3,
-      name: "Plastic Bottles",
-      date: "2 days ago",
-      points: 0,
-      status: "pending",
-    },
-  ];
+  const [purchasedProducts, setPurchasedProducts] = useState<
+    PurchasedProduct[]
+  >([]);
+  const totalCoins = useCoins();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const weeklyEnergyData: EnergyData[] = [
     { day: "Mon", consumption: 120 },
@@ -66,13 +58,44 @@ const ProfilePage: React.FC = () => {
     { day: "Sun", consumption: 100 },
   ];
 
-  const router = useRouter();
-  const { logout } = useAuth();
+  useEffect(() => {
+    const userJSON = localStorage.getItem("user");
+    if (userJSON) {
+      const user = JSON.parse(userJSON);
+      setUserData(user);
+    }
+  }, []);
 
-  const handleLogout = async () => {
-    await logout();
-    router.push("/sign-in");
-  };
+  useEffect(() => {
+    const fetchUserScans = async () => {
+      try {
+        if (!userData) return;
+        const response = await fetch(`/api/userScans?userId=${userData.id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch scans");
+        }
+
+        const data = await response.json();
+
+        const mappedProducts = data.scannedProducts.map((scan: any) => ({
+          id: scan.id,
+          name: scan.product.name,
+          date: new Date(scan.scannedAt).toLocaleDateString(),
+          points: scan.product.ecoScore,
+          status: scan.addedToFavorites ? "completed" : "pending",
+        }));
+
+        setPurchasedProducts(mappedProducts);
+      } catch (error) {
+        console.error("Error fetching scans:", error);
+        setError("Failed to load purchase history.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserScans();
+  }, [userData]);
 
   return (
     <div className="min-h-screen bg-backgroundDark p-6 text-white">
@@ -80,11 +103,11 @@ const ProfilePage: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold">Profile</h1>
-            <p className="text-gray-400">Ahmed</p>
+            <p className="text-gray-400">{userData ? userData.username : ""}</p>
           </div>
           <div className="bg-backgroundLight px-4 py-2 rounded-full flex items-center">
             <Award className="w-4 h-4 text-primaryColor mr-2" />
-            <span className="text-sm">{userPoints} points</span>
+            <span className="text-sm">{totalCoins} points</span>
           </div>
         </div>
       </div>
@@ -142,33 +165,51 @@ const ProfilePage: React.FC = () => {
 
       <div className="bg-backgroundLight rounded-xl p-6 mb-16">
         <h3 className="text-lg font-medium mb-4">Purchase History</h3>
-        <div className="space-y-4">
-          {purchasedProducts.map((product) => (
-            <div
-              key={product.id}
-              className="flex items-center justify-between p-4 bg-[#FFFFFF07] rounded-lg"
-            >
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-primaryColor/20 rounded-full flex items-center justify-center mr-4">
-                  <ShoppingBag className="w-5 h-5 text-primaryColor" />
-                </div>
-                <div>
-                  <h4 className="font-medium">{product.name}</h4>
-                  <p className="text-sm text-gray-400">{product.date}</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                {product.status === "completed" ? (
-                  <span className="text-primaryColor">
-                    +{product.points} points
-                  </span>
-                ) : (
-                  <span className="text-gray-400">Pending</span>
-                )}
-              </div>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-32">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primaryColor"></div>
+          </div>
+        ) : error ? (
+          <div className="text-red-500 text-center py-6">
+            <span className="block text-3xl mb-2">⚠️</span>
+            {error}
+          </div>
+        ) : purchasedProducts.length === 0 ? (
+          <div className="text-center py-6">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primaryColor/10 flex items-center justify-center">
+              <ShoppingBag className="w-8 h-8 text-primaryColor" />
             </div>
-          ))}
-        </div>
+            <h3 className="text-white font-medium mb-1">No Purchases Yet</h3>
+            <p className="text-gray-400 text-sm">
+              Scan products to see them here
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {purchasedProducts.map((product) => (
+              <div
+                key={product.id}
+                className="flex items-center justify-between p-4 bg-[#FFFFFF07] rounded-lg"
+              >
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-primaryColor/20 rounded-full flex items-center justify-center mr-4">
+                    <ShoppingBag className="w-5 h-5 text-primaryColor" />
+                  </div>
+                  <div className="text-primaryColor">{product.name}</div>
+                </div>
+                <div className="flex items-center">
+                  {product.status === "completed" ? (
+                    <span className="text-primaryColor">
+                      +{product.points} points
+                    </span>
+                  ) : (
+                    <span className="text-gray-400">Pending</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <NavBar />
     </div>

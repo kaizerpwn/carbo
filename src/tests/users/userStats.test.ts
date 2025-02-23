@@ -52,10 +52,10 @@ describe("POST /api/userStats", () => {
 
     expect(prisma.userStats.upsert).toHaveBeenCalledWith({
       where: { userId: "123" },
-      update: { totalPoints: { increment: 10 } },
+      update: { totalCoins: { increment: 10 } },
       create: {
         userId: "123",
-        totalPoints: 10,
+        totalCoins: 10,
         carbonSaved: 0.0,
         currentStreak: 0,
         totalScans: 0,
@@ -67,7 +67,9 @@ describe("POST /api/userStats", () => {
   });
 
   it("returns 500 when prisma.upsert throws an error", async () => {
-    (prisma.userStats.upsert as jest.Mock).mockRejectedValue(new Error("Database error"));
+    (prisma.userStats.upsert as jest.Mock).mockRejectedValue(
+      new Error("Database error")
+    );
     const req = createMockRequest({ userId: "123", coins: 10 });
     const response = await POST(req);
     const data = await response.json();

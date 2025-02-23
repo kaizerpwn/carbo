@@ -12,7 +12,7 @@ import { DeleteConfirmationModal } from "@/components/DeleteConfirmationModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
 
-export const DevicesView: React.FC = () => {
+const DevicesView = () => {
   const {
     devices,
     isLoading,

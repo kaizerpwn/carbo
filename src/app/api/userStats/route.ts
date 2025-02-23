@@ -21,10 +21,10 @@ export async function POST(req: Request) {
   try {
     await prisma.userStats.upsert({
       where: { userId },
-      update: { totalPoints: { increment: coins } },
+      update: { totalCoins: { increment: coins } },
       create: {
         userId,
-        totalPoints: coins,
+        totalCoins: coins,
         carbonSaved: 0.0,
         currentStreak: 0,
         totalScans: 0,

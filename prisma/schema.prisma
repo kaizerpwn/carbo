@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "linux-musl-arm64-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -36,6 +37,7 @@ model UserStats {
   id                String   @id @default(uuid()) @db.VarChar(36)
   userId            String   @unique @map("user_id") @db.VarChar(36)
   totalPoints       Int      @default(0) @map("total_points")
+  totalCoins        Int      @default(0) @map("total_coins")
   carbonSaved       Decimal  @default(0.00) @map("carbon_saved") @db.Decimal(10, 2)
   currentStreak     Int      @default(0) @map("current_streak")
   totalScans        Int      @default(0) @map("total_scans")
@@ -62,7 +64,7 @@ model Device {
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   powerReadings PowerReading[]
-  schedules     Schedule[] // Add this line to relate to Schedule model
+  schedules     Schedule[]
 
   @@index([userId])
   @@map("devices")
@@ -71,9 +73,9 @@ model Device {
 model Schedule {
   id        String   @id @default(uuid()) @db.VarChar(36)
   deviceId  String   @map("device_id") @db.VarChar(36)
-  on        String   @db.VarChar(5) // Store time as "HH:MM"
-  off       String   @db.VarChar(5) // Store time as "HH:MM"
-  days      String   @db.VarChar(255) // Store days as comma-separated string
+  on        String   @db.VarChar(5)
+  off       String   @db.VarChar(5)
+  days      String   @db.VarChar(255)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

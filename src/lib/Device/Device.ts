@@ -86,7 +86,7 @@ export const DeviceAPI = {
   },
 
   toggleFavorite: async (id: string, isFavorite: boolean) => {
-    const response = await http.put(`/devices?id=${id}`, { isFavorite });
+    const response = await http.put(`/devices/${id}/favorite`, { isFavorite });
     if (response.status !== 200) {
       throw new Error("Failed to update favorite status");
     }

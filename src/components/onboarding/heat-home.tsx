@@ -6,7 +6,7 @@ interface TransportStepProps {
 
 export default function HeatHome({ onContinue }: TransportStepProps) {
   return (
-    <div className='min-h-screen bg-gray-900 p-6 text-white'>
+    <div className='min-h-screen bg-backgroundDark p-6 text-white'>
       <div className='flex justify-center mb-2'>
         <div className='relative'>
           <Image src={'/car.png'} alt='car' height={200} width={500} />
