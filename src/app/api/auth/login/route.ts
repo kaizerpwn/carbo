@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       { expiresIn: '7d' }
     );
 
-    const { passwordHash, ...userWithoutPassword } = user;
+    const { ...userWithoutPassword } = user;
 
     const response = NextResponse.json({
       user: userWithoutPassword,

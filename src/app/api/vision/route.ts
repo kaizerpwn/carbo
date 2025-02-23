@@ -164,7 +164,7 @@ export async function POST(req: AuthenticatedNextRequest) {
                 ecoScore: validatedEcoScore,
                 category: "Unknown",
                 carbonFootprint: new Prisma.Decimal(0),
-                recyclable: sanitizedEcoFacts.some((fact) =>
+                recyclable: sanitizedEcoFacts.some((fact:any) =>
                   fact.toLowerCase().includes("recycl")
                 ),
                 brand: null,
