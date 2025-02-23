@@ -100,7 +100,8 @@ export const authMiddleware = async (
     return next();
   } catch (error: any) {
     console.error(error);
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return next();
+    // return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 };
 
