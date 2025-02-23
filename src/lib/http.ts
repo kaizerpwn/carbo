@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://carbo.kaizerpwn.dev/api",
   withCredentials: true,
 });
 
