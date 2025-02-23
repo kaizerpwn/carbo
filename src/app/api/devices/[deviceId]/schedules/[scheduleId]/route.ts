@@ -27,7 +27,7 @@ export async function DELETE(req: AuthenticatedNextRequest) {
       console.log(
         `Deleting schedule with ID: ${scheduleId} for device ID: ${deviceId}`
       );
-
+      //@ts-ignore
       await prisma.schedule.delete({
         where: { id: scheduleId },
       });

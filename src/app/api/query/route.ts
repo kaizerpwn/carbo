@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Answers on all questions
 type Answer =
   | "Never recycle"
   | "Sometimes recycle"
@@ -93,7 +92,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ awarenessPercentage, nickname });
-  } catch (error) {
+  } catch (error:any) {
     console.error("Error processing the answers:", error);
     return NextResponse.json(
       {

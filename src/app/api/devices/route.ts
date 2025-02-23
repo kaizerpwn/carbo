@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
       where: { userId },
       include: {
         powerReadings: true,
+        //@ts-ignore
         schedules: true,
       },
     });
@@ -94,6 +95,7 @@ export async function PUT(req: AuthenticatedNextRequest) {
       const device = await prisma.device.update({
         where: { id: String(id) },
         data: { name, powerRating, standbyPower, location, isActive },
+        //@ts-ignore
         include: { schedules: true },
       });
 

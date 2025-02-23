@@ -8,7 +8,6 @@ import { useAuth } from '@/context/AuthContext';
 import { UserAPI } from '@/lib/User/User';
 import { Airplay, Navigation, PlaneLanding } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useDevicesContext } from '@/hooks/useDevicesManagement';
 
 export default function Dashboard() {
@@ -318,21 +317,6 @@ export default function Dashboard() {
                             {device.isActive ? 'Active' : 'Inactive'}
                           </span>
                         </div>
-                        {/* <button className='p-2 hover:bg-white/5 rounded-lg transition-colors duration-300'>
-                          <svg
-                            className='w-5 h-5 text-gray-400 hover:text-primary'
-                            fill='none'
-                            viewBox='0 0 24 24'
-                            stroke='currentColor'
-                          >
-                            <path
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth={2}
-                              d='M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z'
-                            />
-                          </svg>
-                        </button> */}
                       </div>
                     </div>
                   </div>
