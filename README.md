@@ -42,19 +42,17 @@ bun run dev
 - Compete with Others
 - Gain XP & Monitor Usage
 
+
+## Business model
+
+![biznis-model](https://i.ibb.co/KSmVkwV/image.png)
+
+
 ## Screenshots
-![biznis-model](https://github.com/user-attachments/assets/f619133f-1830-497a-9d2d-ec3418e13035)
 
-![image](https://github.com/user-attachments/assets/7f53e96d-8f4b-4937-8d47-8cd1f10ce1ef)
+<img src="https://i.ibb.co/3mXWPdSD/Screen-Shot-2025-02-23-at-07-37-16.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/7J7SVtrB/Screen-Shot-2025-02-23-at-07-37-36.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/rGXLfCpm/Screen-Shot-2025-02-23-at-07-36-55.png" alt="screenshot" width="300"/>
 
-![image](https://github.com/user-attachments/assets/f10ce1a4-2924-41f2-a86e-b3f6364a4f23)
-
-![image](https://github.com/user-attachments/assets/ab2c3327-5ca6-4ba9-9e10-64b5c04b29b1)
-
-![image](https://github.com/user-attachments/assets/23f105bb-6ea1-4864-b95a-740ac6d7e29f)
-
-![image](https://github.com/user-attachments/assets/c2c5f490-c958-49c1-9db7-159006886fe7)
-
+<img src="https://i.ibb.co/5hmCfNxx/Screen-Shot-2025-02-23-at-07-37-01.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/svjWRbVR/Screen-Shot-2025-02-23-at-07-37-04.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/3mXWPdSD/Screen-Shot-2025-02-23-at-07-37-16.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/wFWtBNch/Screen-Shot-2025-02-23-at-07-37-22.png" alt="screenshot" width="300"/>
 
 ## Authors
 
