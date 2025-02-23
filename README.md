@@ -16,7 +16,7 @@ Carbo is your eco-friendly companion that helps you save money and reduce your c
 | Next JS | Handles both frontend and backend with server-side rendering and API routes.	 | [NextJS](https://nextjs.org) |
 | Tailwind CSS |  A utility-first CSS framework used for building modern UI.	  | [Tailwind CSS](https://tailwindcss.com/)  |
 | MariaDB  |  Relational database used for efficient data storage and management.	  | [MariaDB](https://mariadb.org)  |
-| Docker Kubernetes  |  Used for CI/CD process  | [Kubernetes](https://www.docker.com/resources/kubernetes-and-docker/)  |
+| Docker, Kubernetes & ArgoCD  |  Used for CI/CD process  | [Kubernetes](https://www.docker.com/resources/kubernetes-and-docker/)  |
 
 | Package | Version |
 |---|---|
