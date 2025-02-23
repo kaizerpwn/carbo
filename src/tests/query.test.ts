@@ -20,7 +20,6 @@ describe("POST /api/ecoScore", () => {
   });
 
   it("returns error 500 if request body is not an object", async () => {
-    // Providing an array instead of an object.
     const req = createMockRequest([]);
     const res = await POST(req);
     const data = await res.json();
