@@ -27,61 +27,34 @@ const ProductScanView: React.FC = () => {
   const [coins, setCoins] = useState(0);
   const [userScans, setUserScans] = useState<any[]>([]);
 
-  const recentScans: RecentScan[] = [
-    {
-      id: 1,
-      productName: 'Eco Paper Towels',
-      date: 'Today',
-      isEcoFriendly: true,
-      points: 50,
-      claimed: true,
-    },
-    {
-      id: 2,
-      productName: 'Glass Cleaner',
-      date: 'Yesterday',
-      isEcoFriendly: true,
-      points: 30,
-      claimed: false,
-    },
-    {
-      id: 3,
-      productName: 'Plastic Bottles',
-      date: '2 days ago',
-      isEcoFriendly: false,
-      points: 0,
-      claimed: false,
-    },
-  ];
-
   const mockScans = [
-    {
-      id: '1',
-      product: {
-        name: 'Eco Paper Towels',
-        ecoScore: 85,
-      },
-      scannedAt: new Date(),
-      pointsClaimed: true,
-    },
-    {
-      id: '2',
-      product: {
-        name: 'Glass Cleaner',
-        ecoScore: 75,
-      },
-      scannedAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-      pointsClaimed: false,
-    },
-    {
-      id: '3',
-      product: {
-        name: 'Plastic Bottles',
-        ecoScore: 30,
-      },
-      scannedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-      pointsClaimed: false,
-    },
+    // {
+    //   id: "1",
+    //   product: {
+    //     name: "Eco Paper Towels",
+    //     ecoScore: 85,
+    //   },
+    //   scannedAt: new Date(),
+    //   pointsClaimed: true,
+    // },
+    // {
+    //   id: "2",
+    //   product: {
+    //     name: "Glass Cleaner",
+    //     ecoScore: 75,
+    //   },
+    //   scannedAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+    //   pointsClaimed: false,
+    // },
+    // {
+    //   id: "3",
+    //   product: {
+    //     name: "Plastic Bottles",
+    //     ecoScore: 30,
+    //   },
+    //   scannedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    //   pointsClaimed: false,
+    // },
   ];
 
   const handleScan = async (imageSrc: string | File) => {
@@ -89,7 +62,6 @@ const ProductScanView: React.FC = () => {
 
     let file: File;
     if (typeof imageSrc === 'string') {
-      // Convert base64 image to a File object
       const byteString = atob(imageSrc.split(',')[1]);
       const mimeString = imageSrc.split(',')[0].split(':')[1].split(';')[0];
       const ab = new ArrayBuffer(byteString.length);
@@ -288,6 +260,40 @@ const ProductScanView: React.FC = () => {
               </div>
 
               <div className='space-y-3'>
+                {/* {recentScans.map((scan) => (
+                  <div key={scan.id} className="bg-backgroundLight rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            scan.isEcoFriendly ? "bg-[#4ADE80]" : "bg-red-500"
+                          }`}
+                        />
+                        <div>
+                          <h3 className="text-white text-sm font-medium">
+                            {scan.productName}
+                          </h3>
+                          <p className="text-[#6B7280] text-xs">{scan.date}</p>
+                        </div>
+                      </div>
+                      {scan.isEcoFriendly && (
+                        <div className="text-right">
+                          <div className="flex items-center gap-1">
+                            <span className="text-[#4ADE80] text-sm font-medium">
+                              +{scan.points}
+                            </span>
+                            <Award className="w-4 h-4 text-[#4ADE80]" />
+                          </div>
+                          {!scan.claimed && (
+                            <button className="text-[#6B7280] text-xs hover:text-[#4ADE80]">
+                              Claim Points
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))} */}
                 <RecentScans scans={userScans} />
               </div>
             </div>
