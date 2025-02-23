@@ -53,6 +53,11 @@ npm run dev
 
 <img src="https://i.ibb.co/5hmCfNxx/Screen-Shot-2025-02-23-at-07-37-01.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/svjWRbVR/Screen-Shot-2025-02-23-at-07-37-04.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/3mXWPdSD/Screen-Shot-2025-02-23-at-07-37-16.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/wFWtBNch/Screen-Shot-2025-02-23-at-07-37-22.png" alt="screenshot" width="300"/>
 
+## Deployment using ArgoCD
+
+![argocd](https://github.com/user-attachments/assets/c26060ff-61e0-49a3-ab38-08ec32a3b074)
+
+
 ## Authors
 
 
