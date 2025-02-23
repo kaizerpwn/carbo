@@ -49,7 +49,7 @@ npm run dev
 
 ## Demo
 
-[![Watch the video](https://img.youtube.com/vi/DFL87UeGC8A/maxresdefault.jpg)](https://youtube.com/shorts/DFL87UeGC8A?feature=share)
+[![Watch the video](https://i.ibb.co/svBC1yqp/image.png)](https://youtube.com/shorts/DFL87UeGC8A?feature=share)
 
 
 ## Screenshots
