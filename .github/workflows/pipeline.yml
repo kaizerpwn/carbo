@@ -2,7 +2,7 @@ name: CI/CD Pipeline for Next.js - [PRODUCTION]
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          node-version: "20.x"
 
       - name: Cache Node Modules
         uses: actions/cache@v3
@@ -55,8 +55,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/kaizerpwn/kaizer-portfolio-next:${{ github.sha }}
-            ghcr.io/kaizerpwn/kaizer-portfolio-next:latest
+            ghcr.io/kaizerpwn/carbo-hackathon:${{ github.sha }}
+            ghcr.io/kaizerpwn/carbo-hackathon:latest
 
   update-infra:
     runs-on: ubuntu-latest
@@ -67,36 +67,36 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: kaizerpwn/infrastructure
-          ref: 'main'
+          ref: "main"
           token: ${{ secrets.INFRASTRUCTURE_TOKEN }}
           path: infrastructure
 
       - name: Verify File Presence
         run: |
           echo "Checking file presence:"
-          ls -la infrastructure/kaizer-portfolio
-          cat infrastructure/kaizer-portfolio/next-deployment.yml
+          ls -la infrastructure/carbo
+          cat infrastructure/carbo/next-deployment.yml
 
       - name: Update Deployment Manifest
         run: |
           echo "Updating deployment manifest:"
           # Print the file content before changes
           echo "Before update:"
-          cat infrastructure/kaizer-portfolio/next-deployment.yml
+          cat infrastructure/carbo/next-deployment.yml
 
           # Update the image tag in the deployment manifest with the digest
-          sed -i "s|image: ghcr.io/kaizerpwn/kaizer-portfolio-next:.*|image: ghcr.io/kaizerpwn/kaizer-portfolio-next:${{ github.sha }}|g" infrastructure/kaizer-portfolio/next-deployment.yml
+          sed -i "s|image: ghcr.io/kaizerpwn/carbo-hackathon:.*|image: ghcr.io/kaizerpwn/carbo-hackathon:${{ github.sha }}|g" infrastructure/carbo/next-deployment.yml
 
           # Print the file content after changes
           echo "After update:"
-          cat infrastructure/kaizer-portfolio/next-deployment.yml
+          cat infrastructure/carbo/next-deployment.yml
 
       - name: Stage and Commit Changes
         run: |
           cd infrastructure
           git config user.name "GitHub Actions Bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add kaizer-portfolio/next-deployment.yml
+          git add carbo/next-deployment.yml
           # Verify the production
           git status
           # Commit and push changes if there are modifications
