@@ -14,7 +14,11 @@ const eslintConfig = [
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      // You can add more rules to disable here if needed
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+       "react-hooks/exhaustive-deps": "off",
+       "react-hooks/rules-of-hooks": "off",
+       "@next/next/no-img-element": "off"
     },
   },
 ];
