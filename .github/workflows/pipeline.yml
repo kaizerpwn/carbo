@@ -74,29 +74,29 @@ jobs:
       - name: Verify File Presence
         run: |
           echo "Checking file presence:"
-          ls -la infrastructure/kaizer-portfolio
-          cat infrastructure/kaizer-portfolio/next-deployment.yml
+          ls -la infrastructure/carbo
+          cat infrastructure/carbo/next-deployment.yml
 
       - name: Update Deployment Manifest
         run: |
           echo "Updating deployment manifest:"
           # Print the file content before changes
           echo "Before update:"
-          cat infrastructure/kaizer-portfolio/next-deployment.yml
+          cat infrastructure/carbo/next-deployment.yml
 
           # Update the image tag in the deployment manifest with the digest
-          sed -i "s|image: ghcr.io/kaizerpwn/carbo-hackathon:.*|image: ghcr.io/kaizerpwn/carbo-hackathon:${{ github.sha }}|g" infrastructure/kaizer-portfolio/next-deployment.yml
+          sed -i "s|image: ghcr.io/kaizerpwn/carbo-hackathon:.*|image: ghcr.io/kaizerpwn/carbo-hackathon:${{ github.sha }}|g" infrastructure/carbo/next-deployment.yml
 
           # Print the file content after changes
           echo "After update:"
-          cat infrastructure/kaizer-portfolio/next-deployment.yml
+          cat infrastructure/carbo/next-deployment.yml
 
       - name: Stage and Commit Changes
         run: |
           cd infrastructure
           git config user.name "GitHub Actions Bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add kaizer-portfolio/next-deployment.yml
+          git add carbo/next-deployment.yml
           # Verify the production
           git status
           # Commit and push changes if there are modifications
