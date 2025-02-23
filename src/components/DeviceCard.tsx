@@ -52,8 +52,6 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
         </button>
       </div>
 
-      {/* ... rest of the component stays the same ... */}
-
       {showActions && (
         <div className='mt-4 pt-4 border-t border-[#374151] grid grid-cols-3 gap-2'>
           <button
