@@ -28,11 +28,10 @@ Carbo is your eco-friendly companion that helps you save money and reduce your c
 # Install dependencies  
 npm install  
 
+npx prisma migrate dev --name init
+
 # Start the development server  
 npm run dev
-
-# You can also use bun
-bun run dev
 ```
 ## Features
 
