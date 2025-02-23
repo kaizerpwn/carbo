@@ -16,12 +16,12 @@ interface Product {
 }
 
 const SponsorProducts: React.FC = () => {
+  const totalCoins = useCoins();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showPurchaseConfirmation, setShowPurchaseConfirmation] =
     useState<boolean>(false);
   const [progress, setProgress] = useState<number>(100);
-  const totalCoins = useCoins();
 
   const products: Product[] = [
     {
@@ -103,7 +103,7 @@ const SponsorProducts: React.FC = () => {
         </div>
         <div className="bg-backgroundLight px-4 py-2 rounded-full flex items-center">
           <ShoppingBag className="w-4 h-4 text-primaryColor mr-2" />
-          <span className="text-sm">{totalCoins} points</span>
+          <span className="text-sm">{totalCoins} coins</span>
         </div>
       </div>
 
