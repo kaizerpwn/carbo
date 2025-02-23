@@ -59,7 +59,15 @@ const ProfilePage: React.FC = () => {
         }
 
         const data = await response.json();
-        setPurchasedProducts(data.scannedProducts || []);
+
+        const mappedProducts = data.scannedProducts.map((scan: any) => ({
+          id: scan.id,
+          name: scan.product.name,
+          date: new Date(scan.scannedAt).toLocaleDateString(),
+          points: scan.product.ecoScore,
+        }));
+
+        setPurchasedProducts(mappedProducts);
       } catch (error) {
         console.error("Error fetching scans:", error);
         setError("Failed to load purchase history.");
@@ -169,10 +177,7 @@ const ProfilePage: React.FC = () => {
                   <div className="w-10 h-10 bg-primaryColor/20 rounded-full flex items-center justify-center mr-4">
                     <ShoppingBag className="w-5 h-5 text-primaryColor" />
                   </div>
-                  <div>
-                    <h4 className="font-medium">{product.name}</h4>
-                    <p className="text-sm text-gray-400">{product.date}</p>
-                  </div>
+                  <div className="text-primaryColor">{product.name}</div>
                 </div>
                 <div className="flex items-center">
                   {product.status === "completed" ? (
