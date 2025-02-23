@@ -2,12 +2,12 @@
 
 import {
   Home,
-  Maximize2,
   MonitorSmartphone,
   Trophy,
   User,
   ShoppingBag,
   LogOut,
+  QrCode,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -38,7 +38,7 @@ const NavBar: React.FC<NavBarProps> = ({ className }) => {
       onClick: () => console.log("Home clicked"),
     },
     {
-      icon: Maximize2,
+      icon: QrCode,
       route: "/scan",
       label: "Scan",
       onClick: () => console.log("Scan clicked"),

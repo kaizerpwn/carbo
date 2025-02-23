@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Power, PowerOff } from "lucide-react";
 import { Device } from "@/types/devices";
 import { DeviceCard } from "@/components/DeviceCard";
 import { AddDeviceModal } from "@/components/AddDevicesModal";
@@ -139,44 +139,72 @@ export const DevicesView: React.FC = () => {
             <h2 className="text-[#6B7280] text-sm font-medium mb-3">
               Active Devices
             </h2>
-            <div className="space-y-3">
-              {activeDevices.map((device) => (
-                <DeviceCard
-                  key={device.id}
-                  device={device}
-                  onToggle={toggleDeviceStatus}
-                  onSchedule={(device) => {
-                    setSelectedDevice(device);
-                    setShowScheduleModal(true);
-                  }}
-                  onFavoriteToggle={toggleFavorite}
-                  onEdit={handleEditDevice}
-                  onDelete={handleDeleteDevice}
-                />
-              ))}
-            </div>
+            {activeDevices.length > 0 ? (
+              <div className="space-y-3">
+                {activeDevices.map((device) => (
+                  <DeviceCard
+                    key={device.id}
+                    device={device}
+                    onToggle={toggleDeviceStatus}
+                    onSchedule={(device) => {
+                      setSelectedDevice(device);
+                      setShowScheduleModal(true);
+                    }}
+                    onFavoriteToggle={toggleFavorite}
+                    onEdit={handleEditDevice}
+                    onDelete={handleDeleteDevice}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-backgroundLight rounded-2xl my-4">
+                <div className="w-16 h-16  mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Power />
+                </div>
+                <h3 className="text-white font-medium mb-1">
+                  No Active Devices
+                </h3>
+                <p className="text-gray-400 text-sm">
+                  Add or activate devices to see them here
+                </p>
+              </div>
+            )}
           </div>
 
           <div>
             <h2 className="text-[#6B7280] text-sm font-medium mb-3">
               Inactive Devices
             </h2>
-            <div className="space-y-3">
-              {inactiveDevices.map((device) => (
-                <DeviceCard
-                  key={device.id}
-                  device={device}
-                  onToggle={toggleDeviceStatus}
-                  onSchedule={(device) => {
-                    setSelectedDevice(device);
-                    setShowScheduleModal(true);
-                  }}
-                  onFavoriteToggle={toggleFavorite}
-                  onEdit={handleEditDevice}
-                  onDelete={handleDeleteDevice}
-                />
-              ))}
-            </div>
+            {inactiveDevices.length > 0 ? (
+              <div className="space-y-3">
+                {inactiveDevices.map((device) => (
+                  <DeviceCard
+                    key={device.id}
+                    device={device}
+                    onToggle={toggleDeviceStatus}
+                    onSchedule={(device) => {
+                      setSelectedDevice(device);
+                      setShowScheduleModal(true);
+                    }}
+                    onFavoriteToggle={toggleFavorite}
+                    onEdit={handleEditDevice}
+                    onDelete={handleDeleteDevice}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-backgroundLight rounded-2xl my-4">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                  <PowerOff />
+                </div>
+                <h3 className="text-white font-medium mb-1">
+                  No Inactive Devices
+                </h3>
+                <p className="text-gray-400 text-sm">
+                  All devices are currently active
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

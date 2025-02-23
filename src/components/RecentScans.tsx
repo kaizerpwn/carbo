@@ -4,10 +4,10 @@ import { ScanSearch } from "lucide-react";
 export const RecentScans = ({ scans }: { scans: any[] }) => {
   return (
     <div className="bg-backgroundLight rounded-2xl p-4">
-      <div className="space-y-3 my-4">
+      <div className="my-4">
         {scans.length === 0 ? (
           <div className="text-center py-10">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
               <ScanSearch />
             </div>
             <h3 className="text-white font-medium mb-1">No Recent Scans</h3>
