@@ -190,11 +190,12 @@ export async function POST(req: AuthenticatedNextRequest) {
               },
               update: {
                 totalScans: { increment: 1 },
+                totalPoints: { increment: 1 },
               },
               create: {
                 userId: user.id,
                 totalScans: 1,
-                totalPoints: 0,
+                totalPoints: 1,
                 carbonSaved: new Prisma.Decimal(0),
                 currentStreak: 0,
                 ecoProductsBought: 0,

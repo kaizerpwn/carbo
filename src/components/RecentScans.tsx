@@ -50,8 +50,8 @@ export const RecentScans = ({ scans }: { scans: any[] }) => {
                     </svg>
                   </div>
                 ) : (
-                  <button className="text-[#22C55E] text-sm hover:text-[#22C55E]/80">
-                    Claim Points
+                  <button className="text-red-400 text-sm hover:text-red-500/80">
+                    Only scanned
                   </button>
                 )}
               </div>
