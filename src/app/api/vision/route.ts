@@ -5,7 +5,7 @@ import { authMiddleware } from "@/app/middleware";
 import { Prisma } from "@prisma/client";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
+  apiKey: process.env.OPENAI_API_KEY || "",
 });
 
 function sanitizeString(input: string): string {
@@ -164,7 +164,7 @@ export async function POST(req: AuthenticatedNextRequest) {
                 ecoScore: validatedEcoScore,
                 category: "Unknown",
                 carbonFootprint: new Prisma.Decimal(0),
-                recyclable: sanitizedEcoFacts.some((fact:any) =>
+                recyclable: sanitizedEcoFacts.some((fact: any) =>
                   fact.toLowerCase().includes("recycl")
                 ),
                 brand: null,

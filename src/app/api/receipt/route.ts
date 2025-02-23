@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
+  apiKey: process.env.OPENAI_API_KEY || "",
 });
 
 function sanitizeString(input: string): string {
-  return input.replace(/[`]/g, '');
+  return input.replace(/[`]/g, "");
 }
 
 export async function POST(req: NextRequest) {
@@ -19,7 +19,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
     if (!productTextProvided) {
-      return NextResponse.json({ error: "No product text provided" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No product text provided" },
+        { status: 400 }
+      );
     }
 
     const bytes = await file.arrayBuffer();
@@ -31,7 +34,7 @@ export async function POST(req: NextRequest) {
         {
           role: "system",
           content:
-            "You are an expert in OCR extraction. Extract all text from the receipt image and return valid JSON with exactly one key: 'text'. For example: { \"text\": \"Organic almond milk bla bla bla\" }. Do not include any extra text or formatting, do not use backticks or markdown formatting and dont use any characters that may not be parsable into JSON.",
+            'You are an expert in OCR extraction. Extract all text from the receipt image and return valid JSON with exactly one key: \'text\'. For example: { "text": "Organic almond milk bla bla bla" }. Do not include any extra text or formatting, do not use backticks or markdown formatting and dont use any characters that may not be parsable into JSON.',
         },
         {
           role: "user",
@@ -52,7 +55,7 @@ export async function POST(req: NextRequest) {
     if (!extractContent) throw new Error("No content in extraction response");
     const extractResult = JSON.parse(extractContent);
     const extractedText = sanitizeString(extractResult.text);
-    console.log(extractContent)
+    console.log(extractContent);
 
     const responseCompare = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -80,11 +83,14 @@ export async function POST(req: NextRequest) {
     if (!compareContent) throw new Error("No content in compare response");
     const compareResult = JSON.parse(compareContent);
     const confirmed = compareResult.confirmed;
-    console.log(compareContent)
+    console.log(compareContent);
 
     return NextResponse.json({ confirmed });
   } catch (error) {
     console.error("Error processing receipt image:", error);
-    return NextResponse.json({ error: "Failed to process receipt image" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to process receipt image" },
+      { status: 500 }
+    );
   }
 }
