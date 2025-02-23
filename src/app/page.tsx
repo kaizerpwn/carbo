@@ -155,7 +155,7 @@ export default function Dashboard() {
   }, [user]);
 
   const CoTreeSvg = () => {
-    if (coEmissionPercent < 50) {
+    if (coEmissionPercent > 50) {
       return <CoTreeSmall />;
     } else {
       return <CoTreeLarge />;
@@ -276,7 +276,7 @@ export default function Dashboard() {
                 />
                 <div className="relative w-48 h-48">
                   <div className="absolute inset-0 flex items-center justify-center p-10 mt-4">
-                    {powerConsumptionPercent < 50 ? (
+                    {powerConsumptionPercent > 50 ? (
                       <CoTreeLarge />
                     ) : (
                       <CoTreeSmall />
