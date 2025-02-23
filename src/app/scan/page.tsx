@@ -70,7 +70,7 @@ const ProductScanView: React.FC = () => {
         name: 'Glass Cleaner',
         ecoScore: 75,
       },
-      scannedAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // yesterday
+      scannedAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
       pointsClaimed: false,
     },
     {
@@ -79,7 +79,7 @@ const ProductScanView: React.FC = () => {
         name: 'Plastic Bottles',
         ecoScore: 30,
       },
-      scannedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      scannedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
       pointsClaimed: false,
     },
   ];
@@ -288,40 +288,6 @@ const ProductScanView: React.FC = () => {
               </div>
 
               <div className='space-y-3'>
-                {/* {recentScans.map((scan) => (
-                  <div key={scan.id} className="bg-backgroundLight rounded-xl p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-2 h-2 rounded-full ${
-                            scan.isEcoFriendly ? "bg-[#4ADE80]" : "bg-red-500"
-                          }`}
-                        />
-                        <div>
-                          <h3 className="text-white text-sm font-medium">
-                            {scan.productName}
-                          </h3>
-                          <p className="text-[#6B7280] text-xs">{scan.date}</p>
-                        </div>
-                      </div>
-                      {scan.isEcoFriendly && (
-                        <div className="text-right">
-                          <div className="flex items-center gap-1">
-                            <span className="text-[#4ADE80] text-sm font-medium">
-                              +{scan.points}
-                            </span>
-                            <Award className="w-4 h-4 text-[#4ADE80]" />
-                          </div>
-                          {!scan.claimed && (
-                            <button className="text-[#6B7280] text-xs hover:text-[#4ADE80]">
-                              Claim Points
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))} */}
                 <RecentScans scans={userScans} />
               </div>
             </div>

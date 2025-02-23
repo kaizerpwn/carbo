@@ -42,7 +42,6 @@ export const RecentScans = ({ scans }: { scans: any[] }) => {
   );
 };
 
-// Helper funkcija za formatiranje vremena
 const getTimeAgo = (date: Date) => {
   const now = new Date();
   const scanDate = new Date(date);

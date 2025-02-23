@@ -174,7 +174,7 @@ export async function POST(req: AuthenticatedNextRequest) {
           },
         });
 
-        console.log("UserScan created:", userScan); */
+        console.log("UserScan created:", userScan);
 
         return NextResponse.json({
           text: sanitizedText,
