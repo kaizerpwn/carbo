@@ -47,6 +47,11 @@ npm run dev
 ![biznis-model](https://i.ibb.co/KSmVkwV/image.png)
 
 
+## Demo
+
+[![Watch the video](https://img.youtube.com/vi/DFL87UeGC8A/maxresdefault.jpg)](https://youtube.com/shorts/DFL87UeGC8A?feature=share)
+
+
 ## Screenshots
 
 <img src="https://i.ibb.co/3mXWPdSD/Screen-Shot-2025-02-23-at-07-37-16.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/7J7SVtrB/Screen-Shot-2025-02-23-at-07-37-36.png" alt="screenshot" width="300"/> <img src="https://i.ibb.co/rGXLfCpm/Screen-Shot-2025-02-23-at-07-36-55.png" alt="screenshot" width="300"/>
