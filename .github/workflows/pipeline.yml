@@ -34,7 +34,9 @@ jobs:
 
       - name: Build Next.js App
         env:
-          JWT_SECRET: ibrakadabra
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm run build
 
       - name: Set up Docker Buildx
