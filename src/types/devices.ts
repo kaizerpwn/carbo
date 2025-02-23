@@ -44,6 +44,12 @@ export interface AddDeviceModalProps {
   onAdd: (device: Omit<Device, "id" | "createdAt" | "updatedAt">) => void;
 }
 
+export interface EditDeviceModalProps {
+  onClose: () => void;
+  onEdit: (device: Device) => void;
+  device: (Device & { schedules: Schedule[] }) | null;
+}
+
 export interface ScheduleModalProps {
   device: Device;
   onClose: () => void;
