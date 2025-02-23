@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Carbo 
 
-First, run the development server:
+Carbo is your eco-friendly companion that helps you save money and reduce your carbon footprint. If you're looking to lower your electricity bills and earn money while shopping, Carbo is a must-have! ⭐.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+ 
+## Tools used
+
+| Tool | Description | Source |
+|---|---|---|
+| GPT-4o | Designed to determine whether a product is eco-friendly or not. | [OpenAI](https://openai.com/) |  
+| Next JS | Handles both frontend and backend with server-side rendering and API routes.	 | [NextJS](https://nextjs.org) |
+| Tailwind CSS |  A utility-first CSS framework used for building modern UI.	  | [Tailwind CSS](https://tailwindcss.com/)  |
+| MariaDB  |  Relational database used for efficient data storage and management.	  | [MariaDB](https://mariadb.org)  |
+| Docker Kubernetes  |  Used for CI/CD process  | [Kubernetes](https://www.docker.com/resources/kubernetes-and-docker/)  |
+
+| Package | Version |
+|---|---|
+| next | 15.1.7 |
+
+## How to run?
+
+```sh
+# Install dependencies  
+npm install  
+
+# Start the development server  
+npm run dev  
 ```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Scan Products for Eco-Friendliness 
+- Track Energy Savings 
+- Earn & Spend Eco-Coins
+- Compete with Others
+- Gain XP & Monitor Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Screenshots
+![biznis-model](https://github.com/user-attachments/assets/f619133f-1830-497a-9d2d-ec3418e13035)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+![image](https://github.com/user-attachments/assets/7f53e96d-8f4b-4937-8d47-8cd1f10ce1ef)
 
-## Learn More
+![image](https://github.com/user-attachments/assets/f10ce1a4-2924-41f2-a86e-b3f6364a4f23)
 
-To learn more about Next.js, take a look at the following resources:
+![image](https://github.com/user-attachments/assets/ab2c3327-5ca6-4ba9-9e10-64b5c04b29b1)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![image](https://github.com/user-attachments/assets/23f105bb-6ea1-4864-b95a-740ac6d7e29f)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+![image](https://github.com/user-attachments/assets/c2c5f490-c958-49c1-9db7-159006886fe7)
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Authors
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+| Person | Role |
+|---|---|
+| ![kaizerpwn](https://avatars.githubusercontent.com/u/70588174?s=28&v=4) [@kaizerpwn](https://www.github.com/kaizerpwn) | Full stack development |
+| ![jqsmiin](https://avatars.githubusercontent.com/u/86678700?s=28&v=4) [@jqsmiin](https://www.github.com/jqsmiin) | Frontend development |
+| ![daddyDOT](https://avatars.githubusercontent.com/u/65982671?s=28&v=4) [@daddyDOT](https://www.github.com/daddyDOT) | Graphics design, frontend development |
+![kosharun](https://avatars.githubusercontent.com/u/121234919?s=28&v=4) [@kosharun](https://github.com/kosharun) | Backend development |
+![IzetDelibasic](https://avatars.githubusercontent.com/u/123022248?s=28&v=4) [@IzetDelibasic](https://github.com/IzetDelibasic) | Frontend development |
+
+
+## FAQ
+
+#### What is this project about?
+
+This project is all about making our world a cleaner, greener place while helping people save electricity. By using smart solutions, we want to reduce waste, lower energy consumption, and make sustainable choices easier for everyone.
+
+#### Why did you create this project?
+
+We built this project at the BEST Mostar 2025 hackathon, with the tight deadline of 35h. Our goal was to create something meaningful that promotes sustainability and energy efficiency.
