@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { ShoppingBag, Award } from "lucide-react";
 import NavBar from "@/components/NavBar";
+import useCoins from "@/hooks/useCoins";
 
 interface PurchasedProduct {
   id: number;
@@ -36,13 +37,13 @@ interface UserData {
 }
 
 const ProfilePage: React.FC = () => {
-  const userPoints = 560;
   const emissionsProgress = 13;
   const co2Reduction = 10;
 
   const [purchasedProducts, setPurchasedProducts] = useState<
     PurchasedProduct[]
   >([]);
+  const totalCoins = useCoins();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -106,7 +107,7 @@ const ProfilePage: React.FC = () => {
           </div>
           <div className="bg-backgroundLight px-4 py-2 rounded-full flex items-center">
             <Award className="w-4 h-4 text-primaryColor mr-2" />
-            <span className="text-sm">{userPoints} points</span>
+            <span className="text-sm">{totalCoins} points</span>
           </div>
         </div>
       </div>

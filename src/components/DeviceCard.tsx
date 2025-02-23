@@ -16,6 +16,14 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
   const [showActions, setShowActions] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
 
+  const handleFavoriteToggle = async () => {
+    try {
+      await onFavoriteToggle(device.id, !device.isFavorite);
+    } catch (error) {
+      console.error("Failed to toggle favorite status:", error);
+    }
+  };
+
   return (
     <div className="bg-backgroundLight rounded-xl p-4">
       <div className="flex items-center justify-between">
@@ -36,7 +44,7 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
             <div className="flex items-center gap-2">
               <h3 className="text-white font-medium">{device.name}</h3>
               <button
-                onClick={() => onFavoriteToggle(device.id, !device.isFavorite)}
+                onClick={handleFavoriteToggle}
                 className="hover:scale-110 transition-transform"
               >
                 <Star

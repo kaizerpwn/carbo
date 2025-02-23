@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       totalPoints: userStats.totalPoints,
+      totalCoins: userStats.totalCoins,
       level,
       nextLevelXP,
     });
