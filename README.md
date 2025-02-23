@@ -64,12 +64,6 @@ npm run dev
 | ![kosharun](https://avatars.githubusercontent.com/u/121234919?s=28&v=4) [@kosharun](https://github.com/kosharun) | Backend development |
 | ![IzetDelibasic](https://avatars.githubusercontent.com/u/123022248?s=28&v=4) [@IzetDelibasic](https://github.com/IzetDelibasic) | Frontend development |
 
-
-## Problems we encountered
-
-- Application in production works well. However, since the lack of the time, it still _can_ produce a bad result. It is possible to encounter the lack of the list of your previously scanned items.
-
-
 ## FAQ
 
 #### What is this project about?
