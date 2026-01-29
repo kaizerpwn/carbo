@@ -21,7 +21,7 @@
     "jose": "^5.10.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.475.0",
-    "next": "15.1.7",
+    "next": "16.1.5",
     "openai": "^4.85.3",
     "prisma": "^6.4.1",
     "react": "^19.0.0",
